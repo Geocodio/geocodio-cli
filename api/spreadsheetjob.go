@@ -22,5 +22,5 @@ type SpreadsheetJob struct {
 	Status      StatusItem `json:"status"`
 	DownloadUrl string     `json:"download_url"`
 	ExpiresAt   time.Time  `json:"expires_at"`
-	Error       string     `json:"error,omitempty"`
+	Message     string     `json:"message,omitempty"`
 }

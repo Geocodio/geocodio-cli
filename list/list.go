@@ -51,10 +51,6 @@ func list(c *cli.Context) error {
 		return cli.Exit("Could not parse JSON from the Geocodio API", 1)
 	}
 
-	if listResults.Error != "" {
-		return cli.Exit(fmt.Sprintf("Error: %s", listResults.Error), 1)
-	}
-
 	var data [][]string
 
 	if len(listResults.Jobs) <= 0 {

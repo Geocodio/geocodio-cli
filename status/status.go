@@ -43,10 +43,6 @@ func status(c *cli.Context) error {
 		return cli.Exit("Could not parse JSON from the Geocodio API", 1)
 	}
 
-	if job.Error != "" {
-		return cli.Exit(fmt.Sprintf("Error: %s", job.Error), 1)
-	}
-
 	if job.Id == 0 {
 		return cli.Exit("No spreadsheet job with that id found. Make sure that the id is correct and that you are using the expected API key", 1)
 	}

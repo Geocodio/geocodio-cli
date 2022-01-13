@@ -17,6 +17,7 @@ func RegisterCommand() *cli.Command {
 	command.Aliases = []string{"rm"}
 	command.Usage = "Delete an existing geocoding job"
 	command.Action = remove
+	command.ArgsUsage = "id"
 
 	return command
 }
