@@ -38,12 +38,9 @@ func list(c *cli.Context) error {
 	hostname := c.String("hostname")
 	apiKey := c.String("apikey")
 
-	if len(hostname) <= 0 {
-		return cli.Exit("Please specify a valid hostname", 1)
-	}
-
-	if len(apiKey) <= 0 {
-		return cli.Exit("Please specify a valid apikey", 1)
+	error := api.Validate(hostname, apiKey)
+	if error != nil {
+		return error
 	}
 
 	body := api.Request(http.MethodGet, "lists", hostname, apiKey)

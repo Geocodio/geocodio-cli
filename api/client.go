@@ -15,10 +15,10 @@ func Request(method string, path string, hostname string, apiKey string) []byte 
 	url := fmt.Sprintf("https://%s/%s/%s?api_key=%s", hostname, apiVersion, path, url.QueryEscape(apiKey))
 
 	client := http.Client{
-		Timeout: time.Second * 2,
+		Timeout: time.Second * 10,
 	}
 
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
 		log.Fatal(err)
 	}
