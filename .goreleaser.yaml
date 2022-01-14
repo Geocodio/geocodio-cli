@@ -9,6 +9,8 @@ builds:
       - linux
       - windows
       - darwin
+    ldflags:
+      - -s -w -X github.com/geocodio/geocodio-cli/release.version={{.Version}} -X github.com/geocodio/geocodio-cli/release.commit={{.Commit}} -X github.com/geocodio/geocodio-cli/release.date={{.Date}}
 archives:
   - replacements:
       darwin: Darwin

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/geocodio/geocodio-cli/create"
 	"github.com/geocodio/geocodio-cli/list"
+	"github.com/geocodio/geocodio-cli/release"
 	"github.com/geocodio/geocodio-cli/remove"
 	"github.com/geocodio/geocodio-cli/status"
 	"github.com/urfave/cli/v2"
@@ -10,13 +11,11 @@ import (
 	"os"
 )
 
-var version string
-
 func main() {
 	app := cli.NewApp()
 	app.Name = "Geocodio"
-	app.Usage = "Geocode lists using the Geocodio API " + version
-	app.Version = version
+	app.Usage = "Geocode lists using the Geocodio API"
+	app.Version = release.Version()
 	app.EnableBashCompletion = true
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{

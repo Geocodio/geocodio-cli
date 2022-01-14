@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"fmt"
+	"github.com/geocodio/geocodio-cli/release"
 	"github.com/urfave/cli/v2"
 	"io"
 	"io/ioutil"
@@ -30,7 +31,7 @@ func Request(method string, path string, c *cli.Context) ([]byte, error) {
 		return nil, err
 	}
 
-	req.Header.Set("User-Agent", fmt.Sprintf("geocodio-cli"))
+	req.Header.Set("User-Agent", buildUserAgent())
 
 	res, getErr := client.Do(req)
 	if getErr != nil {
@@ -94,7 +95,7 @@ func Upload(file *os.File, direction string, format string, fields string, c *cl
 	}
 
 	req.Header.Add("Content-Type", writer.FormDataContentType())
-	req.Header.Set("User-Agent", fmt.Sprintf("geocodio-cli"))
+	req.Header.Set("User-Agent", buildUserAgent())
 
 	res, getErr := client.Do(req)
 	if getErr != nil {
@@ -111,4 +112,8 @@ func Upload(file *os.File, direction string, format string, fields string, c *cl
 	}
 
 	return responseBody, nil
+}
+
+func buildUserAgent() string {
+	return fmt.Sprintf("geocodio-cli v%s", release.Version())
 }
