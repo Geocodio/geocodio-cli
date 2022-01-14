@@ -1,10 +1,10 @@
 package status
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/dustin/go-humanize"
 	"github.com/geocodio/geocodio-cli/api"
+	"github.com/geocodio/geocodio-cli/output"
 	"github.com/urfave/cli/v2"
 	"net/http"
 	"strconv"
@@ -22,32 +22,42 @@ func RegisterCommand() *cli.Command {
 }
 
 func status(c *cli.Context) error {
-	hostname := c.String("hostname")
-	apiKey := c.String("apikey")
-
-	error := api.Validate(hostname, apiKey)
-	if error != nil {
-		return error
+	spreadsheetJobId, err := validateInput(c)
+	if err != nil {
+		return err
 	}
 
-	spreadsheetJobId, err := strconv.Atoi(c.Args().First())
-	if err != nil || spreadsheetJobId <= 0 {
-		return cli.Exit("Invalid spreadsheet job id specified", 1)
+	body, err := api.Request(http.MethodGet, fmt.Sprintf("lists/%d", spreadsheetJobId), c)
+	if err != nil {
+		return output.ErrorAndExit(err)
 	}
-
-	body := api.Request(http.MethodGet, fmt.Sprintf("lists/%d", spreadsheetJobId), hostname, apiKey)
 
 	job := api.SpreadsheetJob{}
-	jsonErr := json.Unmarshal(body, &job)
-	if jsonErr != nil {
-		return cli.Exit("Could not parse JSON from the Geocodio API", 1)
+	if err = api.ParseJson(body, &job); err != nil {
+		return err
 	}
 
-	if job.Id == 0 {
-		return cli.Exit("No spreadsheet job with that id found. Make sure that the id is correct and that you are using the expected API key", 1)
+	if err := validateResponse(job); err != nil {
+		return err
 	}
 
 	outputJob(job)
+
+	return nil
+}
+
+func validateInput(c *cli.Context) (int, error) {
+	spreadsheetJobId, err := strconv.Atoi(c.Args().First())
+	if err != nil || spreadsheetJobId <= 0 {
+		return 0, output.ErrorStringAndExit("Invalid spreadsheet job id specified")
+	}
+	return spreadsheetJobId, nil
+}
+
+func validateResponse(job api.SpreadsheetJob) error {
+	if job.Id == 0 {
+		return output.ErrorStringAndExit("No spreadsheet job with that id found. Make sure that the id is correct and that you are using the intended API key")
+	}
 
 	return nil
 }

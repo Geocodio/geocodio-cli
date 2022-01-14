@@ -3,6 +3,7 @@
 Command line application to create and manage spreadsheet uploads on Geocodio
 
 ## Usage
+
 ```
 $ ./geocodio 
 NAME:

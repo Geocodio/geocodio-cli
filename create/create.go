@@ -1,12 +1,13 @@
 package create
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/dustin/go-humanize"
 	"github.com/geocodio/geocodio-cli/api"
+	"github.com/geocodio/geocodio-cli/output"
 	"github.com/urfave/cli/v2"
 	"os"
+	"strings"
 )
 
 func RegisterCommand() *cli.Command {
@@ -18,9 +19,13 @@ func RegisterCommand() *cli.Command {
 	command.UsageText = "filename format"
 	command.Flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:    "direction",
+			Name:  "direction",
 			Value: "forward",
-			Usage:   "Direction can either be \"forward\" (address to coordinate) or \"reverse\" (coordinate to address)",
+			Usage: "Direction can either be \"forward\" (address to coordinate) or \"reverse\" (coordinate to address)",
+		},
+		&cli.StringFlag{
+			Name:  "fields",
+			Usage: "A comma-separated list of fields to append to the geocoding job. Read more here https://www.geocod.io/docs/#fields",
 		},
 	}
 
@@ -28,54 +33,25 @@ func RegisterCommand() *cli.Command {
 }
 
 func geocode(c *cli.Context) error {
-	hostname := c.String("hostname")
-	apiKey := c.String("apikey")
-
-	error := api.Validate(hostname, apiKey)
-	if error != nil {
-		cli.ShowAppHelp(c)
-		return error
-	}
-
-	direction := c.String("direction")
-	if direction != "forward" && direction != "reverse" {
-		cli.ShowAppHelp(c)
-		return cli.Exit("Please specify a valid direction. Valid values are \"forward\" or \"reverse\"", 1)
-	}
-
-	filename := c.Args().Get(0)
-	format := c.Args().Get(1)
-
-	if len(filename) <= 0 {
-		cli.ShowAppHelp(c)
-		return cli.Exit("Please specify a filename to geocode", 1)
-	}
-
-	if len(format) <= 0 {
-		cli.ShowAppHelp(c)
-		return cli.Exit("Please specify a geocoding format", 1)
-	}
-
-	file, err := os.Open(filename)
-
+	direction, format, file, err := validateInput(c)
 	if err != nil {
-		cli.ShowAppHelp(c)
-		return cli.Exit(fmt.Sprintf("Could not open %s", filename), 1)
+		return err
 	}
-	defer file.Close()
 
-	body := api.Upload(file, direction, format, hostname, apiKey)
+	fields := c.String("fields")
 
-	fmt.Println(string(body))
+	body, err := api.Upload(file, direction, format, fields, c)
+	if err != nil {
+		return cli.Exit(err, 1)
+	}
 
 	job := api.SpreadsheetJob{}
-	jsonErr := json.Unmarshal(body, &job)
-	if jsonErr != nil {
-		return cli.Exit("Could not parse JSON from the Geocodio API", 1)
+	if err = api.ParseJson(body, &job); err != nil {
+		return err
 	}
 
-	if job.Message != "" {
-		return cli.Exit(job.Message, 1)
+	if err := validateResponse(job); err != nil {
+		return err
 	}
 
 	outputJob(job)
@@ -83,9 +59,43 @@ func geocode(c *cli.Context) error {
 	return nil
 }
 
+func validateInput(c *cli.Context) (string, string, *os.File, error) {
+	direction := c.String("direction")
+	if direction != "forward" && direction != "reverse" {
+		return "", "", nil, output.ErrorStringAndExit("Please specify a valid direction. Valid values are \"forward\" or \"reverse\"")
+	}
+
+	filename := c.Args().Get(0)
+	format := c.Args().Get(1)
+
+	if len(filename) <= 0 {
+		return "", "", nil, output.ErrorStringAndExit("Please specify a file to geocode")
+	}
+
+	if len(format) <= 0 || !strings.Contains(format, "{{") {
+		return "", "", nil, output.ErrorStringAndExit("Please specify a geocoding format. The format is used to tell the geocoder which spreadsheet columns to use for geocoding. Read more here https://www.geocod.io/docs/#format-syntax")
+	}
+
+	file, err := os.Open(filename)
+
+	if err != nil {
+		return "", "", nil, output.ErrorStringAndExit(fmt.Sprintf("Could not open %s", filename))
+	}
+	defer file.Close()
+
+	return direction, format, file, nil
+}
+
+func validateResponse(job api.SpreadsheetJob) error {
+	if job.Message != "" {
+		return output.ErrorStringAndExit(job.Message)
+	}
+
+	return nil
+}
 
 func outputJob(job api.SpreadsheetJob) {
-	fmt.Println("Spreadsheet job created")
+	output.Success("Spreadsheet job created")
 	fmt.Println("--------------------------")
 
 	fmt.Println("Id:")

@@ -1,10 +1,10 @@
 package list
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/dustin/go-humanize"
 	"github.com/geocodio/geocodio-cli/api"
+	"github.com/geocodio/geocodio-cli/output"
 	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli/v2"
 	"net/http"
@@ -12,16 +12,16 @@ import (
 )
 
 type ListsResult struct {
-	CurrentPage  int              `json:"current_page"`
-	FirstPageUrl string           `json:"first_page_url,omitempty"`
-	From         int              `json:"from"`
-	NextPageUrl  string           `json:"next_page_url,omitempty"`
-	Path         string           `json:"path"`
-	PerPage      int              `json:"per_page"`
-	PrevPageUrl  string           `json:"prev_page_url,omitempty"`
-	To           int              `json:"to"`
+	CurrentPage  int                  `json:"current_page"`
+	FirstPageUrl string               `json:"first_page_url,omitempty"`
+	From         int                  `json:"from"`
+	NextPageUrl  string               `json:"next_page_url,omitempty"`
+	Path         string               `json:"path"`
+	PerPage      int                  `json:"per_page"`
+	PrevPageUrl  string               `json:"prev_page_url,omitempty"`
+	To           int                  `json:"to"`
 	Jobs         []api.SpreadsheetJob `json:"data"`
-	Error        string           `json:"error,omitempty"`
+	Error        string               `json:"error,omitempty"`
 }
 
 func RegisterCommand() *cli.Command {
@@ -35,26 +35,28 @@ func RegisterCommand() *cli.Command {
 }
 
 func list(c *cli.Context) error {
-	hostname := c.String("hostname")
-	apiKey := c.String("apikey")
-
-	error := api.Validate(hostname, apiKey)
-	if error != nil {
-		return error
+	body, err := api.Request(http.MethodGet, "lists", c)
+	if err != nil {
+		return output.ErrorAndExit(err)
 	}
-
-	body := api.Request(http.MethodGet, "lists", hostname, apiKey)
 
 	listResults := ListsResult{}
-	jsonErr := json.Unmarshal(body, &listResults)
-	if jsonErr != nil {
-		return cli.Exit("Could not parse JSON from the Geocodio API", 1)
+	if err = api.ParseJson(body, &listResults); err != nil {
+		return err
 	}
 
-	var data [][]string
+	if err := outputResults(listResults); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func outputResults(listResults ListsResult) error {
+	var rows [][]string
 
 	if len(listResults.Jobs) <= 0 {
-		return cli.Exit("No previous spreadsheet jobs found", 1)
+		return output.WarningAndExit("No previous spreadsheet jobs found")
 	}
 
 	for _, job := range listResults.Jobs {
@@ -68,13 +70,13 @@ func list(c *cli.Context) error {
 			job.Status.TimeLeftDescription,
 			job.ExpiresAt.Format("Mon Jan _2 15:04:05 2006"),
 		}
-		data = append(data, row)
+		rows = append(rows, row)
 	}
 
 	table := tablewriter.NewWriter(os.Stdout)
 	table.SetHeader([]string{"Id", "Filename", "Rows", "State", "Progress", "Message", "Time left", "Expires"})
 
-	for _, v := range data {
+	for _, v := range rows {
 		table.Append(v)
 	}
 	table.Render()
