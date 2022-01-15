@@ -3,8 +3,9 @@ package output
 import (
 	"fmt"
 	"github.com/fatih/color"
+	"io"
 )
 
-func Success(message string) {
-	fmt.Println(color.GreenString("✅ Success:") + " " + message)
+func Success(w io.Writer, message string) {
+	fmt.Fprintln(w, color.GreenString("✅ Success:") + " " + message)
 }

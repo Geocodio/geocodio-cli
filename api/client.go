@@ -17,7 +17,7 @@ import (
 
 var apiVersion string = "v1.7"
 
-func Request(method string, path string, c *cli.Context) ([]byte, error) {
+func Request(method string, path string, c *cli.Context) ([]byte, bool, error) {
 	hostname := c.String("hostname")
 	apiKey := c.String("apikey")
 	url := fmt.Sprintf("https://%s/%s/%s?api_key=%s", hostname, apiVersion, path, url.QueryEscape(apiKey))
@@ -28,26 +28,28 @@ func Request(method string, path string, c *cli.Context) ([]byte, error) {
 
 	req, err := http.NewRequest(method, url, nil)
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
 	req.Header.Set("User-Agent", buildUserAgent())
 
 	res, getErr := client.Do(req)
 	if getErr != nil {
-		return nil, getErr
+		return nil, false, getErr
 	}
 
 	if res.Body != nil {
 		defer res.Body.Close()
 	}
 
+	isJson := res.Header.Get("Content-Type") == "application/json"
+
 	body, readErr := ioutil.ReadAll(res.Body)
 	if readErr != nil {
-		return nil, readErr
+		return nil, isJson, readErr
 	}
 
-	return body, nil
+	return body, isJson, nil
 }
 
 func Upload(file *os.File, direction string, format string, fields string, c *cli.Context) ([]byte, error) {

@@ -5,8 +5,8 @@ import (
 	"github.com/geocodio/geocodio-cli/api"
 	"github.com/geocodio/geocodio-cli/output"
 	"github.com/urfave/cli/v2"
+	"io"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -28,12 +28,12 @@ type DeleteResponse struct {
 }
 
 func remove(c *cli.Context) error {
-	spreadsheetJobId, err := validateInput(c)
+	spreadsheetJobId, err := api.ValidateSpreadsheetJobId(c)
 	if err != nil {
 		return err
 	}
 
-	body, err := api.Request(http.MethodDelete, fmt.Sprintf("lists/%d", spreadsheetJobId), c)
+	body, _, err := api.Request(http.MethodDelete, fmt.Sprintf("lists/%d", spreadsheetJobId), c)
 	if err != nil {
 		return output.ErrorAndExit(err)
 	}
@@ -43,14 +43,14 @@ func remove(c *cli.Context) error {
 		return err
 	}
 
-	if err := outputOutcome(response); err != nil {
+	if err := outputOutcome(c.App.Writer, response); err != nil {
 		return nil
 	}
 
 	return nil
 }
 
-func outputOutcome(response DeleteResponse) error {
+func outputOutcome(w io.Writer, response DeleteResponse) error {
 	message := response.Message
 
 	if response.Success {
@@ -58,7 +58,7 @@ func outputOutcome(response DeleteResponse) error {
 			message = "Spreadsheet job was successfully deleted"
 		}
 
-		output.Success(message)
+		output.Success(w, message)
 
 		return nil
 	} else {
@@ -70,12 +70,4 @@ func outputOutcome(response DeleteResponse) error {
 
 		return output.ErrorStringAndExit(message)
 	}
-}
-
-func validateInput(c *cli.Context) (int, error) {
-	spreadsheetJobId, err := strconv.Atoi(c.Args().First())
-	if err != nil || spreadsheetJobId <= 0 {
-		return 0, output.ErrorStringAndExit("Invalid spreadsheet job id specified")
-	}
-	return spreadsheetJobId, nil
 }

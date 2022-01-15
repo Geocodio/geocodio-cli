@@ -1,4 +1,4 @@
-project_name: geocodio-cli
+project_name: geocodio
 before:
   hooks:
     - go mod tidy

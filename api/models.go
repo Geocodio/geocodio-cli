@@ -3,8 +3,9 @@ package api
 import "time"
 
 type FileItem struct {
-	EstimatedRowsCount int    `json:"estimated_rows_count"`
-	Filename           string `json:"filename"`
+	EstimatedRowsCount int      `json:"estimated_rows_count"`
+	Filename           string   `json:"filename"`
+	Headers            []string `json:"headers,omitempty"`
 }
 
 type StatusItem struct {
@@ -23,4 +24,5 @@ type SpreadsheetJob struct {
 	DownloadUrl string     `json:"download_url"`
 	ExpiresAt   time.Time  `json:"expires_at"`
 	Message     string     `json:"message,omitempty"`
+	Error       string     `json:"error,omitempty"`
 }

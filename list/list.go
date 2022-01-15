@@ -7,8 +7,8 @@ import (
 	"github.com/geocodio/geocodio-cli/output"
 	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli/v2"
+	"io"
 	"net/http"
-	"os"
 )
 
 type ListsResult struct {
@@ -35,7 +35,7 @@ func RegisterCommand() *cli.Command {
 }
 
 func list(c *cli.Context) error {
-	body, err := api.Request(http.MethodGet, "lists", c)
+	body, _, err := api.Request(http.MethodGet, "lists", c)
 	if err != nil {
 		return output.ErrorAndExit(err)
 	}
@@ -45,14 +45,14 @@ func list(c *cli.Context) error {
 		return err
 	}
 
-	if err := outputResults(listResults); err != nil {
+	if err := outputResults(c.App.Writer, listResults); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func outputResults(listResults ListsResult) error {
+func outputResults(w io.Writer, listResults ListsResult) error {
 	var rows [][]string
 
 	if len(listResults.Jobs) <= 0 {
@@ -68,12 +68,12 @@ func outputResults(listResults ListsResult) error {
 			fmt.Sprintf("%.0f%%", job.Status.Progress),
 			job.Status.Message,
 			job.Status.TimeLeftDescription,
-			job.ExpiresAt.Format("Mon Jan _2 15:04:05 2006"),
+			job.ExpiresAt.Format("Jan _2 15:04:05 2006"),
 		}
 		rows = append(rows, row)
 	}
 
-	table := tablewriter.NewWriter(os.Stdout)
+	table := tablewriter.NewWriter(w)
 	table.SetHeader([]string{"Id", "Filename", "Rows", "State", "Progress", "Message", "Time left", "Expires"})
 
 	for _, v := range rows {

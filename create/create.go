@@ -6,6 +6,7 @@ import (
 	"github.com/geocodio/geocodio-cli/api"
 	"github.com/geocodio/geocodio-cli/output"
 	"github.com/urfave/cli/v2"
+	"io"
 	"os"
 	"strings"
 )
@@ -34,6 +35,8 @@ func RegisterCommand() *cli.Command {
 
 func geocode(c *cli.Context) error {
 	direction, format, file, err := validateInput(c)
+	defer file.Close()
+
 	if err != nil {
 		return err
 	}
@@ -54,7 +57,7 @@ func geocode(c *cli.Context) error {
 		return err
 	}
 
-	outputJob(job)
+	outputJob(c.App.Writer, job)
 
 	return nil
 }
@@ -81,7 +84,6 @@ func validateInput(c *cli.Context) (string, string, *os.File, error) {
 	if err != nil {
 		return "", "", nil, output.ErrorStringAndExit(fmt.Sprintf("Could not open %s", filename))
 	}
-	defer file.Close()
 
 	return direction, format, file, nil
 }
@@ -91,38 +93,23 @@ func validateResponse(job api.SpreadsheetJob) error {
 		return output.ErrorStringAndExit(job.Message)
 	}
 
+	if job.Error != "" {
+		return output.ErrorStringAndExit(job.Error)
+	}
+
 	return nil
 }
 
-func outputJob(job api.SpreadsheetJob) {
-	output.Success("Spreadsheet job created")
-	fmt.Println("--------------------------")
+func outputJob(w io.Writer, job api.SpreadsheetJob) {
+	output.Success(w, "Spreadsheet job created")
+	fmt.Fprint(w, "\n")
 
-	fmt.Println("Id:")
-	fmt.Printf("\t%d\n\n", job.Id)
+	fmt.Fprintf(w, "Id: %d\n", job.Id)
+	fmt.Fprintf(w, "Filename: %s\n", job.File.Filename)
+	fmt.Fprintf(w, "Headers: %s\n", strings.Join(job.File.Headers, " | "))
+	fmt.Fprintf(w, "Rows: %s\n", humanize.Comma(int64(job.File.EstimatedRowsCount)))
 
-	fmt.Println("Filename:")
-	fmt.Printf("\t%s\n\n", job.File.Filename)
 
-	fmt.Println("Rows:")
-	fmt.Printf("\t%s\n\n", humanize.Comma(int64(job.File.EstimatedRowsCount)))
-
-	fmt.Println("State:")
-	fmt.Printf("\t%s\n\n", job.Status.State)
-
-	fmt.Println("Progress:")
-	fmt.Printf("\t%.0f%%\n\n", job.Status.Progress)
-
-	fmt.Println("Message:")
-	fmt.Printf("\t%s\n\n", job.Status.Message)
-
-	fmt.Println("Time left:")
-	timeLeft := job.Status.TimeLeftDescription
-	if len(timeLeft) <= 0 {
-		timeLeft = "-"
-	}
-	fmt.Printf("\t%s\n\n", timeLeft)
-
-	fmt.Println("Expires:")
-	fmt.Printf("\t%s\n\n", job.ExpiresAt.Format("Mon Jan _2 15:04:05 2006"))
+	fmt.Fprint(w, "\n\tTo see job status\n")
+	fmt.Fprintf(w, "\t$ %s status %d", os.Args[0], job.Id)
 }

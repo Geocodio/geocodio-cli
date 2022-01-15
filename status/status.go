@@ -6,8 +6,10 @@ import (
 	"github.com/geocodio/geocodio-cli/api"
 	"github.com/geocodio/geocodio-cli/output"
 	"github.com/urfave/cli/v2"
+	"io"
 	"net/http"
-	"strconv"
+	"os"
+	"strings"
 )
 
 func RegisterCommand() *cli.Command {
@@ -22,12 +24,12 @@ func RegisterCommand() *cli.Command {
 }
 
 func status(c *cli.Context) error {
-	spreadsheetJobId, err := validateInput(c)
+	spreadsheetJobId, err := api.ValidateSpreadsheetJobId(c)
 	if err != nil {
 		return err
 	}
 
-	body, err := api.Request(http.MethodGet, fmt.Sprintf("lists/%d", spreadsheetJobId), c)
+	body, _, err := api.Request(http.MethodGet, fmt.Sprintf("lists/%d", spreadsheetJobId), c)
 	if err != nil {
 		return output.ErrorAndExit(err)
 	}
@@ -41,17 +43,9 @@ func status(c *cli.Context) error {
 		return err
 	}
 
-	outputJob(job)
+	outputJob(c.App.Writer, job)
 
 	return nil
-}
-
-func validateInput(c *cli.Context) (int, error) {
-	spreadsheetJobId, err := strconv.Atoi(c.Args().First())
-	if err != nil || spreadsheetJobId <= 0 {
-		return 0, output.ErrorStringAndExit("Invalid spreadsheet job id specified")
-	}
-	return spreadsheetJobId, nil
 }
 
 func validateResponse(job api.SpreadsheetJob) error {
@@ -62,32 +56,27 @@ func validateResponse(job api.SpreadsheetJob) error {
 	return nil
 }
 
-func outputJob(job api.SpreadsheetJob) {
-	fmt.Println("Id:")
-	fmt.Printf("\t%d\n\n", job.Id)
+func outputJob(w io.Writer, job api.SpreadsheetJob) {
+	fmt.Fprintf(w, "Id: %d\n", job.Id)
+	fmt.Fprintf(w, "Filename: %s\n", job.File.Filename)
+	fmt.Fprintf(w, "Fields: %s\n", strings.Join(job.Fields, ","))
+	fmt.Fprintf(w, "Rows: %s\n", humanize.Comma(int64(job.File.EstimatedRowsCount)))
+	fmt.Fprintf(w, "State: %s\n", job.Status.State)
+	fmt.Fprintf(w, "Progress: %.0f%%\n", job.Status.Progress)
+	fmt.Fprintf(w, "Message: %s\n", job.Status.Message)
 
-	fmt.Println("Filename:")
-	fmt.Printf("\t%s\n\n", job.File.Filename)
-
-	fmt.Println("Rows:")
-	fmt.Printf("\t%s\n\n", humanize.Comma(int64(job.File.EstimatedRowsCount)))
-
-	fmt.Println("State:")
-	fmt.Printf("\t%s\n\n", job.Status.State)
-
-	fmt.Println("Progress:")
-	fmt.Printf("\t%.0f%%\n\n", job.Status.Progress)
-
-	fmt.Println("Message:")
-	fmt.Printf("\t%s\n\n", job.Status.Message)
-
-	fmt.Println("Time left:")
 	timeLeft := job.Status.TimeLeftDescription
 	if len(timeLeft) <= 0 {
 		timeLeft = "-"
 	}
-	fmt.Printf("\t%s\n\n", timeLeft)
+	fmt.Fprintf(w, "Time left: %s\n", timeLeft)
 
-	fmt.Println("Expires:")
-	fmt.Printf("\t%s\n\n", job.ExpiresAt.Format("Mon Jan _2 15:04:05 2006"))
+	fmt.Fprintf(w, "Expires: %s\n", job.ExpiresAt.Format("Jan _2 15:04:05 2006"))
+
+	if job.Status.State == "COMPLETED" && len(job.DownloadUrl) > 0 {
+		fmt.Fprintf(w, "Download URL: %s\n", job.DownloadUrl)
+
+		fmt.Fprint(w, "\n\tTo download geocoded file\n")
+		fmt.Fprintf(w, "\t$ %s download %d", os.Args[0], job.Id)
+	}
 }
