@@ -2,6 +2,10 @@
 
 Command line application to create and manage spreadsheet uploads on Geocodio
 
+## Download
+
+Download our [latest release](https://github.com/Geocodio/geocodio-cli/releases), or compile from source using `go get github.com/geocodio/geocodio-cli`
+
 ## Usage
 
 ```
@@ -13,7 +17,7 @@ USAGE:
    geocodio [global options] command [command options] [arguments...]
 
 VERSION:
-   dev
+   0.2.2
 
 COMMANDS:
    create      Geocode a new spreadsheet
@@ -25,7 +29,7 @@ COMMANDS:
 
 GLOBAL OPTIONS:
    --hostname value, -n value  Geocodio hostname to use, change this for Geocodio+HIPAA or on-premise environments (default: "api.geocod.io") [$GEOCODIO_HOSTNAME]
-   --apikey value, -k value    Geocodio API Key to use. Generate a new one in the Geocodio Dashboard (default: "84a871a4ed113cc616ae328ae731a371c6dad14") [$GEOCODIO_API_KEY]
+   --apikey value, -k value    Geocodio API Key to use. Generate a new one in the Geocodio Dashboard [$GEOCODIO_API_KEY]
    --help, -h                  show help (default: false)
    --version, -v               print the version (default: false)
 ```
