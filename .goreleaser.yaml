@@ -2,7 +2,6 @@ project_name: geocodio
 before:
   hooks:
     - go mod tidy
-    - go test -cover -race ./...
 builds:
   - env:
       - CGO_ENABLED=0
