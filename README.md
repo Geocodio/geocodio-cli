@@ -4,7 +4,7 @@ Command line application to create and manage spreadsheet uploads on Geocodio
 
 ## Download
 
-Download our [latest release](https://github.com/Geocodio/geocodio-cli/releases), or compile from source using `go get github.com/geocodio/geocodio-cli`
+Download our [latest release](https://github.com/Geocodio/geocodio-cli/releases), or use `go install github.com/geocodio/geocodio-cli@latest`
 
 ## Usage
 
