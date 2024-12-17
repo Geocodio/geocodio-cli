@@ -17,7 +17,7 @@ USAGE:
    geocodio [global options] command [command options] [arguments...]
 
 VERSION:
-   0.2.2
+   1.0.0
 
 COMMANDS:
    create      Geocode a new spreadsheet
