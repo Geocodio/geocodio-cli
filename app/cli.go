@@ -21,7 +21,7 @@ func BuildApp() *cli.App {
 			Name:    "hostname",
 			Aliases: []string{"n"},
 			Value:   "api.geocod.io",
-			Usage:   "Geocodio hostname to use, change this for Geocodio Enterprise or on-premise environments",
+			Usage:   "Geocodio hostname to use, change this for Geocodio Enterprise",
 			EnvVars: []string{"GEOCODIO_HOSTNAME"},
 		},
 		&cli.StringFlag{
