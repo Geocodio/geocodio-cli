@@ -74,7 +74,7 @@ func outputResults(w io.Writer, listResults ListsResult) error {
 	}
 
 	table := tablewriter.NewWriter(w)
-	table.SetHeader([]string{"Id", "Filename", "Rows", "State", "Progress", "Message", "Time left", "Expires"})
+	table.Header("Id", "Filename", "Rows", "State", "Progress", "Message", "Time left", "Expires")
 
 	for _, v := range rows {
 		table.Append(v)

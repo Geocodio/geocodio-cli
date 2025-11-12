@@ -43,7 +43,7 @@ func download(c *cli.Context) error {
 
 		return output.ErrorStringAndExit(job.Message)
 	} else {
-		fmt.Fprintf(c.App.Writer, string(body))
+		fmt.Fprintf(c.App.Writer, "%s", string(body))
 	}
 
 	return nil
