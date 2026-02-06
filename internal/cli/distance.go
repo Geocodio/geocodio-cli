@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
 
@@ -110,7 +112,12 @@ func distanceMatrixAction(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("destinations file is empty")
 	}
 
-	resp, err := app.client.DistanceMatrix(ctx, origins, destinations, cmd.String("mode"), cmd.String("units"))
+	mode := cmd.String("mode")
+	units := cmd.String("units")
+
+	resp, err := ui.WithSpinner(app.stderr, "Calculating distance matrix...", func() (*api.DistanceMatrixResponse, error) {
+		return app.client.DistanceMatrix(ctx, origins, destinations, mode, units)
+	})
 	if err != nil {
 		return err
 	}

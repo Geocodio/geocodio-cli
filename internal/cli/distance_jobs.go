@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
 
@@ -212,7 +213,9 @@ func distanceJobsDownloadAction(ctx context.Context, cmd *cli.Command) error {
 
 	identifier := cmd.Args().First()
 
-	data, err := app.client.DownloadDistanceJob(ctx, identifier)
+	data, err := ui.WithSpinner(app.stderr, "Downloading results...", func() ([]byte, error) {
+		return app.client.DownloadDistanceJob(ctx, identifier)
+	})
 	if err != nil {
 		return err
 	}
@@ -258,17 +261,25 @@ func distanceJobsDeleteAction(ctx context.Context, cmd *cli.Command) error {
 }
 
 func watchDistanceJob(ctx context.Context, app *App, identifier string) error {
+	display := ui.NewWatchDisplay(app.stderr)
+
 	fmt.Fprintln(app.stderr, "\nWatching job progress...")
 
 	resp, err := app.client.PollDistanceJob(ctx, identifier, func(job *api.DistanceJobResponse) {
-		if job.Data != nil {
-			fmt.Fprintf(app.stderr, "\rStatus: %s, Progress: %d%%", job.Data.Status, job.Data.Progress)
+		if job.Data == nil {
+			return
 		}
+		display.Update(ui.WatchUpdate{
+			Progress: float64(job.Data.Progress),
+			Status:   job.Data.Status,
+		})
 	})
+
+	display.Done()
+
 	if err != nil {
 		return err
 	}
 
-	fmt.Fprintln(app.stderr)
 	return app.formatter.FormatDistanceJob(resp)
 }

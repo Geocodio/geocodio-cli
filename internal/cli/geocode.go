@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
 
@@ -103,7 +104,9 @@ func geocodeBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 		req.Fields = strings.Split(fields, ",")
 	}
 
-	resp, err := app.client.BatchGeocode(ctx, req)
+	resp, err := ui.WithSpinner(app.stderr, "Geocoding addresses...", func() (*api.BatchGeocodeResponse, error) {
+		return app.client.BatchGeocode(ctx, req)
+	})
 	if err != nil {
 		return err
 	}

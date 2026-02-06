@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
 
@@ -201,7 +202,9 @@ func listsDownloadAction(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("invalid list ID: %w", err)
 	}
 
-	data, err := app.client.DownloadList(ctx, id)
+	data, err := ui.WithSpinner(app.stderr, "Downloading results...", func() ([]byte, error) {
+		return app.client.DownloadList(ctx, id)
+	})
 	if err != nil {
 		return err
 	}
@@ -250,15 +253,24 @@ func listsDeleteAction(ctx context.Context, cmd *cli.Command) error {
 }
 
 func watchList(ctx context.Context, app *App, id int) error {
+	display := ui.NewWatchDisplay(app.stderr)
+
 	resp, err := app.client.PollList(ctx, id, func(list *api.ListResponse) {
-		if list.Status != nil {
-			fmt.Fprintf(app.stderr, "\rStatus: %s, Progress: %.1f%%", list.Status.State, list.Status.Progress)
+		if list.Status == nil {
+			return
 		}
+		display.Update(ui.WatchUpdate{
+			Progress: list.Status.Progress,
+			Status:   list.Status.State,
+			TimeLeft: list.Status.TimeLeftDescription,
+		})
 	})
+
+	display.Done()
+
 	if err != nil {
 		return err
 	}
 
-	fmt.Fprintln(app.stderr)
 	return app.formatter.FormatList(resp)
 }

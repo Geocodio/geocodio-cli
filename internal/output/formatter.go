@@ -6,6 +6,19 @@ import (
 	"github.com/geocodio/geocodio-cli/internal/api"
 )
 
+// OutputMode represents the output format mode.
+type OutputMode int
+
+const (
+	// OutputModeHuman is human-readable formatted output with optional styling.
+	OutputModeHuman OutputMode = iota
+	// OutputModeJSON is raw JSON output.
+	OutputModeJSON
+	// OutputModeAgent is markdown-formatted output suitable for LLM consumption.
+	OutputModeAgent
+)
+
+// Formatter defines the interface for formatting API responses.
 type Formatter interface {
 	FormatGeocode(resp *api.GeocodeResponse) error
 	FormatBatchGeocode(resp *api.BatchGeocodeResponse) error
@@ -19,9 +32,14 @@ type Formatter interface {
 	FormatMessage(msg string) error
 }
 
-func New(w io.Writer, jsonOutput bool) Formatter {
-	if jsonOutput {
+// New creates a new Formatter based on the specified mode and styling preference.
+func New(w io.Writer, mode OutputMode, useStyles bool) Formatter {
+	switch mode {
+	case OutputModeJSON:
 		return NewJSON(w)
+	case OutputModeAgent:
+		return NewAgent(w)
+	default:
+		return NewHuman(w, useStyles)
 	}
-	return NewHuman(w)
 }

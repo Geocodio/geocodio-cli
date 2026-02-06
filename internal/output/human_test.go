@@ -49,7 +49,7 @@ func TestHuman_FormatGeocode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf)
+			h := NewHuman(&buf, false)
 
 			err := h.FormatGeocode(tt.resp)
 			if err != nil {
@@ -80,7 +80,7 @@ func TestHuman_FormatBatchGeocode(t *testing.T) {
 					{Query: "query two", Response: api.GeocodeResponse{Results: []api.GeocodeResult{{FormattedAddress: "addr2", AccuracyType: "place"}}}},
 				},
 			},
-			wantContains: []string{"Query: query one", "Query: query two", "addr1", "addr2"},
+			wantContains: []string{"Query:", "query one", "Query:", "query two", "addr1", "addr2"},
 		},
 		{
 			name: "empty response for query",
@@ -89,14 +89,14 @@ func TestHuman_FormatBatchGeocode(t *testing.T) {
 					{Query: "nowhere", Response: api.GeocodeResponse{}},
 				},
 			},
-			wantContains: []string{"Query: nowhere", "No results found"},
+			wantContains: []string{"Query:", "nowhere", "No results found"},
 		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf)
+			h := NewHuman(&buf, false)
 
 			err := h.FormatBatchGeocode(tt.resp)
 			if err != nil {
@@ -165,7 +165,7 @@ func TestHuman_FormatDistance(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf)
+			h := NewHuman(&buf, false)
 
 			err := h.FormatDistance(tt.resp)
 			if err != nil {
@@ -207,7 +207,7 @@ func TestHuman_FormatDistanceMatrix(t *testing.T) {
 					},
 				},
 			},
-			wantContains: []string{"Origin: Washington DC", "New York", "225.5 miles", "15 minutes"},
+			wantContains: []string{"Origin:", "Washington DC", "New York", "225.5 miles", "15 minutes"},
 		},
 		{
 			name:         "empty results",
@@ -219,7 +219,7 @@ func TestHuman_FormatDistanceMatrix(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf)
+			h := NewHuman(&buf, false)
 
 			err := h.FormatDistanceMatrix(tt.resp)
 			if err != nil {
@@ -238,7 +238,7 @@ func TestHuman_FormatDistanceMatrix(t *testing.T) {
 
 func TestHuman_FormatDistanceJob(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf)
+	h := NewHuman(&buf, false)
 
 	resp := &api.DistanceJobResponse{
 		Data: &api.DistanceJob{
@@ -290,7 +290,7 @@ func TestHuman_FormatDistanceJobList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf)
+			h := NewHuman(&buf, false)
 
 			err := h.FormatDistanceJobList(tt.resp)
 			if err != nil {
@@ -309,7 +309,7 @@ func TestHuman_FormatDistanceJobList(t *testing.T) {
 
 func TestHuman_FormatList(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf)
+	h := NewHuman(&buf, false)
 
 	resp := &api.ListResponse{
 		ID:   456,
@@ -365,7 +365,7 @@ func TestHuman_FormatListList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf)
+			h := NewHuman(&buf, false)
 
 			err := h.FormatListList(tt.resp)
 			if err != nil {
@@ -384,7 +384,7 @@ func TestHuman_FormatListList(t *testing.T) {
 
 func TestHuman_FormatError(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf)
+	h := NewHuman(&buf, false)
 
 	testErr := errors.New("something went wrong")
 	err := h.FormatError(testErr)
@@ -403,7 +403,7 @@ func TestHuman_FormatError(t *testing.T) {
 
 func TestHuman_FormatMessage(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf)
+	h := NewHuman(&buf, false)
 
 	err := h.FormatMessage("operation successful")
 	if err != nil {
@@ -419,15 +419,18 @@ func TestHuman_FormatMessage(t *testing.T) {
 func TestNew(t *testing.T) {
 	var buf bytes.Buffer
 
-	// Test JSON output
-	jsonFormatter := New(&buf, true)
+	jsonFormatter := New(&buf, OutputModeJSON, false)
 	if _, ok := jsonFormatter.(*JSON); !ok {
-		t.Errorf("New(_, true) returned %T, want *JSON", jsonFormatter)
+		t.Errorf("New(_, OutputModeJSON, _) returned %T, want *JSON", jsonFormatter)
 	}
 
-	// Test human output
-	humanFormatter := New(&buf, false)
+	humanFormatter := New(&buf, OutputModeHuman, false)
 	if _, ok := humanFormatter.(*Human); !ok {
-		t.Errorf("New(_, false) returned %T, want *Human", humanFormatter)
+		t.Errorf("New(_, OutputModeHuman, _) returned %T, want *Human", humanFormatter)
+	}
+
+	agentFormatter := New(&buf, OutputModeAgent, false)
+	if _, ok := agentFormatter.(*Agent); !ok {
+		t.Errorf("New(_, OutputModeAgent, _) returned %T, want *Agent", agentFormatter)
 	}
 }

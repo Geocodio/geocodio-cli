@@ -15,6 +15,7 @@ Whether you're geocoding a single address or processing thousands in batch, this
   - [Distance Matrix](#distance-matrix)
   - [Async Distance Jobs](#async-distance-jobs)
   - [Spreadsheet Processing](#spreadsheet-processing)
+- [Output Formats](#output-formats)
 - [Global Flags](#global-flags)
 - [Development](#development)
 - [Troubleshooting](#troubleshooting)
@@ -108,6 +109,8 @@ For processing many addresses at once, create a file with one address per line a
 ```bash
 geocodio geocode --batch addresses.txt
 ```
+
+When running in a terminal, you'll see a spinner while the batch processes.
 
 **JSON output:**
 
@@ -214,14 +217,16 @@ For large distance calculations, use async jobs. These run in the background and
 **Create a job:**
 
 ```bash
-geocodio distance-jobs create --origins origins.txt --destinations destinations.txt
+geocodio distance-jobs create --name "My Job" --origins origins.txt --destinations destinations.txt
 ```
 
 **Create and watch progress:**
 
 ```bash
-geocodio distance-jobs create --origins origins.txt --destinations destinations.txt --watch
+geocodio distance-jobs create --name "My Job" --origins origins.txt --destinations destinations.txt --watch
 ```
+
+When running in a terminal, you'll see an animated progress bar showing the job's completion status.
 
 **List all jobs:**
 
@@ -258,6 +263,7 @@ geocodio distance-jobs delete 12345
 
 | Flag | Alias | Required | Default | Description |
 |------|-------|----------|---------|-------------|
+| `--name` | `-n` | Yes | — | Job name for identification |
 | `--origins` | `-o` | Yes | — | File containing origin locations |
 | `--destinations` | `-d` | Yes | — | File containing destination locations |
 | `--mode` | `-m` | No | `driving` | Routing mode: `driving` or `straightline` |
@@ -335,6 +341,63 @@ geocodio lists delete 12345
 > [!WARNING]
 > Large spreadsheets can take time to process. Use the `--watch` flag or check status periodically rather than waiting for immediate results.
 
+## Output Formats
+
+The CLI supports multiple output formats to fit different workflows.
+
+### Human-Readable (Default)
+
+The default output is formatted for easy reading in your terminal. When connected to a terminal, you'll see:
+
+- **Colored output** with status indicators (green for completed, yellow for processing, red for failed)
+- **Styled labels** for better visual hierarchy
+- **Progress indicators** during batch operations and watch mode
+
+### JSON Output
+
+For scripting and programmatic use, get raw JSON with the `--json` flag:
+
+```bash
+geocodio geocode "1600 Pennsylvania Ave NW" --json
+```
+
+This returns the complete API response, perfect for piping to `jq` or processing in scripts.
+
+### Agent Output (Markdown)
+
+For AI assistants and LLMs, use the `--agent` flag to get clean markdown tables:
+
+```bash
+geocodio geocode "1600 Pennsylvania Ave NW" --agent
+```
+
+This outputs structured markdown that's easy for language models to parse:
+
+```markdown
+## Geocode Result
+
+| Field | Value |
+|-------|-------|
+| Matched Address | 1600 Pennsylvania Ave NW, Washington, DC 20500 |
+| Coordinates | 38.8976763, -77.0365298 |
+| Accuracy | rooftop (1.00) |
+```
+
+### Disabling Colors
+
+Colors are automatically disabled when output is piped or redirected. To explicitly disable colors:
+
+```bash
+# Using the flag
+geocodio geocode "1600 Pennsylvania Ave NW" --no-color
+
+# Using the environment variable
+NO_COLOR=1 geocodio geocode "1600 Pennsylvania Ave NW"
+```
+
+> [!TIP]
+> The `NO_COLOR` environment variable follows the [no-color.org](https://no-color.org) standard and works across many CLI tools.
+
 ## Global Flags
 
 These flags work with all commands:
@@ -343,6 +406,8 @@ These flags work with all commands:
 |------|-------------|
 | `--api-key` | Geocodio API key (or use `GEOCODIO_API_KEY` env var) |
 | `--json` | Output results as JSON |
+| `--agent` | Output results as markdown (for LLM consumption) |
+| `--no-color` | Disable colored output (also respects `NO_COLOR` env var) |
 | `--base-url` | Override API base URL (useful for testing or enterprise endpoints) |
 | `--debug` | Show HTTP request/response details |
 | `--version` | Show version information |
@@ -484,6 +549,14 @@ Use the `--debug` flag to see the full HTTP request and response:
 ```bash
 geocodio geocode "1600 Pennsylvania Ave" --debug
 ```
+
+### Colors Not Displaying
+
+If you're not seeing colored output:
+
+1. Make sure you're running in a terminal (not piping output)
+2. Check that `NO_COLOR` isn't set in your environment
+3. Try using `FORCE_COLOR=1` to force color output
 
 ## License
 

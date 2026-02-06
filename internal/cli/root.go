@@ -8,6 +8,7 @@ import (
 	"github.com/geocodio/geocodio-cli/internal/api"
 	"github.com/geocodio/geocodio-cli/internal/config"
 	"github.com/geocodio/geocodio-cli/internal/output"
+	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
 
@@ -39,6 +40,15 @@ func NewApp() *cli.Command {
 			&cli.BoolFlag{
 				Name:  "json",
 				Usage: "Output as JSON",
+			},
+			&cli.BoolFlag{
+				Name:  "agent",
+				Usage: "Output as markdown (for LLM consumption)",
+			},
+			&cli.BoolFlag{
+				Name:    "no-color",
+				Usage:   "Disable colored output",
+				Sources: cli.EnvVars("NO_COLOR"),
 			},
 			&cli.BoolFlag{
 				Name:  "debug",
@@ -77,7 +87,17 @@ func newApp(cmd *cli.Command) (*App, error) {
 	}
 
 	client := api.NewClient(cfg.BaseURL, cfg.APIKey, clientOpts...)
-	formatter := output.New(stdout, cmd.Bool("json"))
+
+	mode := output.OutputModeHuman
+	if cmd.Bool("json") {
+		mode = output.OutputModeJSON
+	} else if cmd.Bool("agent") {
+		mode = output.OutputModeAgent
+	}
+
+	useStyles := !cmd.Bool("no-color") && ui.ColorEnabled()
+
+	formatter := output.New(stdout, mode, useStyles)
 
 	return &App{
 		cfg:       cfg,

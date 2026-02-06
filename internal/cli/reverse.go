@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
 
@@ -110,7 +111,9 @@ func reverseBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 		req.Fields = strings.Split(fields, ",")
 	}
 
-	resp, err := app.client.BatchReverseGeocode(ctx, req)
+	resp, err := ui.WithSpinner(app.stderr, "Reverse geocoding coordinates...", func() (*api.BatchReverseGeocodeResponse, error) {
+		return app.client.BatchReverseGeocode(ctx, req)
+	})
 	if err != nil {
 		return err
 	}
