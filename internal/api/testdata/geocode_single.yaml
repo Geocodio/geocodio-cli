@@ -1,0 +1,69 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        form:
+            q:
+                - 1600 Pennsylvania Ave NW, Washington DC
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/geocode?api_key=REDACTED&q=1600+Pennsylvania+Ave+NW%2C+Washington+DC
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"input":{"address_components":{"number":"1600","street":"Pennsylvania","suffix":"Ave","postdirectional":"NW","formatted_street":"Pennsylvania Ave NW","city":"Washington","state":"DC","country":"US"},"formatted_address":"1600 Pennsylvania Ave NW, Washington, DC"},"results":[{"address_components":{"number":"1600","street":"Pennsylvania","suffix":"Ave","postdirectional":"NW","formatted_street":"Pennsylvania Ave NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20500","country":"US"},"address_lines":["1600 Pennsylvania Ave NW","","Washington, DC 20500"],"formatted_address":"1600 Pennsylvania Ave NW, Washington, DC 20500","location":{"lat":38.897675,"lng":-77.036547},"accuracy":1,"accuracy_type":"rooftop","source":"Statewide (City of Washington)"}]}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:32:40 GMT
+            Request-Handler:
+                - api306
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Billable-Fields-Count:
+                - "0"
+            X-Billable-Lookups-Count:
+                - "1"
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "999"
+            X-Request-Id:
+                - A2EFFF91:FC47_05A11518:01BB_698641D8_23445B6:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 419.982417ms

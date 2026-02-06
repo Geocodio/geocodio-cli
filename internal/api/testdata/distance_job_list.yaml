@@ -1,0 +1,62 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/distance-jobs?api_key=REDACTED
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"data":[{"identifier":"cdeb73e42e3eaf327f401f63ab5acbc4a7868b07","name":"test job","created_at":"2026-02-06T19:37:04.000000Z","origins_type":"addresses","origins_count":1,"destinations_type":"addresses","destinations_count":1,"distance_mode":"driving","status":"PROCESSING","download_url":null,"total_calculations":1,"calculations_completed":0,"progress":0,"status_message":"Initializing","time_left":"Estimating time to complete","is_expired":false},{"identifier":"1b6d3f4e26071c98fb7cbc041307e2745f390480","name":"test job","created_at":"2026-02-06T19:18:57.000000Z","origins_type":"addresses","origins_count":2,"destinations_type":"addresses","destinations_count":2,"distance_mode":"driving","status":"COMPLETED","download_url":"https:\/\/api.geocod.io\/v1.9\/distance-jobs\/1b6d3f4e26071c98fb7cbc041307e2745f390480\/download","total_calculations":4,"calculations_completed":4,"progress":100,"status_message":"Completed","time_left":null,"is_expired":false}],"links":{"first":"https:\/\/api.geocod.io\/v1.9\/distance-jobs?page=1","last":"https:\/\/api.geocod.io\/v1.9\/distance-jobs?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","active":false},{"url":"https:\/\/api.geocod.io\/v1.9\/distance-jobs?page=1","label":"1","active":true},{"url":null,"label":"Next &raquo;","active":false}],"path":"https:\/\/api.geocod.io\/v1.9\/distance-jobs","per_page":20,"to":2,"total":2}}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:37:04 GMT
+            Request-Handler:
+                - api306
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "998"
+            X-Request-Id:
+                - A2EFFF91:C079_05A11518:01BB_698642DF_2357CA4:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 267.440209ms

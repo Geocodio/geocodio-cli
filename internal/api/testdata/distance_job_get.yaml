@@ -1,0 +1,123 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 83
+        host: api.geocod.io
+        body: '{"destinations":["New York"],"name":"test job for get","origins":["Washington DC"]}'
+        headers:
+            Accept:
+                - application/json
+            Content-Type:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/distance-jobs?api_key=REDACTED
+        method: POST
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        body: '{"id":20,"identifier":"427d511e5b5dca632ac0ac10dfc883a8b6c3bc2a","status":"ENQUEUED","name":"test job for get","created_at":"2026-02-06T19:37:05.000000Z","origins_count":1,"destinations_count":1,"total_calculations":1}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:37:05 GMT
+            Request-Handler:
+                - api303
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "997"
+            X-Request-Id:
+                - A2EFFF91:C079_05A11518:01BB_698642E0_2357D37:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 201 Created
+        code: 201
+        duration: 291.68375ms
+    - id: 1
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/distance-jobs/427d511e5b5dca632ac0ac10dfc883a8b6c3bc2a?api_key=REDACTED
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"data":{"identifier":"427d511e5b5dca632ac0ac10dfc883a8b6c3bc2a","name":"test job for get","created_at":"2026-02-06T19:37:05.000000Z","origins_type":"addresses","origins_count":1,"destinations_type":"addresses","destinations_count":1,"distance_mode":"straightline","status":"PROCESSING","download_url":null,"total_calculations":1,"calculations_completed":0,"progress":0,"status_message":"Initializing","time_left":"Estimating time to complete","is_expired":false}}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:37:05 GMT
+            Request-Handler:
+                - api277
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "996"
+            X-Request-Id:
+                - A2EFFF91:C079_05A11518:01BB_698642E1_2357DF9:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 252.876125ms

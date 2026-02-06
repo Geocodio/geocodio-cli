@@ -1,0 +1,71 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        form:
+            limit:
+                - "1"
+            q:
+                - 1109 N Highland St, Arlington VA
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/geocode?api_key=REDACTED&limit=1&q=1109+N+Highland+St%2C+Arlington+VA
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"input":{"address_components":{"number":"1109","predirectional":"N","street":"Highland","suffix":"St","formatted_street":"N Highland St","city":"Arlington","state":"VA","country":"US"},"formatted_address":"1109 N Highland St, Arlington, VA"},"results":[{"address_components":{"number":"1109","predirectional":"N","street":"Highland","suffix":"St","formatted_street":"N Highland St","city":"Arlington","county":"Arlington County","state":"VA","zip":"22201","country":"US"},"address_lines":["1109 N Highland St","","Arlington, VA 22201"],"formatted_address":"1109 N Highland St, Arlington, VA 22201","location":{"lat":38.886672,"lng":-77.094735},"accuracy":1,"accuracy_type":"rooftop","source":"Arlington"}]}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:32:42 GMT
+            Request-Handler:
+                - api310
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Billable-Fields-Count:
+                - "0"
+            X-Billable-Lookups-Count:
+                - "1"
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "997"
+            X-Request-Id:
+                - A2EFFF91:FC47_05A11518:01BB_698641D9_2344790:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 342.752125ms

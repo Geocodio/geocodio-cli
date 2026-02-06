@@ -1,0 +1,64 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 117
+        host: api.geocod.io
+        body: '{"destinations":["New York"],"distance_mode":"driving","name":"test job","origins":["Washington DC"],"units":"miles"}'
+        headers:
+            Accept:
+                - application/json
+            Content-Type:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/distance-jobs?api_key=REDACTED
+        method: POST
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        body: '{"id":19,"identifier":"cdeb73e42e3eaf327f401f63ab5acbc4a7868b07","status":"ENQUEUED","name":"test job","created_at":"2026-02-06T19:37:04.000000Z","origins_count":1,"destinations_count":1,"total_calculations":1}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:37:04 GMT
+            Request-Handler:
+                - api309
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "999"
+            X-Request-Id:
+                - A2EFFF91:C079_05A11518:01BB_698642DF_2357BD6:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 201 Created
+        code: 201
+        duration: 390.592708ms

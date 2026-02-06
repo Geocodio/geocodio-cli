@@ -1,0 +1,75 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        form:
+            destinations[]:
+                - New York
+            mode:
+                - straightline
+            origin:
+                - Washington DC
+            units:
+                - miles
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/distance?api_key=REDACTED&destinations%5B%5D=New+York&mode=straightline&origin=Washington+DC&units=miles
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"origin":{"location":[38.911936,-77.016719],"geocode":{"address_components":{"city":"Washington","county":"District of Columbia","state":"DC","zip":"20001","country":"US"},"address_lines":["","","Washington, DC 20001"],"formatted_address":"Washington, DC 20001","location":{"lat":38.911936,"lng":-77.016719},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},"mode":"straightline","destinations":[{"query":"New York","location":[40.750422,-73.996328],"id":null,"distance_miles":204.7,"distance_km":329.4,"geocode":{"address_components":{"city":"New York","county":"New York County","state":"NY","zip":"10001","country":"US"},"address_lines":["","","New York, NY 10001"],"formatted_address":"New York, NY 10001","location":{"lat":40.750422,"lng":-73.996328},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}}]}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:33:03 GMT
+            Request-Handler:
+                - api311
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Billable-Distance-Calculations:
+                - "1"
+            X-Billable-Lookups-Count:
+                - "2"
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "991"
+            X-Request-Id:
+                - A2EFFF91:FC9A_05A11518:01BB_698641EE_2346047:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 414.409917ms

@@ -1,0 +1,62 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/lists?api_key=REDACTED
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"current_page":1,"data":[{"id":12231595,"fields":[],"file":{"estimated_rows_count":1,"filename":"test.csv"},"status":{"state":"PROCESSING","progress":1,"message":"Processing","time_left_description":"Estimating time to complete","time_left_seconds":null},"download_url":null,"expires_at":"2026-02-09T19:37:08.000000Z"},{"id":12231510,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231510\/download","expires_at":"2026-02-09T18:48:27.000000Z"},{"id":12231508,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231508\/download","expires_at":"2026-02-09T18:48:10.000000Z"},{"id":12231504,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231504\/download","expires_at":"2026-02-09T18:45:51.000000Z"},{"id":12231503,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231503\/download","expires_at":"2026-02-09T18:42:34.000000Z"},{"id":12231499,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231499\/download","expires_at":"2026-02-09T18:41:39.000000Z"},{"id":12231498,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231498\/download","expires_at":"2026-02-09T18:41:05.000000Z"},{"id":12231294,"fields":["cd+legislators","stateleg+legislators","census","acs-demographics","acs-economics","school","timezone"],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231294\/download","expires_at":"2026-02-09T15:24:31.000000Z"},{"id":12231288,"fields":["cd+legislators","school","timezone"],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":"https:\/\/api.geocod.io\/v1.9\/lists\/12231288\/download","expires_at":"2026-02-09T15:17:55.000000Z"},{"id":12212605,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":null,"expires_at":"2026-01-09T08:45:40.000000Z"},{"id":12212604,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":null,"expires_at":"2026-01-09T08:45:35.000000Z"},{"id":12212603,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":null,"expires_at":"2026-01-09T08:45:46.000000Z"},{"id":12212602,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":null,"expires_at":"2026-01-09T08:45:31.000000Z"},{"id":12212082,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":null,"expires_at":"2026-01-08T10:11:50.000000Z"},{"id":12212081,"fields":[],"file":{"estimated_rows_count":24,"filename":"sample_list.csv"},"status":{"state":"COMPLETED","progress":100,"message":"Completed","time_left_description":null,"time_left_seconds":null},"download_url":null,"expires_at":"2026-01-08T10:11:57.000000Z"}],"first_page_url":"https:\/\/api.geocod.io\/v1.9\/lists?page=1","from":1,"next_page_url":"https:\/\/api.geocod.io\/v1.9\/lists?page=2","path":"https:\/\/api.geocod.io\/v1.9\/lists","per_page":15,"prev_page_url":null,"to":15}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:37:08 GMT
+            Request-Handler:
+                - api303
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "992"
+            X-Request-Id:
+                - A2EFFF91:C079_05A11518:01BB_698642E3_235826B:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 268.900041ms

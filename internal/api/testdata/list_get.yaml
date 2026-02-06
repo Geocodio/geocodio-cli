@@ -1,0 +1,129 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 288
+        host: api.geocod.io
+        body: "--4c8591dd6a4f0fcb04ba98629704c5a7ed34fdcbd667fb7d2923ce2e19b2\r\nContent-Disposition: form-data; name=\"file\"; filename=\"test.csv\"\r\nContent-Type: application/octet-stream\r\n\r\naddress\n1600 Pennsylvania Ave NW, Washington DC\n\r\n--4c8591dd6a4f0fcb04ba98629704c5a7ed34fdcbd667fb7d2923ce2e19b2--\r\n"
+        form:
+            direction:
+                - forward
+            format:
+                - '{{A}}'
+        headers:
+            Accept:
+                - application/json
+            Content-Type:
+                - multipart/form-data; boundary=4c8591dd6a4f0fcb04ba98629704c5a7ed34fdcbd667fb7d2923ce2e19b2
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/lists?api_key=REDACTED&direction=forward&format=%7B%7BA%7D%7D
+        method: POST
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"id":12231596,"file":{"headers":["address"],"estimated_rows_count":1,"filename":"test.csv"}}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:37:10 GMT
+            Request-Handler:
+                - api312
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "991"
+            X-Request-Id:
+                - A2EFFF91:C079_05A11518:01BB_698642E5_23582EC:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 815.62675ms
+    - id: 1
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/lists/12231596?api_key=REDACTED
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"id":12231596,"fields":[],"file":{"estimated_rows_count":1,"filename":"test.csv"},"status":{"state":"PROCESSING","progress":1,"message":"Processing","time_left_description":"Estimating time to complete","time_left_seconds":null},"download_url":null,"expires_at":"2026-02-09T19:37:10.000000Z"}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:37:11 GMT
+            Request-Handler:
+                - api310
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "990"
+            X-Request-Id:
+                - A2EFFF91:C079_05A11518:01BB_698642E6_23584E7:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 267.025834ms

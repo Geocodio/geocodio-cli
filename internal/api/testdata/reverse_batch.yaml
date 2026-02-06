@@ -1,0 +1,69 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 48
+        host: api.geocod.io
+        body: '["38.897676,-77.036530","37.331800,-122.031200"]'
+        headers:
+            Accept:
+                - application/json
+            Content-Type:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/reverse?api_key=REDACTED
+        method: POST
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"results":[{"query":"38.897676,-77.036530","response":{"results":[{"address_components":{"number":"1600","street":"Pennsylvania","suffix":"Ave","postdirectional":"NW","formatted_street":"Pennsylvania Ave NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20500","country":"US"},"address_lines":["1600 Pennsylvania Ave NW","","Washington, DC 20500"],"formatted_address":"1600 Pennsylvania Ave NW, Washington, DC 20500","location":{"lat":38.897675,"lng":-77.036547},"accuracy":1,"accuracy_type":"rooftop","source":"Statewide (City of Washington)"},{"address_components":{"number":"1500","street":"Pennsylvania","suffix":"Ave","postdirectional":"NW","formatted_street":"Pennsylvania Ave NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20229","country":"US"},"address_lines":["1500 Pennsylvania Ave NW","","Washington, DC 20229"],"formatted_address":"1500 Pennsylvania Ave NW, Washington, DC 20229","location":{"lat":38.89815,"lng":-77.034336},"accuracy":1,"accuracy_type":"rooftop","source":"Statewide (City of Washington)"},{"address_components":{"number":"700","street":"Jackson","suffix":"Pl","postdirectional":"NW","formatted_street":"Jackson Pl NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20006","country":"US"},"address_lines":["700 Jackson Pl NW","","Washington, DC 20006"],"formatted_address":"700 Jackson Pl NW, Washington, DC 20006","location":{"lat":38.898976,"lng":-77.038219},"accuracy":1,"accuracy_type":"rooftop","source":"Statewide (City of Washington)"},{"address_components":{"number":"704","street":"Jackson","suffix":"Pl","postdirectional":"NW","formatted_street":"Jackson Pl NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20006","country":"US"},"address_lines":["704 Jackson Pl NW","","Washington, DC 20006"],"formatted_address":"704 Jackson Pl NW, Washington, DC 20006","location":{"lat":38.899055,"lng":-77.038221},"accuracy":1,"accuracy_type":"rooftop","source":"Statewide (City of Washington)"},{"address_components":{"number":"708","street":"Jackson","suffix":"Pl","postdirectional":"NW","formatted_street":"Jackson Pl NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20006","country":"US"},"address_lines":["708 Jackson Pl NW","","Washington, DC 20006"],"formatted_address":"708 Jackson Pl NW, Washington, DC 20006","location":{"lat":38.899132,"lng":-77.038211},"accuracy":1,"accuracy_type":"rooftop","source":"Statewide (City of Washington)"},{"address_components":{"number":"712","street":"Jackson","suffix":"Pl","postdirectional":"NW","formatted_street":"Jackson Pl NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20006","country":"US"},"address_lines":["712 Jackson Pl NW","","Washington, DC 20006"],"formatted_address":"712 Jackson Pl NW, Washington, DC 20006","location":{"lat":38.899207,"lng":-77.038217},"accuracy":1,"accuracy_type":"rooftop","source":"Statewide (City of Washington)"}]}},{"query":"37.331800,-122.031200","response":{"results":[{"address_components":{"number":"10690","predirectional":"N","street":"De Anza","suffix":"Blvd","formatted_street":"N De Anza Blvd","city":"Cupertino","county":"Santa Clara County","state":"CA","zip":"95014","country":"US"},"address_lines":["10690 N De Anza Blvd","","Cupertino, CA 95014"],"formatted_address":"10690 N De Anza Blvd, Cupertino, CA 95014","location":{"lat":37.331298,"lng":-122.031748},"accuracy":1,"accuracy_type":"rooftop","source":"Santa Clara (Santa Clara County)"},{"address_components":{"number":"10700","predirectional":"N","street":"De Anza","suffix":"Blvd","formatted_street":"N De Anza Blvd","city":"Cupertino","county":"Santa Clara County","state":"CA","zip":"95014","country":"US"},"address_lines":["10700 N De Anza Blvd","","Cupertino, CA 95014"],"formatted_address":"10700 N De Anza Blvd, Cupertino, CA 95014","location":{"lat":37.331691,"lng":-122.030236},"accuracy":1,"accuracy_type":"rooftop","source":"Santa Clara (Santa Clara County)"},{"address_components":{"number":"1","street":"Infinite","suffix":"Loop","formatted_street":"Infinite Loop","city":"Cupertino","county":"Santa Clara County","state":"CA","zip":"95014","country":"US"},"address_lines":["1 Infinite Loop","","Cupertino, CA 95014"],"formatted_address":"1 Infinite Loop, Cupertino, CA 95014","location":{"lat":37.331524,"lng":-122.030231},"accuracy":1,"accuracy_type":"rooftop","source":"City of Cupertino"},{"address_components":{"number":"2","street":"Infinite","suffix":"Loop","formatted_street":"Infinite Loop","city":"Cupertino","county":"Santa Clara County","state":"CA","zip":"95014","country":"US"},"address_lines":["2 Infinite Loop","","Cupertino, CA 95014"],"formatted_address":"2 Infinite Loop, Cupertino, CA 95014","location":{"lat":37.332638,"lng":-122.030286},"accuracy":1,"accuracy_type":"rooftop","source":"Santa Clara (Santa Clara County)"},{"address_components":{"number":"10600","predirectional":"N","street":"De Anza","suffix":"Blvd","formatted_street":"N De Anza Blvd","city":"Cupertino","county":"Santa Clara County","state":"CA","zip":"95014","country":"US"},"address_lines":["10600 N De Anza Blvd","","Cupertino, CA 95014"],"formatted_address":"10600 N De Anza Blvd, Cupertino, CA 95014","location":{"lat":37.330653,"lng":-122.031714},"accuracy":1,"accuracy_type":"rooftop","source":"Santa Clara (Santa Clara County)"},{"address_components":{"number":"10600","street":"N","suffix":"Blvd","formatted_street":"N Blvd","city":"Cupertino","county":"Santa Clara County","state":"CA","zip":"95014","country":"US"},"address_lines":["10600 N Blvd","","Cupertino, CA 95014"],"formatted_address":"10600 N Blvd, Cupertino, CA 95014","location":{"lat":37.330663,"lng":-122.031859},"accuracy":1,"accuracy_type":"rooftop","source":"City of Cupertino2 (City of Cupertino)"}]}}]}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 06 Feb 2026 19:32:44 GMT
+            Request-Handler:
+                - api310
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Billable-Fields-Count:
+                - "0"
+            X-Billable-Lookups-Count:
+                - "2"
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "994"
+            X-Request-Id:
+                - A2EFFF91:FC47_05A11518:01BB_698641DB_2344A42:0428
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 330.014375ms

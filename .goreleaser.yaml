@@ -1,0 +1,77 @@
+# Geocodio CLI - GoReleaser Configuration
+# https://goreleaser.com
+#
+# Build targets:
+#   - darwin/amd64, darwin/arm64
+#   - linux/amd64, linux/arm64
+#   - windows/amd64
+#
+# Local snapshot:
+#   goreleaser release --snapshot --clean
+#
+# Single target (current platform only):
+#   goreleaser build --snapshot --clean --single-target
+
+version: 2
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - id: geocodio
+    main: ./cmd/geocodio
+    binary: geocodio
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+    env:
+      - CGO_ENABLED=0
+    ldflags:
+      - -s -w
+      - -X github.com/geocodio/geocodio-cli/internal/cli.Version={{.Version}}
+
+archives:
+  - id: geocodio-archive
+    formats:
+      - tar.gz
+    format_overrides:
+      - goos: windows
+        formats:
+          - zip
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- .Arch }}
+    files:
+      - LICENSE*
+      - README*
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  version_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - Merge pull request
+      - Merge branch
+
+release:
+  draft: false
+  prerelease: auto
+  name_template: "Geocodio CLI v{{.Version}}"
