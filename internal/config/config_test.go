@@ -7,14 +7,14 @@ import (
 
 func TestNew(t *testing.T) {
 	tests := []struct {
-		name           string
-		apiKeyFlag     string
-		baseURLFlag    string
-		debug          bool
-		envAPIKey      string
-		wantAPIKey     string
-		wantBaseURL    string
-		wantDebug      bool
+		name        string
+		apiKeyFlag  string
+		baseURLFlag string
+		debug       bool
+		envAPIKey   string
+		wantAPIKey  string
+		wantBaseURL string
+		wantDebug   bool
 	}{
 		{
 			name:        "flag takes precedence over env",
@@ -45,12 +45,12 @@ func TestNew(t *testing.T) {
 			wantBaseURL: "https://custom.api.com",
 		},
 		{
-			name:      "debug flag is passed through",
-			apiKeyFlag: "test-key",
-			debug:     true,
-			wantAPIKey: "test-key",
+			name:        "debug flag is passed through",
+			apiKeyFlag:  "test-key",
+			debug:       true,
+			wantAPIKey:  "test-key",
 			wantBaseURL: DefaultBaseURL,
-			wantDebug: true,
+			wantDebug:   true,
 		},
 	}
 

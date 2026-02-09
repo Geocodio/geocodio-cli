@@ -4,12 +4,12 @@ import "github.com/charmbracelet/lipgloss"
 
 // Color constants for consistent theming.
 var (
-	colorSuccess = lipgloss.Color("2")  // Green
-	colorWarning = lipgloss.Color("3")  // Yellow
-	colorError   = lipgloss.Color("1")  // Red
-	colorInfo    = lipgloss.Color("4")  // Blue
-	colorMuted   = lipgloss.Color("8")  // Gray
-	colorAccent  = lipgloss.Color("6")  // Cyan
+	colorSuccess = lipgloss.Color("2") // Green
+	colorWarning = lipgloss.Color("3") // Yellow
+	colorError   = lipgloss.Color("1") // Red
+	colorInfo    = lipgloss.Color("4") // Blue
+	colorMuted   = lipgloss.Color("8") // Gray
+	colorAccent  = lipgloss.Color("6") // Cyan
 )
 
 // LabelStyle is used for field labels.

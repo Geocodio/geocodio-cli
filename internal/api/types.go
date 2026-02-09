@@ -112,37 +112,37 @@ type DistanceRequest struct {
 
 // DistanceResponse represents a distance calculation response.
 type DistanceResponse struct {
-	Origin       *DistanceLocation   `json:"origin,omitempty"`
-	Mode         string              `json:"mode,omitempty"`
+	Origin       *DistanceLocation     `json:"origin,omitempty"`
+	Mode         string                `json:"mode,omitempty"`
 	Destinations []DistanceDestination `json:"destinations,omitempty"`
 }
 
 type DistanceLocation struct {
-	Query    string          `json:"query,omitempty"`
-	Location []float64       `json:"location,omitempty"`
-	Geocode  *GeocodeResult  `json:"geocode,omitempty"`
+	Query    string         `json:"query,omitempty"`
+	Location []float64      `json:"location,omitempty"`
+	Geocode  *GeocodeResult `json:"geocode,omitempty"`
 }
 
 type DistanceDestination struct {
-	Query           string          `json:"query,omitempty"`
-	Location        []float64       `json:"location,omitempty"`
-	ID              *string         `json:"id,omitempty"`
-	DistanceMiles   float64         `json:"distance_miles,omitempty"`
-	DistanceKm      float64         `json:"distance_km,omitempty"`
-	DurationSeconds *int            `json:"duration_seconds,omitempty"`
-	Geocode         *GeocodeResult  `json:"geocode,omitempty"`
+	Query           string         `json:"query,omitempty"`
+	Location        []float64      `json:"location,omitempty"`
+	ID              *string        `json:"id,omitempty"`
+	DistanceMiles   float64        `json:"distance_miles,omitempty"`
+	DistanceKm      float64        `json:"distance_km,omitempty"`
+	DurationSeconds *int           `json:"duration_seconds,omitempty"`
+	Geocode         *GeocodeResult `json:"geocode,omitempty"`
 }
 
 // DistanceMatrixResponse represents a distance-matrix calculation response.
 type DistanceMatrixResponse struct {
-	Mode    string                  `json:"mode,omitempty"`
-	Results []DistanceMatrixResult  `json:"results,omitempty"`
+	Mode    string                 `json:"mode,omitempty"`
+	Results []DistanceMatrixResult `json:"results,omitempty"`
 }
 
 // DistanceMatrixResult represents a single origin's distances to all destinations.
 type DistanceMatrixResult struct {
-	Origin       *DistanceLocation       `json:"origin,omitempty"`
-	Destinations []DistanceDestination   `json:"destinations,omitempty"`
+	Origin       *DistanceLocation     `json:"origin,omitempty"`
+	Destinations []DistanceDestination `json:"destinations,omitempty"`
 }
 
 // DistanceJobCreateRequest represents a request to create a distance job.

@@ -122,10 +122,7 @@ func reverseBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 		Results: make([]api.BatchGeocodeResult, len(resp.Results)),
 	}
 	for i, r := range resp.Results {
-		batchResp.Results[i] = api.BatchGeocodeResult{
-			Query:    r.Query,
-			Response: r.Response,
-		}
+		batchResp.Results[i] = api.BatchGeocodeResult(r)
 	}
 
 	return app.formatter.FormatBatchGeocode(batchResp)
