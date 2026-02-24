@@ -50,7 +50,7 @@ Progress: 100%
 Message: Completed
 Time left: -
 Expires: Jan 21 15:18:31 2022
-Download URL: https://api.geocod.io/v1.9/lists/11472143/download
+Download URL: https://api.geocod.io/v1.10/lists/11472143/download
 ```
 
 You can also use the `--follow` flag to monitor the progress in real-time with a progress bar:
