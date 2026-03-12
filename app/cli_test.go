@@ -8,10 +8,7 @@ import (
 func TestNoArgs(t *testing.T) {
 	err, output := RunAppForTesting([]string{})
 
-	assert.NotNil(t, err, "should return an error when apikey is not set")
-	if err != nil {
-		assert.Contains(t, err.Error(), "\"apikey\" not set", "apikey flag should be required")
-	}
+	assert.Nil(t, err, "running with no args should show help without error")
 	assert.Contains(t, output, "Geocodio - Geocode lists using the Geocodio API", "Output should contain expected string")
 }
 
