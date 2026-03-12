@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.4.0
+
+- Updated default API version to v1.11
+
 ## v1.3.0
 
 - Update default API version from v1.9 to v1.10

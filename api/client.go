@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-var apiVersion = "v1.10"
+var apiVersion = "v1.11"
 
 func Request(method string, path string, c *cli.Context) ([]byte, bool, error) {
 	hostname := c.String("hostname")
