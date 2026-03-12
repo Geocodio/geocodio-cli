@@ -6,14 +6,7 @@ import (
 	"testing"
 )
 
-func skipIfNoAPIKey(t *testing.T) {
-	if os.Getenv("GEOCODIO_TEST_API_KEY") == "" {
-		t.Skip("GEOCODIO_TEST_API_KEY not set")
-	}
-}
-
 func TestStatusWithoutArgument(t *testing.T) {
-	skipIfNoAPIKey(t)
 	err, output := RunAppForTesting([]string{"--apikey=" + os.Getenv("GEOCODIO_TEST_API_KEY"), "status"})
 
 	assert.Contains(t, err.Error(), "Invalid spreadsheet job id specified")
@@ -21,7 +14,6 @@ func TestStatusWithoutArgument(t *testing.T) {
 }
 
 func TestStatusWithInvalidSpreadsheetId(t *testing.T) {
-	skipIfNoAPIKey(t)
 	err, output := RunAppForTesting([]string{"--apikey=" + os.Getenv("GEOCODIO_TEST_API_KEY"), "status", "1"})
 
 	assert.Contains(t, err.Error(), " No spreadsheet job with that id found")
@@ -29,7 +21,6 @@ func TestStatusWithInvalidSpreadsheetId(t *testing.T) {
 }
 
 func TestStatusWithValidSpreadsheetId(t *testing.T) {
-	skipIfNoAPIKey(t)
 	err, output := RunAppForTesting([]string{"--apikey=" + os.Getenv("GEOCODIO_TEST_API_KEY"), "status", "11471563"})
 
 	assert.Nil(t, err)
