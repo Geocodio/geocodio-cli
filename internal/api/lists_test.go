@@ -26,6 +26,24 @@ func TestUploadList(t *testing.T) {
 	assert.Greater(t, resp.ID, 0)
 }
 
+func TestUploadListWithFields(t *testing.T) {
+	client := newTestClient(t, "list_upload_with_fields")
+
+	csvData := []byte("address\n1600 Pennsylvania Ave NW, Washington DC\n")
+
+	resp, err := client.UploadList(context.Background(), &api.ListUploadRequest{
+		Filename:  "test.csv",
+		Data:      csvData,
+		Direction: "forward",
+		Format:    "{{A}}",
+		Fields:    []string{"cd", "timezone"},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	assert.Greater(t, resp.ID, 0)
+}
+
 func TestListLists(t *testing.T) {
 	client := newTestClient(t, "list_list")
 
