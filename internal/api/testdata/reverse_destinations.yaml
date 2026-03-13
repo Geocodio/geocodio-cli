@@ -1,0 +1,73 @@
+---
+version: 2
+interactions:
+    - id: 0
+      request:
+        proto: HTTP/1.1
+        proto_major: 1
+        proto_minor: 1
+        content_length: 0
+        host: api.geocod.io
+        form:
+            destinations[]:
+                - New York
+            limit:
+                - "1"
+            q:
+                - 38.897676,-77.036530
+        headers:
+            Accept:
+                - application/json
+            User-Agent:
+                - geocodio-cli/dev
+        url: https://api.geocod.io/v1.9/reverse?api_key=REDACTED&destinations%5B%5D=New+York&limit=1&q=38.897676%2C-77.036530
+        method: GET
+      response:
+        proto: HTTP/2.0
+        proto_major: 2
+        proto_minor: 0
+        content_length: -1
+        uncompressed: true
+        body: '{"results":[{"stable_address_key":"gcod_usnqu2qtyk7ac38dlpzanec598p2c","address_components":{"number":"1600","street":"Pennsylvania","suffix":"Ave","postdirectional":"NW","formatted_street":"Pennsylvania Ave NW","city":"Washington","county":"District of Columbia","state":"DC","zip":"20500","country":"US"},"address_lines":["1600 Pennsylvania Ave NW","","Washington, DC 20500"],"formatted_address":"1600 Pennsylvania Ave NW, Washington, DC 20500","location":{"lat":38.897675,"lng":-77.036547},"accuracy":1,"accuracy_type":"rooftop","match_type":null,"source":"Statewide (City of Washington)","destinations":[{"query":"New York","location":[40.750422,-73.996328],"distance_miles":206.2,"distance_km":331.8,"duration_seconds":null,"geocode":{"address_components":{"city":"New York","county":"New York County","state":"NY","zip":"10001","country":"US"},"formatted_address":"New York, NY 10001","location":{"lat":40.750422,"lng":-73.996328},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}}]}],"_warnings":["There is a newer API version available, please consider upgrading to v1.11. See changelog here: https:\/\/www.geocod.io\/docs\/#changelog"]}'
+        headers:
+            Access-Control-Allow-Headers:
+                - Content-Type, User-Agent
+            Access-Control-Allow-Methods:
+                - GET, POST, PATCH, DELETE
+            Access-Control-Allow-Origin:
+                - '*'
+            Access-Control-Expose-Headers:
+                - Request-Handler
+            Cache-Control:
+                - no-cache, private
+            Content-Security-Policy:
+                - default-src 'none';
+            Content-Type:
+                - application/json
+            Date:
+                - Fri, 13 Mar 2026 15:46:19 GMT
+            Request-Handler:
+                - api309
+            Server:
+                - Unicorns with magic wands (https://www.geocod.io)
+            X-Billable-Fields-Count:
+                - "0"
+            X-Billable-Lookups-Count:
+                - "2"
+            X-Content-Type-Options:
+                - nosniff
+            X-Frame-Options:
+                - DENY
+            X-Ratelimit-Limit:
+                - "1000"
+            X-Ratelimit-Period:
+                - "60"
+            X-Ratelimit-Remaining:
+                - "996"
+            X-Request-Id:
+                - 63ABBDD6:C7CE_054E1F88:01BB_69B4314A_1201CE8:0508
+            X-Xss-Protection:
+                - 1; mode=block
+        status: 200 OK
+        code: 200
+        duration: 462.390792ms

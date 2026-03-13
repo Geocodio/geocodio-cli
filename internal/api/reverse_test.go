@@ -25,6 +25,44 @@ func TestReverseGeocode(t *testing.T) {
 	assert.Contains(t, result.FormattedAddress, "Washington")
 }
 
+func TestReverseGeocodeSkipGeocoding(t *testing.T) {
+	client := newTestClient(t, "reverse_skip_geocoding")
+
+	resp, err := client.ReverseGeocode(context.Background(), &api.ReverseGeocodeRequest{
+		Lat:           38.8976763,
+		Lng:           -77.0365298,
+		Fields:        []string{"timezone"},
+		SkipGeocoding: true,
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	require.NotEmpty(t, resp.Results)
+
+	result := resp.Results[0]
+	assert.Empty(t, result.FormattedAddress, "expected empty address when skip geocoding")
+}
+
+func TestReverseGeocodeWithDestinations(t *testing.T) {
+	client := newTestClient(t, "reverse_destinations")
+
+	resp, err := client.ReverseGeocode(context.Background(), &api.ReverseGeocodeRequest{
+		Lat:   38.8976763,
+		Lng:   -77.0365298,
+		Limit: 1,
+		DestinationParams: api.DestinationParams{
+			Destinations: []string{"New York"},
+		},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	require.NotEmpty(t, resp.Results)
+
+	result := resp.Results[0]
+	assert.NotEmpty(t, result.Destinations, "expected destinations in response")
+}
+
 func TestBatchReverseGeocode(t *testing.T) {
 	client := newTestClient(t, "reverse_batch")
 

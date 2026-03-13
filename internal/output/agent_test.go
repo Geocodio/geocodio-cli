@@ -77,6 +77,96 @@ func TestAgent_FormatGeocode(t *testing.T) {
 	}
 }
 
+func TestAgent_FormatGeocodeWithDestinations(t *testing.T) {
+	durationSecs := 17302
+	resp := &api.GeocodeResponse{
+		Results: []api.GeocodeResult{
+			{
+				FormattedAddress: "1600 Pennsylvania Ave NW, Washington, DC 20500",
+				Location:         api.Location{Lat: 38.8977, Lng: -77.0365},
+				AccuracyType:     "rooftop",
+				Destinations: []api.DistanceDestination{
+					{
+						Query:           "New York",
+						Geocode:         &api.GeocodeResult{FormattedAddress: "New York, NY 10001"},
+						DistanceMiles:   227.2,
+						DistanceKm:      365.7,
+						DurationSeconds: &durationSecs,
+					},
+				},
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	a := NewAgent(&buf, Options{})
+
+	err := a.FormatGeocode(resp)
+	if err != nil {
+		t.Fatalf("FormatGeocode() error = %v", err)
+	}
+
+	output := buf.String()
+	wantContains := []string{
+		"**Distances:**",
+		"| Destination | Distance | Duration |",
+		"New York, NY 10001",
+		"227.2 mi",
+		"365.7 km",
+		"288 min",
+	}
+	for _, want := range wantContains {
+		if !strings.Contains(output, want) {
+			t.Errorf("output missing %q:\n%s", want, output)
+		}
+	}
+}
+
+func TestAgent_FormatGeocodeStableAddressKey(t *testing.T) {
+	resp := &api.GeocodeResponse{
+		Results: []api.GeocodeResult{
+			{
+				FormattedAddress: "1600 Pennsylvania Ave NW, Washington, DC 20500",
+				Location:         api.Location{Lat: 38.8977, Lng: -77.0365},
+				AccuracyType:     "rooftop",
+				StableAddressKey: "gcod_usnqu2qtyk7ac38dlpzanec598p2c",
+			},
+		},
+	}
+
+	t.Run("hidden by default", func(t *testing.T) {
+		var buf bytes.Buffer
+		a := NewAgent(&buf, Options{})
+
+		err := a.FormatGeocode(resp)
+		if err != nil {
+			t.Fatalf("FormatGeocode() error = %v", err)
+		}
+
+		if strings.Contains(buf.String(), "gcod_") {
+			t.Errorf("output should not contain address key by default:\n%s", buf.String())
+		}
+	})
+
+	t.Run("shown with option", func(t *testing.T) {
+		var buf bytes.Buffer
+		a := NewAgent(&buf, Options{ShowAddressKey: true})
+
+		err := a.FormatGeocode(resp)
+		if err != nil {
+			t.Fatalf("FormatGeocode() error = %v", err)
+		}
+
+		output := buf.String()
+		if !strings.Contains(output, "gcod_usnqu2qtyk7ac38dlpzanec598p2c") {
+			t.Errorf("output missing address key:\n%s", output)
+		}
+		if !strings.Contains(output, "Address Key") {
+			t.Errorf("output missing 'Address Key' label:\n%s", output)
+		}
+	})
+}
+
 func TestAgent_FormatBatchGeocode(t *testing.T) {
 	var buf bytes.Buffer
 	a := NewAgent(&buf, Options{})

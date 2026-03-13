@@ -66,6 +66,130 @@ func TestHuman_FormatGeocode(t *testing.T) {
 	}
 }
 
+func TestHuman_FormatGeocodeWithDestinations(t *testing.T) {
+	durationSecs := 17302
+	resp := &api.GeocodeResponse{
+		Results: []api.GeocodeResult{
+			{
+				FormattedAddress: "1600 Pennsylvania Ave NW, Washington, DC 20500",
+				Location:         api.Location{Lat: 38.8977, Lng: -77.0365},
+				Accuracy:         1.0,
+				AccuracyType:     "rooftop",
+				Destinations: []api.DistanceDestination{
+					{
+						Query:           "New York",
+						Geocode:         &api.GeocodeResult{FormattedAddress: "New York, NY 10001"},
+						DistanceMiles:   227.2,
+						DistanceKm:      365.7,
+						DurationSeconds: &durationSecs,
+					},
+					{
+						Query:         "Boston",
+						Geocode:       &api.GeocodeResult{FormattedAddress: "Boston, MA 02106"},
+						DistanceMiles: 393.7,
+						DistanceKm:    633.7,
+					},
+				},
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	h := NewHuman(&buf, false, Options{})
+
+	err := h.FormatGeocode(resp)
+	if err != nil {
+		t.Fatalf("FormatGeocode() error = %v", err)
+	}
+
+	output := buf.String()
+	wantContains := []string{
+		"1600 Pennsylvania Ave NW",
+		"Distances:",
+		"New York, NY 10001",
+		"227.2 miles",
+		"288 minutes",
+		"Boston, MA 02106",
+		"393.7 miles",
+	}
+	for _, want := range wantContains {
+		if !strings.Contains(output, want) {
+			t.Errorf("output missing %q:\n%s", want, output)
+		}
+	}
+}
+
+func TestHuman_FormatGeocodeWithDestinations_NoDestinations(t *testing.T) {
+	resp := &api.GeocodeResponse{
+		Results: []api.GeocodeResult{
+			{
+				FormattedAddress: "1600 Pennsylvania Ave NW, Washington, DC 20500",
+				Location:         api.Location{Lat: 38.8977, Lng: -77.0365},
+				AccuracyType:     "rooftop",
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	h := NewHuman(&buf, false, Options{})
+
+	err := h.FormatGeocode(resp)
+	if err != nil {
+		t.Fatalf("FormatGeocode() error = %v", err)
+	}
+
+	output := buf.String()
+	if strings.Contains(output, "Distances:") {
+		t.Errorf("output should not contain 'Distances:' when no destinations:\n%s", output)
+	}
+}
+
+func TestHuman_FormatGeocodeStableAddressKey(t *testing.T) {
+	resp := &api.GeocodeResponse{
+		Results: []api.GeocodeResult{
+			{
+				FormattedAddress: "1600 Pennsylvania Ave NW, Washington, DC 20500",
+				Location:         api.Location{Lat: 38.8977, Lng: -77.0365},
+				AccuracyType:     "rooftop",
+				StableAddressKey: "gcod_usnqu2qtyk7ac38dlpzanec598p2c",
+			},
+		},
+	}
+
+	t.Run("hidden by default", func(t *testing.T) {
+		var buf bytes.Buffer
+		h := NewHuman(&buf, false, Options{})
+
+		err := h.FormatGeocode(resp)
+		if err != nil {
+			t.Fatalf("FormatGeocode() error = %v", err)
+		}
+
+		output := buf.String()
+		if strings.Contains(output, "gcod_") {
+			t.Errorf("output should not contain address key by default:\n%s", output)
+		}
+	})
+
+	t.Run("shown with option", func(t *testing.T) {
+		var buf bytes.Buffer
+		h := NewHuman(&buf, false, Options{ShowAddressKey: true})
+
+		err := h.FormatGeocode(resp)
+		if err != nil {
+			t.Fatalf("FormatGeocode() error = %v", err)
+		}
+
+		output := buf.String()
+		if !strings.Contains(output, "gcod_usnqu2qtyk7ac38dlpzanec598p2c") {
+			t.Errorf("output missing address key:\n%s", output)
+		}
+		if !strings.Contains(output, "Address Key") {
+			t.Errorf("output missing 'Address Key' label:\n%s", output)
+		}
+	})
+}
+
 func TestHuman_FormatBatchGeocode(t *testing.T) {
 	tests := []struct {
 		name         string

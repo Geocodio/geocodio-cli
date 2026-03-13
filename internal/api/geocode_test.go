@@ -52,6 +52,42 @@ func TestGeocodeWithLimit(t *testing.T) {
 	assert.LessOrEqual(t, len(resp.Results), 1)
 }
 
+func TestGeocodeWithDestinations(t *testing.T) {
+	client := newTestClient(t, "geocode_destinations")
+
+	resp, err := client.Geocode(context.Background(), &api.GeocodeRequest{
+		Address: "1600 Pennsylvania Ave NW, Washington DC",
+		DestinationParams: api.DestinationParams{
+			Destinations: []string{"New York"},
+			Mode:         "straightline",
+		},
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	require.NotEmpty(t, resp.Results)
+
+	result := resp.Results[0]
+	assert.NotEmpty(t, result.Destinations, "expected destinations in response")
+	assert.Greater(t, result.Destinations[0].DistanceMiles, 0.0)
+}
+
+func TestGeocodeStableAddressKey(t *testing.T) {
+	client := newTestClient(t, "geocode_single")
+
+	resp, err := client.Geocode(context.Background(), &api.GeocodeRequest{
+		Address: "1600 Pennsylvania Ave NW, Washington DC",
+	})
+
+	require.NoError(t, err)
+	require.NotNil(t, resp)
+	require.NotEmpty(t, resp.Results)
+
+	result := resp.Results[0]
+	assert.NotEmpty(t, result.StableAddressKey, "expected stable address key for rooftop result")
+	assert.Contains(t, result.StableAddressKey, "gcod_")
+}
+
 func TestBatchGeocode(t *testing.T) {
 	client := newTestClient(t, "geocode_batch")
 
