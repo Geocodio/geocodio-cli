@@ -19,6 +19,9 @@ func (c *Client) ReverseGeocode(ctx context.Context, req *ReverseGeocodeRequest)
 	if req.Limit > 0 {
 		query.Set("limit", strconv.Itoa(req.Limit))
 	}
+	if req.SkipGeocoding {
+		query.Set("skipGeocoding", "true")
+	}
 
 	addDestinationParams(query, &req.DestinationParams)
 

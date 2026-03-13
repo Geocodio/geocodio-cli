@@ -32,6 +32,10 @@ func reverseCmd() *cli.Command {
 				Aliases: []string{"l"},
 				Usage:   "Maximum number of results",
 			},
+			&cli.BoolFlag{
+				Name:  "skip-geocoding",
+				Usage: "Skip reverse geocoding and only return field appends for the coordinates",
+			},
 		}, destinationFlags()...),
 		Action: reverseAction,
 	}
@@ -65,6 +69,7 @@ func reverseSingle(ctx context.Context, cmd *cli.Command, app *App, coords strin
 		Lat:               lat,
 		Lng:               lng,
 		Limit:             int(cmd.Int("limit")),
+		SkipGeocoding:     cmd.Bool("skip-geocoding"),
 		DestinationParams: parseDestinationParams(cmd),
 	}
 

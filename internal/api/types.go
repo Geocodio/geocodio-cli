@@ -95,10 +95,11 @@ type BatchGeocodeResult struct {
 
 // ReverseGeocodeRequest represents a reverse geocode request.
 type ReverseGeocodeRequest struct {
-	Lat    float64
-	Lng    float64
-	Fields []string
-	Limit  int
+	Lat            float64
+	Lng            float64
+	Fields         []string
+	Limit          int
+	SkipGeocoding  bool
 	DestinationParams
 }
 
