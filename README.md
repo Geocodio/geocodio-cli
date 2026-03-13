@@ -112,6 +112,28 @@ geocodio geocode --batch addresses.txt
 
 When running in a terminal, you'll see a spinner while the batch processes.
 
+**With inline distance calculations:**
+
+Geocode an address and calculate distances to one or more destinations in a single request:
+
+```bash
+geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --destinations "New York" --destinations "Boston"
+```
+
+With driving mode for actual driving distance and duration:
+
+```bash
+geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --destinations "New York" --distance-mode driving
+```
+
+**With stable address key:**
+
+Show the stable address key for a result, which can be used in future requests instead of an address:
+
+```bash
+geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --show-address-key
+```
+
 **JSON output:**
 
 ```bash
@@ -126,6 +148,10 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--fields` | `-f` | Data append fields (comma-separated) |
 | `--limit` | `-l` | Maximum number of results per address |
 | `--country` | `-c` | Country hint (`US` or `CA`) |
+| `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
+| `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
+| `--distance-units` | `-u` | Distance units: `miles` or `km` |
+| `--show-address-key` | | Show stable address key in output |
 
 ### Reverse Geocoding
 
@@ -151,6 +177,20 @@ The coordinates file should have one `lat,lng` pair per line:
 34.0522,-118.2437
 ```
 
+**Skip geocoding (fields only):**
+
+Get only field appends (timezone, census data, etc.) for coordinates without reverse geocoding an address:
+
+```bash
+geocodio reverse "38.8976,-77.0365" --skip-geocoding --fields timezone,cd
+```
+
+**With inline distance calculations:**
+
+```bash
+geocodio reverse "38.8976,-77.0365" --destinations "New York" --distance-mode driving
+```
+
 **All reverse flags:**
 
 | Flag | Alias | Description |
@@ -158,6 +198,11 @@ The coordinates file should have one `lat,lng` pair per line:
 | `--batch` | `-b` | File containing coordinates (one per line) |
 | `--fields` | `-f` | Data append fields (comma-separated) |
 | `--limit` | `-l` | Maximum number of results per coordinate |
+| `--skip-geocoding` | | Skip reverse geocoding, only return field appends |
+| `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
+| `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
+| `--distance-units` | `-u` | Distance units: `miles` or `km` |
+| `--show-address-key` | | Show stable address key in output |
 
 ### Distance Calculation
 
@@ -572,20 +617,6 @@ If you're upgrading from the previous Geocodio CLI (v1.x), here are the breaking
 | `--follow` | `--watch` | Flag renamed |
 | `--apikey` / `-k` | `--api-key` | Flag renamed (env var `GEOCODIO_API_KEY` unchanged) |
 | `--hostname` / `-n` | `--base-url` | Flag renamed |
-
-> **Discussion:** The v1.x CLI only had spreadsheet commands, so top-level names like `create` and `status` made sense. The v2.x CLI adds geocoding, reverse geocoding, and distance commands, so spreadsheet commands were grouped under `lists` to keep things organized. This only affects existing spreadsheet users, but all of them are affected.
->
-> **Option: backward-compatible aliases.** We could register the old command names (`create`, `status`, `download`, `remove`, `list`) as hidden aliases that map to the new `lists` subcommands. Existing scripts would keep working, and new users would only see the new names in help output. However, `status` and `download` are now ambiguous — they exist under both `lists` and `distance-jobs`. The aliases would point to `lists`, but this could be confusing if a user discovers them and tries to use them for distance jobs.
-
-## API Features Not Included
-
-The Geocodio API supports some features that are intentionally not exposed in this CLI. This section tracks those decisions.
-
-| Feature | API Support | CLI Status | Rationale |
-|---------|------------|------------|-----------|
-| Component address fields (`street`, `city`, `state`, etc.) | `GET /geocode` accepts individual address components as separate query params | Not included | The single address string covers the vast majority of use cases. Users with structured data can concatenate fields. Can be added later if there's demand. |
-| `format=simple` | `GET /geocode` accepts `format=simple` for simplified JSON output | Not included | The CLI already provides multiple output layers: human-readable (default), `--json` (full response), and `--agent` (markdown). A simplified JSON format would overlap with existing options. |
-| Stable address keys shown by default | The API returns a `stable_address_key` on most geocode results | Hidden by default, opt-in with `--show-address-key` | Most users won't know what a stable address key is and showing it on every request would be confusing. Available via flag when needed. Always present in `--json` output. |
 
 ## License
 
