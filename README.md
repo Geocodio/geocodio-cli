@@ -382,6 +382,7 @@ geocodio lists delete 12345
 | `--format` | `-f` | Yes | Column format template (e.g., `{{A}} {{B}}, {{C}}`) |
 | `--watch` | `-w` | No | Watch progress until completion |
 | `--callback` | — | No | URL to receive a POST request when processing completes |
+| `--fields` | `-F` | No | Data append fields (comma-separated, e.g., `cd,timezone`) |
 
 > [!WARNING]
 > Large spreadsheets can take time to process. Use the `--watch` flag or check status periodically rather than waiting for immediate results.
@@ -459,6 +460,8 @@ These flags work with all commands:
 | `--help` | Show help for any command |
 
 ## Development
+
+See [DECISIONS.md](DECISIONS.md) for internal design decisions, including which API features are intentionally not exposed in the CLI and why.
 
 ### Building
 
