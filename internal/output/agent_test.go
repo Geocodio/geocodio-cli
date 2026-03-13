@@ -60,7 +60,7 @@ func TestAgent_FormatGeocode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			a := NewAgent(&buf)
+			a := NewAgent(&buf, Options{})
 
 			err := a.FormatGeocode(tt.resp)
 			if err != nil {
@@ -79,7 +79,7 @@ func TestAgent_FormatGeocode(t *testing.T) {
 
 func TestAgent_FormatBatchGeocode(t *testing.T) {
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	resp := &api.BatchGeocodeResponse{
 		Results: []api.BatchGeocodeResult{
@@ -115,7 +115,7 @@ func TestAgent_FormatBatchGeocode(t *testing.T) {
 func TestAgent_FormatDistance(t *testing.T) {
 	durationSecs := 900
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	resp := &api.DistanceResponse{
 		Origin: &api.DistanceLocation{
@@ -155,7 +155,7 @@ func TestAgent_FormatDistance(t *testing.T) {
 
 func TestAgent_FormatDistanceJob(t *testing.T) {
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	resp := &api.DistanceJobResponse{
 		Data: &api.DistanceJob{
@@ -189,7 +189,7 @@ func TestAgent_FormatDistanceJob(t *testing.T) {
 
 func TestAgent_FormatDistanceJobList(t *testing.T) {
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	resp := &api.DistanceJobListResponse{
 		Jobs: []api.DistanceJob{
@@ -220,7 +220,7 @@ func TestAgent_FormatDistanceJobList(t *testing.T) {
 
 func TestAgent_FormatList(t *testing.T) {
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	resp := &api.ListResponse{
 		ID:   456,
@@ -253,7 +253,7 @@ func TestAgent_FormatList(t *testing.T) {
 
 func TestAgent_FormatListList(t *testing.T) {
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	resp := &api.ListListResponse{
 		Lists: []api.ListResponse{
@@ -285,7 +285,7 @@ func TestAgent_FormatListList(t *testing.T) {
 
 func TestAgent_FormatError(t *testing.T) {
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	testErr := errors.New("something went wrong")
 	err := a.FormatError(testErr)
@@ -304,7 +304,7 @@ func TestAgent_FormatError(t *testing.T) {
 
 func TestAgent_FormatMessage(t *testing.T) {
 	var buf bytes.Buffer
-	a := NewAgent(&buf)
+	a := NewAgent(&buf, Options{})
 
 	err := a.FormatMessage("operation successful")
 	if err != nil {

@@ -61,6 +61,7 @@ type GeocodeResult struct {
 	Accuracy          float64                `json:"accuracy"`
 	AccuracyType      string                 `json:"accuracy_type"`
 	Source            string                 `json:"source,omitempty"`
+	StableAddressKey  string                 `json:"stable_address_key,omitempty"`
 	Fields            *Fields                `json:"fields,omitempty"`
 	Destinations      []DistanceDestination  `json:"destinations,omitempty"`
 }

@@ -32,14 +32,24 @@ type Formatter interface {
 	FormatMessage(msg string) error
 }
 
+// Options configures output formatting behavior.
+type Options struct {
+	ShowAddressKey bool
+}
+
 // New creates a new Formatter based on the specified mode and styling preference.
-func New(w io.Writer, mode OutputMode, useStyles bool) Formatter {
+func New(w io.Writer, mode OutputMode, useStyles bool, opts ...Options) Formatter {
+	var o Options
+	if len(opts) > 0 {
+		o = opts[0]
+	}
+
 	switch mode {
 	case OutputModeJSON:
 		return NewJSON(w)
 	case OutputModeAgent:
-		return NewAgent(w)
+		return NewAgent(w, o)
 	default:
-		return NewHuman(w, useStyles)
+		return NewHuman(w, useStyles, o)
 	}
 }

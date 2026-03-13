@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/output"
 	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
@@ -36,13 +37,17 @@ func reverseCmd() *cli.Command {
 				Name:  "skip-geocoding",
 				Usage: "Skip reverse geocoding and only return field appends for the coordinates",
 			},
+			&cli.BoolFlag{
+				Name:  "show-address-key",
+				Usage: "Show stable address key in output",
+			},
 		}, destinationFlags()...),
 		Action: reverseAction,
 	}
 }
 
 func reverseAction(ctx context.Context, cmd *cli.Command) error {
-	app, err := newApp(cmd)
+	app, err := newApp(cmd, output.Options{ShowAddressKey: cmd.Bool("show-address-key")})
 	if err != nil {
 		return err
 	}

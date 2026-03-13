@@ -8,11 +8,12 @@ import (
 )
 
 type Agent struct {
-	w io.Writer
+	w    io.Writer
+	opts Options
 }
 
-func NewAgent(w io.Writer) *Agent {
-	return &Agent{w: w}
+func NewAgent(w io.Writer, opts Options) *Agent {
+	return &Agent{w: w, opts: opts}
 }
 
 func (a *Agent) FormatGeocode(resp *api.GeocodeResponse) error {
@@ -45,7 +46,9 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 	if r.Source != "" {
 		fmt.Fprintf(a.w, "| Source | %s |\n", r.Source)
 	}
-
+	if a.opts.ShowAddressKey && r.StableAddressKey != "" {
+		fmt.Fprintf(a.w, "| Address Key | %s |\n", r.StableAddressKey)
+	}
 	if len(r.Destinations) > 0 {
 		fmt.Fprintln(a.w)
 		fmt.Fprintln(a.w, "**Distances:**")

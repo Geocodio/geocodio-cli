@@ -49,7 +49,7 @@ func TestHuman_FormatGeocode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf, false)
+			h := NewHuman(&buf, false, Options{})
 
 			err := h.FormatGeocode(tt.resp)
 			if err != nil {
@@ -96,7 +96,7 @@ func TestHuman_FormatBatchGeocode(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf, false)
+			h := NewHuman(&buf, false, Options{})
 
 			err := h.FormatBatchGeocode(tt.resp)
 			if err != nil {
@@ -165,7 +165,7 @@ func TestHuman_FormatDistance(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf, false)
+			h := NewHuman(&buf, false, Options{})
 
 			err := h.FormatDistance(tt.resp)
 			if err != nil {
@@ -219,7 +219,7 @@ func TestHuman_FormatDistanceMatrix(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf, false)
+			h := NewHuman(&buf, false, Options{})
 
 			err := h.FormatDistanceMatrix(tt.resp)
 			if err != nil {
@@ -238,7 +238,7 @@ func TestHuman_FormatDistanceMatrix(t *testing.T) {
 
 func TestHuman_FormatDistanceJob(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf, false)
+	h := NewHuman(&buf, false, Options{})
 
 	resp := &api.DistanceJobResponse{
 		Data: &api.DistanceJob{
@@ -290,7 +290,7 @@ func TestHuman_FormatDistanceJobList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf, false)
+			h := NewHuman(&buf, false, Options{})
 
 			err := h.FormatDistanceJobList(tt.resp)
 			if err != nil {
@@ -309,7 +309,7 @@ func TestHuman_FormatDistanceJobList(t *testing.T) {
 
 func TestHuman_FormatList(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf, false)
+	h := NewHuman(&buf, false, Options{})
 
 	resp := &api.ListResponse{
 		ID:   456,
@@ -365,7 +365,7 @@ func TestHuman_FormatListList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buf bytes.Buffer
-			h := NewHuman(&buf, false)
+			h := NewHuman(&buf, false, Options{})
 
 			err := h.FormatListList(tt.resp)
 			if err != nil {
@@ -384,7 +384,7 @@ func TestHuman_FormatListList(t *testing.T) {
 
 func TestHuman_FormatError(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf, false)
+	h := NewHuman(&buf, false, Options{})
 
 	testErr := errors.New("something went wrong")
 	err := h.FormatError(testErr)
@@ -403,7 +403,7 @@ func TestHuman_FormatError(t *testing.T) {
 
 func TestHuman_FormatMessage(t *testing.T) {
 	var buf bytes.Buffer
-	h := NewHuman(&buf, false)
+	h := NewHuman(&buf, false, Options{})
 
 	err := h.FormatMessage("operation successful")
 	if err != nil {

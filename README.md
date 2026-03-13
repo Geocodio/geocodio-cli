@@ -558,6 +558,25 @@ If you're not seeing colored output:
 2. Check that `NO_COLOR` isn't set in your environment
 3. Try using `FORCE_COLOR=1` to force color output
 
+## Migrating from v1.x
+
+If you're upgrading from the previous Geocodio CLI (v1.x), here are the breaking changes:
+
+| v1.x | v2.x | Notes |
+|------|------|-------|
+| `geocodio create file.csv "{{A}}"` | `geocodio lists upload file.csv --direction forward --format "{{A}}"` | `--direction` is now required (`forward` or `reverse`) |
+| `geocodio status 123` | `geocodio lists status 123` | Commands are grouped under `lists` |
+| `geocodio download 123 > out.csv` | `geocodio lists download 123 --output out.csv` | Use `--output` flag instead of shell redirect (stdout still works too) |
+| `geocodio remove 123` | `geocodio lists delete 123` | Renamed for consistency |
+| `geocodio list` | `geocodio lists list` | Grouped under `lists` |
+| `--follow` | `--watch` | Flag renamed |
+| `--apikey` / `-k` | `--api-key` | Flag renamed (env var `GEOCODIO_API_KEY` unchanged) |
+| `--hostname` / `-n` | `--base-url` | Flag renamed |
+
+> **Discussion:** The v1.x CLI only had spreadsheet commands, so top-level names like `create` and `status` made sense. The v2.x CLI adds geocoding, reverse geocoding, and distance commands, so spreadsheet commands were grouped under `lists` to keep things organized. This only affects existing spreadsheet users, but all of them are affected.
+>
+> **Option: backward-compatible aliases.** We could register the old command names (`create`, `status`, `download`, `remove`, `list`) as hidden aliases that map to the new `lists` subcommands. Existing scripts would keep working, and new users would only see the new names in help output. However, `status` and `download` are now ambiguous — they exist under both `lists` and `distance-jobs`. The aliases would point to `lists`, but this could be confusing if a user discovers them and tries to use them for distance jobs.
+
 ## API Features Not Included
 
 The Geocodio API supports some features that are intentionally not exposed in this CLI. This section tracks those decisions.
@@ -566,6 +585,7 @@ The Geocodio API supports some features that are intentionally not exposed in th
 |---------|------------|------------|-----------|
 | Component address fields (`street`, `city`, `state`, etc.) | `GET /geocode` accepts individual address components as separate query params | Not included | The single address string covers the vast majority of use cases. Users with structured data can concatenate fields. Can be added later if there's demand. |
 | `format=simple` | `GET /geocode` accepts `format=simple` for simplified JSON output | Not included | The CLI already provides multiple output layers: human-readable (default), `--json` (full response), and `--agent` (markdown). A simplified JSON format would overlap with existing options. |
+| Stable address keys shown by default | The API returns a `stable_address_key` on most geocode results | Hidden by default, opt-in with `--show-address-key` | Most users won't know what a stable address key is and showing it on every request would be confusing. Available via flag when needed. Always present in `--json` output. |
 
 ## License
 

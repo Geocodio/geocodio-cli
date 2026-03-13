@@ -13,11 +13,12 @@ import (
 type Human struct {
 	w         io.Writer
 	useStyles bool
+	opts      Options
 }
 
 // NewHuman creates a new Human formatter.
-func NewHuman(w io.Writer, useStyles bool) *Human {
-	return &Human{w: w, useStyles: useStyles}
+func NewHuman(w io.Writer, useStyles bool, opts Options) *Human {
+	return &Human{w: w, useStyles: useStyles, opts: opts}
 }
 
 // style applies the given style if styling is enabled.
@@ -56,7 +57,9 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 	if r.Source != "" {
 		h.printField("Source", r.Source)
 	}
-
+	if h.opts.ShowAddressKey && r.StableAddressKey != "" {
+		h.printField("Address Key", r.StableAddressKey)
+	}
 	if len(r.Destinations) > 0 {
 		fmt.Fprintln(h.w)
 		fmt.Fprintf(h.w, "  %s\n", h.style(HeaderStyle, "Distances:"))

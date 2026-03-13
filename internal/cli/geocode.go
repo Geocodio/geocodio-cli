@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/output"
 	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
@@ -38,13 +39,17 @@ func geocodeCmd() *cli.Command {
 				Aliases: []string{"c"},
 				Usage:   "Country hint (US or CA)",
 			},
+			&cli.BoolFlag{
+				Name:  "show-address-key",
+				Usage: "Show stable address key in output",
+			},
 		}, destinationFlags()...),
 		Action: geocodeAction,
 	}
 }
 
 func geocodeAction(ctx context.Context, cmd *cli.Command) error {
-	app, err := newApp(cmd)
+	app, err := newApp(cmd, output.Options{ShowAddressKey: cmd.Bool("show-address-key")})
 	if err != nil {
 		return err
 	}

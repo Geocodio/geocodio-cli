@@ -66,7 +66,7 @@ func NewApp() *cli.Command {
 	}
 }
 
-func newApp(cmd *cli.Command) (*App, error) {
+func newApp(cmd *cli.Command, outputOpts ...output.Options) (*App, error) {
 	cfg := config.New(
 		cmd.String("api-key"),
 		cmd.String("base-url"),
@@ -97,7 +97,7 @@ func newApp(cmd *cli.Command) (*App, error) {
 
 	useStyles := !cmd.Bool("no-color") && ui.ColorEnabled()
 
-	formatter := output.New(stdout, mode, useStyles)
+	formatter := output.New(stdout, mode, useStyles, outputOpts...)
 
 	return &App{
 		cfg:       cfg,
