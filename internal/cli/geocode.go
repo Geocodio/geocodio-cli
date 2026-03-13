@@ -17,7 +17,7 @@ func geocodeCmd() *cli.Command {
 		Name:      "geocode",
 		Usage:     "Geocode an address",
 		ArgsUsage: "[address]",
-		Flags: []cli.Flag{
+		Flags: append([]cli.Flag{
 			&cli.StringFlag{
 				Name:    "batch",
 				Aliases: []string{"b"},
@@ -38,7 +38,7 @@ func geocodeCmd() *cli.Command {
 				Aliases: []string{"c"},
 				Usage:   "Country hint (US or CA)",
 			},
-		},
+		}, destinationFlags()...),
 		Action: geocodeAction,
 	}
 }
@@ -64,9 +64,10 @@ func geocodeAction(ctx context.Context, cmd *cli.Command) error {
 
 func geocodeSingle(ctx context.Context, cmd *cli.Command, app *App, address string) error {
 	req := &api.GeocodeRequest{
-		Address: address,
-		Limit:   int(cmd.Int("limit")),
-		Country: cmd.String("country"),
+		Address:           address,
+		Limit:             int(cmd.Int("limit")),
+		Country:           cmd.String("country"),
+		DestinationParams: parseDestinationParams(cmd),
 	}
 
 	if fields := cmd.String("fields"); fields != "" {

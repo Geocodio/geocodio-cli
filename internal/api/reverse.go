@@ -20,6 +20,8 @@ func (c *Client) ReverseGeocode(ctx context.Context, req *ReverseGeocodeRequest)
 		query.Set("limit", strconv.Itoa(req.Limit))
 	}
 
+	addDestinationParams(query, &req.DestinationParams)
+
 	var resp GeocodeResponse
 	if err := c.get(ctx, "/reverse", query, &resp); err != nil {
 		return nil, err

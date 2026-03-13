@@ -22,6 +22,8 @@ func (c *Client) Geocode(ctx context.Context, req *GeocodeRequest) (*GeocodeResp
 		query.Set("country", req.Country)
 	}
 
+	addDestinationParams(query, &req.DestinationParams)
+
 	var resp GeocodeResponse
 	if err := c.get(ctx, "/geocode", query, &resp); err != nil {
 		return nil, err

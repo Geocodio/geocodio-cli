@@ -45,6 +45,27 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 	if r.Source != "" {
 		fmt.Fprintf(a.w, "| Source | %s |\n", r.Source)
 	}
+
+	if len(r.Destinations) > 0 {
+		fmt.Fprintln(a.w)
+		fmt.Fprintln(a.w, "**Distances:**")
+		fmt.Fprintln(a.w)
+		fmt.Fprintln(a.w, "| Destination | Distance | Duration |")
+		fmt.Fprintln(a.w, "|-------------|---------:|----------:|")
+		for _, d := range r.Destinations {
+			destStr := d.Query
+			if d.Geocode != nil {
+				destStr = d.Geocode.FormattedAddress
+			}
+			duration := "-"
+			if d.DurationSeconds != nil {
+				mins := float64(*d.DurationSeconds) / 60
+				duration = fmt.Sprintf("%.0f min", mins)
+			}
+			fmt.Fprintf(a.w, "| %s | %.1f mi / %.1f km | %s |\n",
+				destStr, d.DistanceMiles, d.DistanceKm, duration)
+		}
+	}
 }
 
 func (a *Agent) FormatBatchGeocode(resp *api.BatchGeocodeResponse) error {

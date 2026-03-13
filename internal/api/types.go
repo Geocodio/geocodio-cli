@@ -1,11 +1,27 @@
 package api
 
+// DestinationParams holds parameters for inline distance calculations
+// on geocode and reverse endpoints.
+type DestinationParams struct {
+	Destinations []string
+	Mode         string // "driving" or "straightline"
+	Units        string // "miles" or "km"
+	MaxResults   int
+	MaxDistance   float64
+	MaxDuration  int
+	MinDistance   float64
+	MinDuration  int
+	OrderBy      string
+	SortOrder    string
+}
+
 // GeocodeRequest represents a request to the geocode endpoint.
 type GeocodeRequest struct {
 	Address string
 	Fields  []string
 	Limit   int
 	Country string
+	DestinationParams
 }
 
 // GeocodeResponse represents a response from the geocode endpoint.
@@ -39,13 +55,14 @@ type AddressComponents struct {
 
 // GeocodeResult represents a single geocoding result.
 type GeocodeResult struct {
-	AddressComponents *AddressComponents `json:"address_components,omitempty"`
-	FormattedAddress  string             `json:"formatted_address"`
-	Location          Location           `json:"location"`
-	Accuracy          float64            `json:"accuracy"`
-	AccuracyType      string             `json:"accuracy_type"`
-	Source            string             `json:"source,omitempty"`
-	Fields            *Fields            `json:"fields,omitempty"`
+	AddressComponents *AddressComponents     `json:"address_components,omitempty"`
+	FormattedAddress  string                 `json:"formatted_address"`
+	Location          Location               `json:"location"`
+	Accuracy          float64                `json:"accuracy"`
+	AccuracyType      string                 `json:"accuracy_type"`
+	Source            string                 `json:"source,omitempty"`
+	Fields            *Fields                `json:"fields,omitempty"`
+	Destinations      []DistanceDestination  `json:"destinations,omitempty"`
 }
 
 // Location represents geographic coordinates.
@@ -82,6 +99,7 @@ type ReverseGeocodeRequest struct {
 	Lng    float64
 	Fields []string
 	Limit  int
+	DestinationParams
 }
 
 // BatchReverseGeocodeRequest represents a batch reverse geocode request.

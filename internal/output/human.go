@@ -56,6 +56,23 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 	if r.Source != "" {
 		h.printField("Source", r.Source)
 	}
+
+	if len(r.Destinations) > 0 {
+		fmt.Fprintln(h.w)
+		fmt.Fprintf(h.w, "  %s\n", h.style(HeaderStyle, "Distances:"))
+		for _, d := range r.Destinations {
+			destStr := d.Query
+			if d.Geocode != nil {
+				destStr = d.Geocode.FormattedAddress
+			}
+			h.printField("To", destStr)
+			h.printField("Distance", fmt.Sprintf("%.1f miles (%.1f km)", d.DistanceMiles, d.DistanceKm))
+			if d.DurationSeconds != nil {
+				mins := float64(*d.DurationSeconds) / 60
+				h.printField("Duration", fmt.Sprintf("%.0f minutes", mins))
+			}
+		}
+	}
 }
 
 func (h *Human) printField(label, value string) {

@@ -558,6 +558,15 @@ If you're not seeing colored output:
 2. Check that `NO_COLOR` isn't set in your environment
 3. Try using `FORCE_COLOR=1` to force color output
 
+## API Features Not Included
+
+The Geocodio API supports some features that are intentionally not exposed in this CLI. This section tracks those decisions.
+
+| Feature | API Support | CLI Status | Rationale |
+|---------|------------|------------|-----------|
+| Component address fields (`street`, `city`, `state`, etc.) | `GET /geocode` accepts individual address components as separate query params | Not included | The single address string covers the vast majority of use cases. Users with structured data can concatenate fields. Can be added later if there's demand. |
+| `format=simple` | `GET /geocode` accepts `format=simple` for simplified JSON output | Not included | The CLI already provides multiple output layers: human-readable (default), `--json` (full response), and `--agent` (markdown). A simplified JSON format would overlap with existing options. |
+
 ## License
 
 MIT

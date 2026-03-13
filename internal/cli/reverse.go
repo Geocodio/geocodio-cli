@@ -16,7 +16,7 @@ func reverseCmd() *cli.Command {
 		Name:      "reverse",
 		Usage:     "Reverse geocode coordinates",
 		ArgsUsage: "<lat,lng>",
-		Flags: []cli.Flag{
+		Flags: append([]cli.Flag{
 			&cli.StringFlag{
 				Name:    "batch",
 				Aliases: []string{"b"},
@@ -32,7 +32,7 @@ func reverseCmd() *cli.Command {
 				Aliases: []string{"l"},
 				Usage:   "Maximum number of results",
 			},
-		},
+		}, destinationFlags()...),
 		Action: reverseAction,
 	}
 }
@@ -62,9 +62,10 @@ func reverseSingle(ctx context.Context, cmd *cli.Command, app *App, coords strin
 	}
 
 	req := &api.ReverseGeocodeRequest{
-		Lat:   lat,
-		Lng:   lng,
-		Limit: int(cmd.Int("limit")),
+		Lat:               lat,
+		Lng:               lng,
+		Limit:             int(cmd.Int("limit")),
+		DestinationParams: parseDestinationParams(cmd),
 	}
 
 	if fields := cmd.String("fields"); fields != "" {

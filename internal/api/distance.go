@@ -4,8 +4,47 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strconv"
 	"time"
 )
+
+// addDestinationParams adds inline destination parameters to a query string.
+// Used by geocode and reverse endpoints to calculate distances as part of the request.
+func addDestinationParams(query url.Values, p *DestinationParams) {
+	if len(p.Destinations) == 0 {
+		return
+	}
+	for _, d := range p.Destinations {
+		query.Add("destinations[]", d)
+	}
+	if p.Mode != "" {
+		query.Set("distance_mode", p.Mode)
+	}
+	if p.Units != "" {
+		query.Set("distance_units", p.Units)
+	}
+	if p.MaxResults > 0 {
+		query.Set("distance_max_results", strconv.Itoa(p.MaxResults))
+	}
+	if p.MaxDistance > 0 {
+		query.Set("distance_max_distance", strconv.FormatFloat(p.MaxDistance, 'f', -1, 64))
+	}
+	if p.MaxDuration > 0 {
+		query.Set("distance_max_duration", strconv.Itoa(p.MaxDuration))
+	}
+	if p.MinDistance > 0 {
+		query.Set("distance_min_distance", strconv.FormatFloat(p.MinDistance, 'f', -1, 64))
+	}
+	if p.MinDuration > 0 {
+		query.Set("distance_min_duration", strconv.Itoa(p.MinDuration))
+	}
+	if p.OrderBy != "" {
+		query.Set("distance_order_by", p.OrderBy)
+	}
+	if p.SortOrder != "" {
+		query.Set("distance_sort_order", p.SortOrder)
+	}
+}
 
 // validateDistanceParams validates mode and units parameters for distance calculations.
 func validateDistanceParams(mode, units string) error {
