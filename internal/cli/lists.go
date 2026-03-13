@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 	"github.com/geocodio/geocodio-cli/internal/ui"
@@ -53,6 +54,11 @@ func listsUploadCmd() *cli.Command {
 				Name:  "callback",
 				Usage: "Callback URL for completion notification",
 			},
+			&cli.StringFlag{
+				Name:    "fields",
+				Aliases: []string{"F"},
+				Usage:   "Data append fields (comma-separated)",
+			},
 		},
 		Action: listsUploadAction,
 	}
@@ -85,6 +91,10 @@ func listsUploadAction(ctx context.Context, cmd *cli.Command) error {
 		Direction: direction,
 		Format:    cmd.String("format"),
 		Callback:  cmd.String("callback"),
+	}
+
+	if fields := cmd.String("fields"); fields != "" {
+		req.Fields = strings.Split(fields, ",")
 	}
 
 	resp, err := app.client.UploadList(ctx, req)

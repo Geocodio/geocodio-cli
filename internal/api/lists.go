@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -27,6 +28,9 @@ func (c *Client) UploadList(ctx context.Context, req *ListUploadRequest) (*ListR
 	query.Set("format", req.Format)
 	if req.Callback != "" {
 		query.Set("callback", req.Callback)
+	}
+	if len(req.Fields) > 0 {
+		query.Set("fields", strings.Join(req.Fields, ","))
 	}
 	u.RawQuery = query.Encode()
 

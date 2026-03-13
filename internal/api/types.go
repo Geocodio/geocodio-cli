@@ -206,6 +206,7 @@ type ListUploadRequest struct {
 	Direction string // "forward" or "reverse"
 	Format    string // Column format template
 	Callback  string // Optional callback URL
+	Fields    []string // Optional data append fields
 }
 
 // ListResponse represents a list/spreadsheet response.
