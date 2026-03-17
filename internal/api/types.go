@@ -7,9 +7,9 @@ type DestinationParams struct {
 	Mode         string // "driving" or "straightline"
 	Units        string // "miles" or "km"
 	MaxResults   int
-	MaxDistance   float64
+	MaxDistance  float64
 	MaxDuration  int
-	MinDistance   float64
+	MinDistance  float64
 	MinDuration  int
 	OrderBy      string
 	SortOrder    string
@@ -55,15 +55,15 @@ type AddressComponents struct {
 
 // GeocodeResult represents a single geocoding result.
 type GeocodeResult struct {
-	AddressComponents *AddressComponents     `json:"address_components,omitempty"`
-	FormattedAddress  string                 `json:"formatted_address"`
-	Location          Location               `json:"location"`
-	Accuracy          float64                `json:"accuracy"`
-	AccuracyType      string                 `json:"accuracy_type"`
-	Source            string                 `json:"source,omitempty"`
-	StableAddressKey  string                 `json:"stable_address_key,omitempty"`
-	Fields            *Fields                `json:"fields,omitempty"`
-	Destinations      []DistanceDestination  `json:"destinations,omitempty"`
+	AddressComponents *AddressComponents    `json:"address_components,omitempty"`
+	FormattedAddress  string                `json:"formatted_address"`
+	Location          Location              `json:"location"`
+	Accuracy          float64               `json:"accuracy"`
+	AccuracyType      string                `json:"accuracy_type"`
+	Source            string                `json:"source,omitempty"`
+	StableAddressKey  string                `json:"stable_address_key,omitempty"`
+	Fields            *Fields               `json:"fields,omitempty"`
+	Destinations      []DistanceDestination `json:"destinations,omitempty"`
 }
 
 // Location represents geographic coordinates.
@@ -96,11 +96,11 @@ type BatchGeocodeResult struct {
 
 // ReverseGeocodeRequest represents a reverse geocode request.
 type ReverseGeocodeRequest struct {
-	Lat            float64
-	Lng            float64
-	Fields         []string
-	Limit          int
-	SkipGeocoding  bool
+	Lat           float64
+	Lng           float64
+	Fields        []string
+	Limit         int
+	SkipGeocoding bool
 	DestinationParams
 }
 
@@ -203,9 +203,9 @@ type DistanceJobListResponse struct {
 type ListUploadRequest struct {
 	Filename  string
 	Data      []byte
-	Direction string // "forward" or "reverse"
-	Format    string // Column format template
-	Callback  string // Optional callback URL
+	Direction string   // "forward" or "reverse"
+	Format    string   // Column format template
+	Callback  string   // Optional callback URL
 	Fields    []string // Optional data append fields
 }
 
