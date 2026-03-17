@@ -44,6 +44,8 @@ func (c *Client) BatchReverseGeocode(ctx context.Context, req *BatchReverseGeoco
 		query.Set("limit", strconv.Itoa(req.Limit))
 	}
 
+	addDestinationParams(query, &req.DestinationParams)
+
 	// Convert coordinates to string format expected by API
 	coords := make([]string, len(req.Coordinates))
 	for i, coord := range req.Coordinates {

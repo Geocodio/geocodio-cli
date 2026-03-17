@@ -2,6 +2,9 @@ package api_test
 
 import (
 	"context"
+	"io"
+	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
@@ -76,4 +79,37 @@ func TestBatchReverseGeocode(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, resp)
 	assert.Len(t, resp.Results, 2)
+}
+
+func TestBatchReverseGeocodeWithDestinations_AddsQueryParams(t *testing.T) {
+	transport := roundTripperFunc(func(r *http.Request) (*http.Response, error) {
+		q := r.URL.Query()
+
+		require.Contains(t, q["destinations[]"], "New York")
+		require.Equal(t, "straightline", q.Get("distance_mode"))
+
+		return &http.Response{
+			StatusCode: 200,
+			Header:     http.Header{"Content-Type": []string{"application/json"}},
+			Body:       io.NopCloser(strings.NewReader(`{"results":[]}`)),
+			Request:    r,
+		}, nil
+	})
+
+	client := api.NewClient(
+		"https://api.geocod.io/v1.9",
+		"test-api-key",
+		api.WithHTTPClient(&http.Client{Transport: transport}),
+	)
+
+	_, err := client.BatchReverseGeocode(context.Background(), &api.BatchReverseGeocodeRequest{
+		Coordinates: []api.Location{
+			{Lat: 38.8976763, Lng: -77.0365298},
+		},
+		DestinationParams: api.DestinationParams{
+			Destinations: []string{"New York"},
+			Mode:         "straightline",
+		},
+	})
+	require.NoError(t, err)
 }

@@ -111,6 +111,7 @@ type BatchReverseGeocodeRequest struct {
 	Coordinates []Location
 	Fields      []string
 	Limit       int
+	DestinationParams
 }
 
 // BatchReverseGeocodeResponse represents a batch reverse geocode response.

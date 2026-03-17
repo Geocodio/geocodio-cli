@@ -114,8 +114,9 @@ func reverseBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 	}
 
 	req := &api.BatchReverseGeocodeRequest{
-		Coordinates: coords,
-		Limit:       int(cmd.Int("limit")),
+		Coordinates:       coords,
+		Limit:             int(cmd.Int("limit")),
+		DestinationParams: parseDestinationParams(cmd),
 	}
 
 	if fields := cmd.String("fields"); fields != "" {
