@@ -538,6 +538,19 @@ Then record the cassette:
 GEOCODIO_API_KEY=your-key VCR_MODE=record go test -v -run TestNewEndpoint ./internal/api/...
 ```
 
+### Smoke Testing
+
+The unit tests use recorded VCR cassettes and don't hit the live API. To verify that the CLI works end-to-end against the real Geocodio API, run the smoke test:
+
+```bash
+GEOCODIO_API_KEY=your-real-key ./scripts/smoke-test.sh
+```
+
+This exercises every command (geocode, reverse, distance, distance-matrix, distance-jobs, lists) with various flag combinations, output formats, and error cases. It also runs lifecycle tests that create and delete distance jobs and spreadsheet uploads.
+
+> [!NOTE]
+> The smoke test makes real API calls, which may count against your usage. It creates temporary resources (distance jobs, spreadsheet uploads) that are automatically deleted during the test run.
+
 ### Linting
 
 ```bash
