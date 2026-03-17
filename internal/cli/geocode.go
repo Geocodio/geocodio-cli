@@ -102,9 +102,10 @@ func geocodeBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 	}
 
 	req := &api.BatchGeocodeRequest{
-		Addresses: addresses,
-		Limit:     int(cmd.Int("limit")),
-		Country:   cmd.String("country"),
+		Addresses:         addresses,
+		Limit:             int(cmd.Int("limit")),
+		Country:           cmd.String("country"),
+		DestinationParams: parseDestinationParams(cmd),
 	}
 
 	if fields := cmd.String("fields"); fields != "" {

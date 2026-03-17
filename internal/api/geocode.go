@@ -46,6 +46,8 @@ func (c *Client) BatchGeocode(ctx context.Context, req *BatchGeocodeRequest) (*B
 		query.Set("country", req.Country)
 	}
 
+	addDestinationParams(query, &req.DestinationParams)
+
 	var resp BatchGeocodeResponse
 	if err := c.post(ctx, "/geocode", query, req.Addresses, &resp); err != nil {
 		return nil, err

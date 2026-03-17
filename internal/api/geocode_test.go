@@ -2,12 +2,21 @@ package api_test
 
 import (
 	"context"
+	"io"
+	"net/http"
+	"strings"
 	"testing"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+type roundTripperFunc func(*http.Request) (*http.Response, error)
+
+func (f roundTripperFunc) RoundTrip(r *http.Request) (*http.Response, error) {
+	return f(r)
+}
 
 func TestGeocode(t *testing.T) {
 	client := newTestClient(t, "geocode_single")
@@ -101,4 +110,37 @@ func TestBatchGeocode(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, resp)
 	assert.Len(t, resp.Results, 2)
+}
+
+func TestBatchGeocodeWithDestinations_AddsQueryParams(t *testing.T) {
+	transport := roundTripperFunc(func(r *http.Request) (*http.Response, error) {
+		q := r.URL.Query()
+
+		// This is the behavior we want: destinations/distance params should be applied to
+		// the batch endpoint query string.
+		require.Contains(t, q["destinations[]"], "New York")
+		require.Equal(t, "straightline", q.Get("distance_mode"))
+
+		return &http.Response{
+			StatusCode: 200,
+			Header:     http.Header{"Content-Type": []string{"application/json"}},
+			Body:       io.NopCloser(strings.NewReader(`{"results":[]}`)),
+			Request:    r,
+		}, nil
+	})
+
+	client := api.NewClient(
+		"https://api.geocod.io/v1.9",
+		"test-api-key",
+		api.WithHTTPClient(&http.Client{Transport: transport}),
+	)
+
+	_, err := client.BatchGeocode(context.Background(), &api.BatchGeocodeRequest{
+		Addresses: []string{"1600 Pennsylvania Ave NW, Washington DC"},
+		DestinationParams: api.DestinationParams{
+			Destinations: []string{"New York"},
+			Mode:         "straightline",
+		},
+	})
+	require.NoError(t, err)
 }
