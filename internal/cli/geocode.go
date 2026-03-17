@@ -104,6 +104,7 @@ func geocodeBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 	req := &api.BatchGeocodeRequest{
 		Addresses: addresses,
 		Limit:     int(cmd.Int("limit")),
+		Country:   cmd.String("country"),
 	}
 
 	if fields := cmd.String("fields"); fields != "" {

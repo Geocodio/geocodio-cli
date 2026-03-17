@@ -81,6 +81,7 @@ type BatchGeocodeRequest struct {
 	Addresses []string
 	Fields    []string
 	Limit     int
+	Country   string
 }
 
 // BatchGeocodeResponse represents a batch geocoding response.

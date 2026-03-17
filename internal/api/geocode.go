@@ -42,6 +42,9 @@ func (c *Client) BatchGeocode(ctx context.Context, req *BatchGeocodeRequest) (*B
 	if req.Limit > 0 {
 		query.Set("limit", strconv.Itoa(req.Limit))
 	}
+	if req.Country != "" {
+		query.Set("country", req.Country)
+	}
 
 	var resp BatchGeocodeResponse
 	if err := c.post(ctx, "/geocode", query, req.Addresses, &resp); err != nil {
