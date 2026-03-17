@@ -78,10 +78,10 @@ type Fields map[string]interface{}
 
 // BatchGeocodeRequest represents a batch geocoding request.
 type BatchGeocodeRequest struct {
-	Addresses         []string
-	Fields            []string
-	Limit             int
-	Country           string
+	Addresses []string
+	Fields    []string
+	Limit     int
+	Country   string
 	DestinationParams
 }
 
