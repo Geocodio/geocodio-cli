@@ -1,4 +1,5 @@
 .idea
+.claude/skills/
 
 dist/
 bin/
