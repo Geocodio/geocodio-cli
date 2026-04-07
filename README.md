@@ -17,6 +17,7 @@ Whether you're geocoding a single address or processing thousands in batch, this
   - [Spreadsheet Processing](#spreadsheet-processing)
 - [Output Formats](#output-formats)
 - [Global Flags](#global-flags)
+- [AI Coding Assistant Skill](#ai-coding-assistant-skill)
 - [Development](#development)
 - [Troubleshooting](#troubleshooting)
 - [License](#license)
@@ -459,9 +460,46 @@ These flags work with all commands:
 | `--version` | Show version information |
 | `--help` | Show help for any command |
 
-## Development
+## AI Coding Assistant Skill
 
-See [DECISIONS.md](DECISIONS.md) for internal design decisions, including which API features are intentionally not exposed in the CLI and why.
+The Geocodio CLI includes a skill that teaches AI coding assistants how to use it. Once installed, your assistant can geocode addresses, reverse geocode coordinates, calculate distances, and process spreadsheets on your behalf.
+
+### Compatibility
+
+Works with any AI coding assistant that supports skills, including [Claude Code](https://claude.ai/code), [Cursor](https://cursor.com), [Amp](https://amp.dev), and [Codex](https://openai.com/codex).
+
+### Installation
+
+```bash
+npx @anthropic-ai/skills add geocodio/cli
+```
+
+### What's Included
+
+The skill teaches your assistant:
+
+- All CLI commands (geocode, reverse, distance, distance-matrix, distance-jobs, lists)
+- Output format flags (`--json`, `--agent`) and when to use each
+- Batch processing workflows and file size limits
+- Data append fields (timezone, congressional district, census, etc.)
+- Common multi-step workflows like geocoding a CSV and downloading results
+
+### Usage
+
+Once installed, the skill activates automatically when you ask your assistant to geocode, look up an address, calculate distances, or process a spreadsheet. No special syntax needed.
+
+**Example prompts:**
+
+- "Geocode this list of addresses and save the results as JSON"
+- "What congressional district is 1600 Pennsylvania Ave in?"
+- "Calculate driving distances from our warehouse to these 50 customers"
+- "Upload this CSV and geocode the addresses in columns B and C"
+
+### Skill Source
+
+The skill definition is in [`skills/geocodio/SKILL.md`](skills/geocodio/SKILL.md).
+
+## Development
 
 ### Building
 
