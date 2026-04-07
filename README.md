@@ -471,7 +471,7 @@ Works with any AI coding assistant that supports skills, including [Claude Code]
 ### Installation
 
 ```bash
-npx @anthropic-ai/skills add geocodio/cli
+npx skills add geocodio/geocodio-cli
 ```
 
 ### What's Included
