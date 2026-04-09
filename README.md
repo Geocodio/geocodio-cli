@@ -74,7 +74,7 @@ export GEOCODIO_API_KEY=your-api-key
 **Command-line flag:**
 
 ```bash
-geocodio geocode "1600 Pennsylvania Ave NW" --api-key your-api-key
+geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --api-key your-api-key
 ```
 
 > [!TIP]
@@ -405,7 +405,7 @@ The default output is formatted for easy reading in your terminal. When connecte
 For scripting and programmatic use, get raw JSON with the `--json` flag:
 
 ```bash
-geocodio geocode "1600 Pennsylvania Ave NW" --json
+geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 ```
 
 This returns the complete API response, perfect for piping to `jq` or processing in scripts.
@@ -415,7 +415,7 @@ This returns the complete API response, perfect for piping to `jq` or processing
 For AI assistants and LLMs, use the `--agent` flag to get clean markdown tables:
 
 ```bash
-geocodio geocode "1600 Pennsylvania Ave NW" --agent
+geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --agent
 ```
 
 This outputs structured markdown that's easy for language models to parse:
@@ -436,10 +436,10 @@ Colors are automatically disabled when output is piped or redirected. To explici
 
 ```bash
 # Using the flag
-geocodio geocode "1600 Pennsylvania Ave NW" --no-color
+geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --no-color
 
 # Using the environment variable
-NO_COLOR=1 geocodio geocode "1600 Pennsylvania Ave NW"
+NO_COLOR=1 geocodio geocode "1600 Pennsylvania Ave NW, Washington DC"
 ```
 
 > [!TIP]
