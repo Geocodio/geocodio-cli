@@ -18,6 +18,13 @@ func NewAgent(w io.Writer, opts Options) *Agent {
 	return &Agent{w: w, opts: opts}
 }
 
+func (a *Agent) formatDistance(miles, km float64) string {
+	if a.opts.Units == "km" {
+		return fmt.Sprintf("%.1f km / %.1f mi", km, miles)
+	}
+	return fmt.Sprintf("%.1f mi / %.1f km", miles, km)
+}
+
 func (a *Agent) FormatGeocode(resp *api.GeocodeResponse) error {
 	if len(resp.Results) == 0 {
 		fmt.Fprintln(a.w, "No results found.")
@@ -87,8 +94,8 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 				mins := float64(*d.DurationSeconds) / 60
 				duration = fmt.Sprintf("%.0f min", mins)
 			}
-			fmt.Fprintf(a.w, "| %s | %.1f mi / %.1f km | %s |\n",
-				destStr, d.DistanceMiles, d.DistanceKm, duration)
+			fmt.Fprintf(a.w, "| %s | %s | %s |\n",
+				destStr, a.formatDistance(d.DistanceMiles, d.DistanceKm), duration)
 		}
 	}
 }
@@ -149,8 +156,8 @@ func (a *Agent) FormatDistance(resp *api.DistanceResponse) error {
 			mins := float64(*d.DurationSeconds) / 60
 			duration = fmt.Sprintf("%.0f min", mins)
 		}
-		fmt.Fprintf(a.w, "| %s | %s | %.1f mi / %.1f km | %s |\n",
-			originAddr, destAddr, d.DistanceMiles, d.DistanceKm, duration)
+		fmt.Fprintf(a.w, "| %s | %s | %s | %s |\n",
+			originAddr, destAddr, a.formatDistance(d.DistanceMiles, d.DistanceKm), duration)
 	}
 	return nil
 }
@@ -188,8 +195,8 @@ func (a *Agent) FormatDistanceMatrix(resp *api.DistanceMatrixResponse) error {
 				mins := float64(*d.DurationSeconds) / 60
 				duration = fmt.Sprintf("%.0f min", mins)
 			}
-			fmt.Fprintf(a.w, "| %s | %.1f mi / %.1f km | %s |\n",
-				destStr, d.DistanceMiles, d.DistanceKm, duration)
+			fmt.Fprintf(a.w, "| %s | %s | %s |\n",
+				destStr, a.formatDistance(d.DistanceMiles, d.DistanceKm), duration)
 		}
 
 		if i < len(resp.Results)-1 {

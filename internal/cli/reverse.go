@@ -47,7 +47,7 @@ func reverseCmd() *cli.Command {
 }
 
 func reverseAction(ctx context.Context, cmd *cli.Command) error {
-	app, err := newApp(cmd, output.Options{ShowAddressKey: cmd.Bool("show-address-key")})
+	app, err := newApp(cmd, output.Options{ShowAddressKey: cmd.Bool("show-address-key"), Units: cmd.String("distance-units")})
 	if err != nil {
 		return err
 	}

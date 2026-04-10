@@ -90,7 +90,7 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 				destStr = d.Geocode.FormattedAddress
 			}
 			h.printField("To", destStr)
-			h.printField("Distance", fmt.Sprintf("%.1f miles (%.1f km)", d.DistanceMiles, d.DistanceKm))
+			h.printField("Distance", h.formatDistance(d.DistanceMiles, d.DistanceKm))
 			if d.DurationSeconds != nil {
 				mins := float64(*d.DurationSeconds) / 60
 				h.printField("Duration", fmt.Sprintf("%.0f minutes", mins))
@@ -107,6 +107,14 @@ func (h *Human) printField(label, value string) {
 	} else {
 		fmt.Fprintf(h.w, "  %-18s %s\n", label, value)
 	}
+}
+
+// formatDistance returns a distance string with the primary unit matching the user's preference.
+func (h *Human) formatDistance(miles, km float64) string {
+	if h.opts.Units == "km" {
+		return fmt.Sprintf("%.1f km (%.1f miles)", km, miles)
+	}
+	return fmt.Sprintf("%.1f miles (%.1f km)", miles, km)
 }
 
 // printJSON pretty-prints a value as indented JSON with the given prefix on each line.
@@ -281,7 +289,7 @@ func (h *Human) FormatDistance(resp *api.DistanceResponse) error {
 			destAddr = d.Geocode.FormattedAddress
 		}
 		h.printField("To", destAddr)
-		h.printField("Distance", fmt.Sprintf("%.1f miles (%.1f km)", d.DistanceMiles, d.DistanceKm))
+		h.printField("Distance", h.formatDistance(d.DistanceMiles, d.DistanceKm))
 		if d.DurationSeconds != nil {
 			mins := float64(*d.DurationSeconds) / 60
 			h.printField("Duration", fmt.Sprintf("%.0f minutes", mins))
@@ -320,7 +328,7 @@ func (h *Human) FormatDistanceMatrix(resp *api.DistanceMatrixResponse) error {
 				destStr = fmt.Sprintf("%.6f, %.6f", d.Location[0], d.Location[1])
 			}
 			h.printField("To", destStr)
-			h.printField("Distance", fmt.Sprintf("%.1f miles (%.1f km)", d.DistanceMiles, d.DistanceKm))
+			h.printField("Distance", h.formatDistance(d.DistanceMiles, d.DistanceKm))
 			if d.DurationSeconds != nil {
 				mins := float64(*d.DurationSeconds) / 60
 				h.printField("Duration", fmt.Sprintf("%.0f minutes", mins))

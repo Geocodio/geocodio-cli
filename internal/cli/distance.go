@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
+	"github.com/geocodio/geocodio-cli/internal/output"
 	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
@@ -33,7 +34,7 @@ func distanceCmd() *cli.Command {
 }
 
 func distanceAction(ctx context.Context, cmd *cli.Command) error {
-	app, err := newApp(cmd)
+	app, err := newApp(cmd, output.Options{Units: cmd.String("units")})
 	if err != nil {
 		return err
 	}
@@ -89,7 +90,7 @@ func distanceMatrixCmd() *cli.Command {
 }
 
 func distanceMatrixAction(ctx context.Context, cmd *cli.Command) error {
-	app, err := newApp(cmd)
+	app, err := newApp(cmd, output.Options{Units: cmd.String("units")})
 	if err != nil {
 		return err
 	}
