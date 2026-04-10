@@ -6,14 +6,9 @@ interactions:
         proto: HTTP/1.1
         proto_major: 1
         proto_minor: 1
-        content_length: 81
+        content_length: 114
         host: api.geocod.io
-        body: '{"destinations":["Boston","Philadelphia"],"origins":["Washington DC","New York"]}'
-        form:
-            mode:
-                - driving
-            units:
-                - miles
+        body: '{"destinations":["Boston","Philadelphia"],"mode":"driving","origins":["Washington DC","New York"],"units":"miles"}'
         headers:
             Accept:
                 - application/json
@@ -21,7 +16,7 @@ interactions:
                 - application/json
             User-Agent:
                 - geocodio-cli/dev
-        url: https://api.geocod.io/v1.9/distance-matrix?api_key=REDACTED&mode=driving&units=miles
+        url: https://api.geocod.io/v1.9/distance-matrix?api_key=REDACTED
         method: POST
       response:
         proto: HTTP/2.0
@@ -29,7 +24,7 @@ interactions:
         proto_minor: 0
         content_length: -1
         uncompressed: true
-        body: '{"mode":"driving","results":[{"origin":{"query":"Washington DC","location":[38.911936,-77.016719],"id":null,"geocode":{"address_components":{"city":"Washington","county":"District of Columbia","state":"DC","zip":"20001","country":"US"},"address_lines":["","","Washington, DC 20001"],"formatted_address":"Washington, DC 20001","location":{"lat":38.911936,"lng":-77.016719},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},"destinations":[{"query":"Philadelphia","location":[40.001811,-75.11787],"id":null,"distance_miles":141.8,"distance_km":228.2,"duration_seconds":11069,"geocode":{"address_components":{"city":"Philadelphia","county":"Philadelphia County","state":"PA","zip":"19101","country":"US"},"address_lines":["","","Philadelphia, PA 19101"],"formatted_address":"Philadelphia, PA 19101","location":{"lat":40.001811,"lng":-75.11787},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},{"query":"Boston","location":[42.354318,-71.073449],"id":null,"distance_miles":434.4,"distance_km":699.2,"duration_seconds":32715,"geocode":{"address_components":{"city":"Boston","county":"Suffolk County","state":"MA","zip":"02106","country":"US"},"address_lines":["","","Boston, MA 02106"],"formatted_address":"Boston, MA 02106","location":{"lat":42.354318,"lng":-71.073449},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}}]},{"origin":{"query":"New York","location":[40.750422,-73.996328],"id":null,"geocode":{"address_components":{"city":"New York","county":"New York County","state":"NY","zip":"10001","country":"US"},"address_lines":["","","New York, NY 10001"],"formatted_address":"New York, NY 10001","location":{"lat":40.750422,"lng":-73.996328},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},"destinations":[{"query":"Philadelphia","location":[40.001811,-75.11787],"id":null,"distance_miles":93.2,"distance_km":150,"duration_seconds":7297,"geocode":{"address_components":{"city":"Philadelphia","county":"Philadelphia County","state":"PA","zip":"19101","country":"US"},"address_lines":["","","Philadelphia, PA 19101"],"formatted_address":"Philadelphia, PA 19101","location":{"lat":40.001811,"lng":-75.11787},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},{"query":"Boston","location":[42.354318,-71.073449],"id":null,"distance_miles":211.6,"distance_km":340.5,"duration_seconds":16519,"geocode":{"address_components":{"city":"Boston","county":"Suffolk County","state":"MA","zip":"02106","country":"US"},"address_lines":["","","Boston, MA 02106"],"formatted_address":"Boston, MA 02106","location":{"lat":42.354318,"lng":-71.073449},"accuracy":1,"accuracy_type":"place","source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}}]}]}'
+        body: '{"mode":"driving","results":[{"origin":{"query":"Washington DC","location":[38.911936,-77.016719],"id":null,"geocode":{"stable_address_key":null,"address_components":{"city":"Washington","county":"District of Columbia","state":"DC","zip":"20001","country":"US"},"address_lines":["","","Washington, DC 20001"],"formatted_address":"Washington, DC 20001","location":{"lat":38.911936,"lng":-77.016719},"accuracy":1,"accuracy_type":"place","match_type":null,"source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},"destinations":[{"query":"Philadelphia","location":[40.001811,-75.11787],"id":null,"distance_miles":141.8,"distance_km":228.2,"duration_seconds":11069,"geocode":{"stable_address_key":null,"address_components":{"city":"Philadelphia","county":"Philadelphia County","state":"PA","zip":"19101","country":"US"},"address_lines":["","","Philadelphia, PA 19101"],"formatted_address":"Philadelphia, PA 19101","location":{"lat":40.001811,"lng":-75.11787},"accuracy":1,"accuracy_type":"place","match_type":null,"source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},{"query":"Boston","location":[42.354318,-71.073449],"id":null,"distance_miles":434.4,"distance_km":699.2,"duration_seconds":32715,"geocode":{"stable_address_key":null,"address_components":{"city":"Boston","county":"Suffolk County","state":"MA","zip":"02106","country":"US"},"address_lines":["","","Boston, MA 02106"],"formatted_address":"Boston, MA 02106","location":{"lat":42.354318,"lng":-71.073449},"accuracy":1,"accuracy_type":"place","match_type":null,"source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}}]},{"origin":{"query":"New York","location":[40.750422,-73.996328],"id":null,"geocode":{"stable_address_key":null,"address_components":{"city":"New York","county":"New York County","state":"NY","zip":"10001","country":"US"},"address_lines":["","","New York, NY 10001"],"formatted_address":"New York, NY 10001","location":{"lat":40.750422,"lng":-73.996328},"accuracy":1,"accuracy_type":"place","match_type":null,"source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},"destinations":[{"query":"Philadelphia","location":[40.001811,-75.11787],"id":null,"distance_miles":93.2,"distance_km":150,"duration_seconds":7297,"geocode":{"stable_address_key":null,"address_components":{"city":"Philadelphia","county":"Philadelphia County","state":"PA","zip":"19101","country":"US"},"address_lines":["","","Philadelphia, PA 19101"],"formatted_address":"Philadelphia, PA 19101","location":{"lat":40.001811,"lng":-75.11787},"accuracy":1,"accuracy_type":"place","match_type":null,"source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}},{"query":"Boston","location":[42.354318,-71.073449],"id":null,"distance_miles":211.6,"distance_km":340.5,"duration_seconds":16519,"geocode":{"stable_address_key":null,"address_components":{"city":"Boston","county":"Suffolk County","state":"MA","zip":"02106","country":"US"},"address_lines":["","","Boston, MA 02106"],"formatted_address":"Boston, MA 02106","location":{"lat":42.354318,"lng":-71.073449},"accuracy":1,"accuracy_type":"place","match_type":null,"source":"TIGER\/Line\u00ae dataset from the US Census Bureau"}}]}]}'
         headers:
             Access-Control-Allow-Headers:
                 - Content-Type, User-Agent
@@ -46,9 +41,9 @@ interactions:
             Content-Type:
                 - application/json
             Date:
-                - Fri, 06 Feb 2026 19:33:04 GMT
+                - Fri, 10 Apr 2026 22:56:19 GMT
             Request-Handler:
-                - api242
+                - api311
             Server:
                 - Unicorns with magic wands (https://www.geocod.io)
             X-Billable-Distance-Calculations:
@@ -64,11 +59,11 @@ interactions:
             X-Ratelimit-Period:
                 - "60"
             X-Ratelimit-Remaining:
-                - "990"
+                - "999"
             X-Request-Id:
-                - A2EFFF91:FC9A_05A11518:01BB_698641EF_2346185:0428
+                - 63ABBDD6:E3D7_054E1F88:01BB_69D98013_89C1D:05FA
             X-Xss-Protection:
                 - 1; mode=block
         status: 200 OK
         code: 200
-        duration: 633.52875ms
+        duration: 965.360208ms

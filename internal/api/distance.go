@@ -95,22 +95,19 @@ func (c *Client) DistanceMatrix(ctx context.Context, origins, destinations []str
 		return nil, err
 	}
 
-	query := url.Values{}
-
-	if mode != "" {
-		query.Set("mode", mode)
-	}
-	if units != "" {
-		query.Set("units", units)
-	}
-
-	body := map[string][]string{
+	body := map[string]interface{}{
 		"origins":      origins,
 		"destinations": destinations,
 	}
+	if mode != "" {
+		body["mode"] = mode
+	}
+	if units != "" {
+		body["units"] = units
+	}
 
 	var resp DistanceMatrixResponse
-	if err := c.post(ctx, "/distance-matrix", query, body, &resp); err != nil {
+	if err := c.post(ctx, "/distance-matrix", nil, body, &resp); err != nil {
 		return nil, err
 	}
 
