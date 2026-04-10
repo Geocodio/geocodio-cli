@@ -3,6 +3,7 @@ package output
 import (
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -59,6 +60,31 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 	}
 	if h.opts.ShowAddressKey && r.StableAddressKey != "" {
 		h.printField("Address Key", r.StableAddressKey)
+	}
+	if r.Fields != nil && len(*r.Fields) > 0 {
+		fmt.Fprintln(h.w)
+		fmt.Fprintf(h.w, "  %s\n", h.style(HeaderStyle, "Fields:"))
+		fieldNames := make([]string, 0, len(*r.Fields))
+		for name := range *r.Fields {
+			fieldNames = append(fieldNames, name)
+		}
+		sort.Strings(fieldNames)
+		for _, name := range fieldNames {
+			val := (*r.Fields)[name]
+			if nested, ok := val.(map[string]interface{}); ok {
+				fmt.Fprintf(h.w, "    %s\n", h.style(LabelStyle, name))
+				subKeys := make([]string, 0, len(nested))
+				for k := range nested {
+					subKeys = append(subKeys, k)
+				}
+				sort.Strings(subKeys)
+				for _, k := range subKeys {
+					fmt.Fprintf(h.w, "      %-18s %v\n", k, nested[k])
+				}
+			} else {
+				h.printField(name, fmt.Sprintf("%v", val))
+			}
+		}
 	}
 	if len(r.Destinations) > 0 {
 		fmt.Fprintln(h.w)
