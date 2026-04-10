@@ -129,17 +129,6 @@ func (h *Human) printJSON(val interface{}, prefix string) {
 	}
 }
 
-// isFlat returns true if all values in the map are scalar (not maps or slices).
-func isFlat(m map[string]interface{}) bool {
-	for _, v := range m {
-		switch v.(type) {
-		case map[string]interface{}, []interface{}:
-			return false
-		}
-	}
-	return true
-}
-
 // fieldSummary returns a human-friendly label and summary value for a known field.
 // For unknown fields, it returns the raw key name and an empty summary.
 func fieldSummary(key string, val interface{}) (label, summary string) {

@@ -32,7 +32,7 @@ func runCLI(t *testing.T, server *httptest.Server, args ...string) (string, erro
 	os.Stdout = oldStdout
 
 	var buf bytes.Buffer
-	buf.ReadFrom(r)
+	_, _ = buf.ReadFrom(r)
 
 	return buf.String(), err
 }
@@ -55,7 +55,7 @@ func newFixtureServer(t *testing.T, pathToFixture map[string]string) *httptest.S
 			if strings.Contains(r.URL.Path, path) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(200)
-				w.Write([]byte(fixture))
+				_, _ = w.Write([]byte(fixture))
 				return
 			}
 		}
