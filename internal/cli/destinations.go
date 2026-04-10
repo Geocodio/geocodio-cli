@@ -61,7 +61,8 @@ func destinationFlags() []cli.Flag {
 func parseDestinationParams(cmd *cli.Command) api.DestinationParams {
 	dests := cmd.StringSlice("destinations")
 
-	// Also support comma-separated destinations in a single flag value
+	// Also support semicolon-separated destinations in a single flag value.
+	// Commas are valid inside street addresses and coordinates.
 	var expanded []string
 	for _, d := range dests {
 		if strings.Contains(d, ";") {

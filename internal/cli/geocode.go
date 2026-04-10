@@ -15,9 +15,10 @@ import (
 
 func geocodeCmd() *cli.Command {
 	return &cli.Command{
-		Name:      "geocode",
-		Usage:     "Geocode an address",
-		ArgsUsage: "[address]",
+		Name:                      "geocode",
+		Usage:                     "Geocode an address",
+		ArgsUsage:                 "[address]",
+		DisableSliceFlagSeparator: true,
 		Flags: append([]cli.Flag{
 			&cli.StringFlag{
 				Name:    "batch",

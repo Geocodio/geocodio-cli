@@ -14,9 +14,10 @@ import (
 
 func reverseCmd() *cli.Command {
 	return &cli.Command{
-		Name:      "reverse",
-		Usage:     "Reverse geocode coordinates",
-		ArgsUsage: "<lat,lng>",
+		Name:                      "reverse",
+		Usage:                     "Reverse geocode coordinates",
+		ArgsUsage:                 "<lat,lng>",
+		DisableSliceFlagSeparator: true,
 		Flags: append([]cli.Flag{
 			&cli.StringFlag{
 				Name:    "batch",
