@@ -205,8 +205,11 @@ func TestHuman_FormatGeocodeWithFields(t *testing.T) {
 						"observes_dst": true,
 						"abbreviation": "EST",
 					},
-					"congressional_districts": map[string]interface{}{
-						"name": "Congressional District 98",
+					"congressional_districts": []interface{}{
+						map[string]interface{}{
+							"name":            "Congressional District 8",
+							"district_number": float64(8),
+						},
 					},
 				},
 			},
@@ -222,11 +225,13 @@ func TestHuman_FormatGeocodeWithFields(t *testing.T) {
 	}
 
 	output := buf.String()
+	// Should have summary labels
 	wantContains := []string{
 		"Fields:",
-		"timezone",
+		"Timezone",
 		"America/New_York",
-		"congressional_districts",
+		"Congressional District",
+		"Congressional District 8",
 	}
 	for _, want := range wantContains {
 		if !strings.Contains(output, want) {

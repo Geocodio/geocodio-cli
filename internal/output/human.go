@@ -1,6 +1,7 @@
 package output
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"sort"
@@ -71,19 +72,13 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 		sort.Strings(fieldNames)
 		for _, name := range fieldNames {
 			val := (*r.Fields)[name]
-			if nested, ok := val.(map[string]interface{}); ok {
-				fmt.Fprintf(h.w, "    %s\n", h.style(LabelStyle, name))
-				subKeys := make([]string, 0, len(nested))
-				for k := range nested {
-					subKeys = append(subKeys, k)
-				}
-				sort.Strings(subKeys)
-				for _, k := range subKeys {
-					fmt.Fprintf(h.w, "      %-18s %v\n", k, nested[k])
-				}
+			label, summary := fieldSummary(name, val)
+			if summary != "" {
+				h.printField(label, summary)
 			} else {
-				h.printField(name, fmt.Sprintf("%v", val))
+				h.printField(label, "")
 			}
+			h.printJSON(val, "      ")
 		}
 	}
 	if len(r.Destinations) > 0 {
@@ -112,6 +107,126 @@ func (h *Human) printField(label, value string) {
 	} else {
 		fmt.Fprintf(h.w, "  %-18s %s\n", label, value)
 	}
+}
+
+// printJSON pretty-prints a value as indented JSON with the given prefix on each line.
+func (h *Human) printJSON(val interface{}, prefix string) {
+	data, err := json.MarshalIndent(val, "", "  ")
+	if err != nil {
+		fmt.Fprintf(h.w, "%s%v\n", prefix, val)
+		return
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		fmt.Fprintf(h.w, "%s%s\n", prefix, line)
+	}
+}
+
+// isFlat returns true if all values in the map are scalar (not maps or slices).
+func isFlat(m map[string]interface{}) bool {
+	for _, v := range m {
+		switch v.(type) {
+		case map[string]interface{}, []interface{}:
+			return false
+		}
+	}
+	return true
+}
+
+// fieldSummary returns a human-friendly label and summary value for a known field.
+// For unknown fields, it returns the raw key name and an empty summary.
+func fieldSummary(key string, val interface{}) (label, summary string) {
+	switch key {
+	case "congressional_districts":
+		label = "Congressional District"
+		summary = extractFromArray(val, "name")
+	case "state_legislative_districts":
+		label = "State Legislature"
+		if m, ok := val.(map[string]interface{}); ok {
+			house := extractFromArray(m["house"], "name")
+			senate := extractFromArray(m["senate"], "name")
+			parts := []string{}
+			if house != "" {
+				parts = append(parts, house)
+			}
+			if senate != "" {
+				parts = append(parts, senate)
+			}
+			summary = strings.Join(parts, ", ")
+		}
+	case "school_districts":
+		label = "School District"
+		if m, ok := val.(map[string]interface{}); ok {
+			for _, sub := range []string{"unified", "elementary", "secondary"} {
+				if v, ok := m[sub]; ok {
+					if name := extractName(v); name != "" {
+						summary = name
+						break
+					}
+				}
+			}
+		}
+	case "census":
+		label = "Census"
+		if m, ok := val.(map[string]interface{}); ok {
+			parts := []string{}
+			if bc, ok := m["block_code"].(string); ok {
+				parts = append(parts, "Block: "+bc)
+			}
+			if fips, ok := m["full_fips"].(string); ok {
+				parts = append(parts, "FIPS: "+fips)
+			}
+			summary = strings.Join(parts, ", ")
+		}
+	case "timezone":
+		label = "Timezone"
+		summary = extractName(val)
+	case "zip4":
+		label = "USPS ZIP+4"
+		if arr, ok := val.([]interface{}); ok && len(arr) > 0 {
+			if m, ok := arr[0].(map[string]interface{}); ok {
+				if p4, ok := m["plus4"].([]interface{}); ok && len(p4) > 0 {
+					summary = fmt.Sprintf("%v", p4[0])
+				}
+			}
+		}
+	case "riding":
+		label = "Federal Riding"
+		summary = extractName(val)
+	case "provriding":
+		label = "Provincial Riding"
+		summary = extractName(val)
+	default:
+		label = key
+	}
+	return label, summary
+}
+
+// extractFromArray extracts a named string field from the first element of an array.
+func extractFromArray(val interface{}, key string) string {
+	arr, ok := val.([]interface{})
+	if !ok || len(arr) == 0 {
+		return ""
+	}
+	m, ok := arr[0].(map[string]interface{})
+	if !ok {
+		return ""
+	}
+	if s, ok := m[key].(string); ok {
+		return s
+	}
+	return ""
+}
+
+// extractName extracts the "name" field from a map.
+func extractName(val interface{}) string {
+	m, ok := val.(map[string]interface{})
+	if !ok {
+		return ""
+	}
+	if s, ok := m["name"].(string); ok {
+		return s
+	}
+	return ""
 }
 
 // FormatBatchGeocode formats a batch geocode response.

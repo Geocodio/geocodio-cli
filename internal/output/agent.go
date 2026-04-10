@@ -3,7 +3,6 @@ package output
 import (
 	"fmt"
 	"io"
-	"sort"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 )
@@ -49,35 +48,6 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 	}
 	if a.opts.ShowAddressKey && r.StableAddressKey != "" {
 		fmt.Fprintf(a.w, "| Address Key | %s |\n", r.StableAddressKey)
-	}
-	if r.Fields != nil && len(*r.Fields) > 0 {
-		fmt.Fprintln(a.w)
-		fmt.Fprintln(a.w, "**Fields:**")
-		fmt.Fprintln(a.w)
-		fieldNames := make([]string, 0, len(*r.Fields))
-		for name := range *r.Fields {
-			fieldNames = append(fieldNames, name)
-		}
-		sort.Strings(fieldNames)
-		for _, name := range fieldNames {
-			val := (*r.Fields)[name]
-			if nested, ok := val.(map[string]interface{}); ok {
-				fmt.Fprintf(a.w, "**%s:**\n\n", name)
-				fmt.Fprintln(a.w, "| Key | Value |")
-				fmt.Fprintln(a.w, "|-----|-------|")
-				subKeys := make([]string, 0, len(nested))
-				for k := range nested {
-					subKeys = append(subKeys, k)
-				}
-				sort.Strings(subKeys)
-				for _, k := range subKeys {
-					fmt.Fprintf(a.w, "| %s | %v |\n", k, nested[k])
-				}
-				fmt.Fprintln(a.w)
-			} else {
-				fmt.Fprintf(a.w, "| %s | %v |\n", name, val)
-			}
-		}
 	}
 	if len(r.Destinations) > 0 {
 		fmt.Fprintln(a.w)
