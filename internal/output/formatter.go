@@ -35,6 +35,7 @@ type Formatter interface {
 // Options configures output formatting behavior.
 type Options struct {
 	ShowAddressKey bool
+	Units          string // "miles" or "km"
 }
 
 // New creates a new Formatter based on the specified mode and styling preference.

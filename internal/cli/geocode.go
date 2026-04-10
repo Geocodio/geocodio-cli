@@ -15,9 +15,10 @@ import (
 
 func geocodeCmd() *cli.Command {
 	return &cli.Command{
-		Name:      "geocode",
-		Usage:     "Geocode an address",
-		ArgsUsage: "[address]",
+		Name:                      "geocode",
+		Usage:                     "Geocode an address",
+		ArgsUsage:                 "[address]",
+		DisableSliceFlagSeparator: true,
 		Flags: append([]cli.Flag{
 			&cli.StringFlag{
 				Name:    "batch",
@@ -49,7 +50,7 @@ func geocodeCmd() *cli.Command {
 }
 
 func geocodeAction(ctx context.Context, cmd *cli.Command) error {
-	app, err := newApp(cmd, output.Options{ShowAddressKey: cmd.Bool("show-address-key")})
+	app, err := newApp(cmd, output.Options{ShowAddressKey: cmd.Bool("show-address-key"), Units: cmd.String("distance-units")})
 	if err != nil {
 		return err
 	}

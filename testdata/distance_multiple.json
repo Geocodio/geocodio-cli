@@ -1,0 +1,109 @@
+{
+  "origin": {
+    "location": [
+      38.911936,
+      -77.016719
+    ],
+    "geocode": {
+      "address_components": {
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20001",
+        "country": "US"
+      },
+      "formatted_address": "Washington, DC 20001",
+      "location": {
+        "lat": 38.911936,
+        "lng": -77.016719
+      },
+      "accuracy": 1,
+      "accuracy_type": "place",
+      "source": "TIGER/Line® dataset from the US Census Bureau"
+    }
+  },
+  "mode": "driving",
+  "destinations": [
+    {
+      "query": "Philadelphia",
+      "location": [
+        40.001811,
+        -75.11787
+      ],
+      "distance_miles": 141.8,
+      "distance_km": 228.2,
+      "duration_seconds": 11069,
+      "geocode": {
+        "address_components": {
+          "city": "Philadelphia",
+          "county": "Philadelphia County",
+          "state": "PA",
+          "zip": "19101",
+          "country": "US"
+        },
+        "formatted_address": "Philadelphia, PA 19101",
+        "location": {
+          "lat": 40.001811,
+          "lng": -75.11787
+        },
+        "accuracy": 1,
+        "accuracy_type": "place",
+        "source": "TIGER/Line® dataset from the US Census Bureau"
+      }
+    },
+    {
+      "query": "New York",
+      "location": [
+        40.750422,
+        -73.996328
+      ],
+      "distance_miles": 226.6,
+      "distance_km": 364.7,
+      "duration_seconds": 17061,
+      "geocode": {
+        "address_components": {
+          "city": "New York",
+          "county": "New York County",
+          "state": "NY",
+          "zip": "10001",
+          "country": "US"
+        },
+        "formatted_address": "New York, NY 10001",
+        "location": {
+          "lat": 40.750422,
+          "lng": -73.996328
+        },
+        "accuracy": 1,
+        "accuracy_type": "place",
+        "source": "TIGER/Line® dataset from the US Census Bureau"
+      }
+    },
+    {
+      "query": "Boston",
+      "location": [
+        42.354318,
+        -71.073449
+      ],
+      "distance_miles": 434.4,
+      "distance_km": 699.2,
+      "duration_seconds": 32715,
+      "geocode": {
+        "address_components": {
+          "city": "Boston",
+          "county": "Suffolk County",
+          "state": "MA",
+          "zip": "02106",
+          "country": "US"
+        },
+        "formatted_address": "Boston, MA 02106",
+        "location": {
+          "lat": 42.354318,
+          "lng": -71.073449
+        },
+        "accuracy": 1,
+        "accuracy_type": "place",
+        "source": "TIGER/Line® dataset from the US Census Bureau"
+      }
+    }
+  ]
+}

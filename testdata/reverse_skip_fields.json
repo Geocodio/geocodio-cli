@@ -1,0 +1,155 @@
+{
+  "input": null,
+  "results": [
+    {
+      "formatted_address": "",
+      "location": {
+        "lat": 40.7588,
+        "lng": -73.9788
+      },
+      "accuracy": 0,
+      "accuracy_type": "coordinate",
+      "fields": {
+        "congressional_districts": [
+          {
+            "congress_number": "119th",
+            "congress_years": "2025-2027",
+            "current_legislators": [
+              {
+                "bio": {
+                  "birthday": "1947-06-13",
+                  "first_name": "Jerrold",
+                  "gender": "M",
+                  "last_name": "Nadler",
+                  "party": "Democrat",
+                  "photo_attribution": "Image courtesy of the Member",
+                  "photo_url": "https://www.congress.gov/img/member/n000002_200.jpg"
+                },
+                "contact": {
+                  "address": "2132 Rayburn House Office Building Washington DC 20515-3212",
+                  "contact_form": null,
+                  "phone": "202-225-5635",
+                  "url": "https://nadler.house.gov"
+                },
+                "references": {
+                  "ballotpedia_id": "Jerrold Nadler",
+                  "bioguide_id": "N000002",
+                  "cspan_id": "26159",
+                  "govtrack_id": "400289",
+                  "icpsr_id": "29377",
+                  "lis_id": null,
+                  "opensecrets_id": "N00000939",
+                  "thomas_id": "00850",
+                  "votesmart_id": "26980",
+                  "washington_post_id": null,
+                  "wikipedia_id": "Jerry Nadler"
+                },
+                "seniority": null,
+                "social": {
+                  "facebook": "CongressmanNadler",
+                  "rss_url": "http://nadler.house.gov/rss.xml",
+                  "twitter": "RepJerryNadler",
+                  "youtube": "congressmannadler",
+                  "youtube_id": "UCQKj0qU1e7o2f5ftSh-c9aQ"
+                },
+                "source": "Legislator data collected by the @unitedstates project (https://github.com/unitedstates/)",
+                "type": "representative"
+              },
+              {
+                "bio": {
+                  "birthday": "1950-11-23",
+                  "first_name": "Charles",
+                  "gender": "M",
+                  "last_name": "Schumer",
+                  "party": "Democrat",
+                  "photo_attribution": "Courtesy U.S. Senate Historical Office (http://www.senate.gov/artandhistory/history/common/generic/Photo_Collection_of_the_Senate_Historical_Office.htm)",
+                  "photo_url": "https://www.congress.gov/img/member/s000148_200.jpg"
+                },
+                "contact": {
+                  "address": "322 Hart Senate Office Building Washington DC 20510",
+                  "contact_form": "https://www.schumer.senate.gov/contact/email-chuck",
+                  "phone": "202-224-6542",
+                  "url": "https://www.schumer.senate.gov"
+                },
+                "references": {
+                  "ballotpedia_id": "Chuck Schumer",
+                  "bioguide_id": "S000148",
+                  "cspan_id": "5929",
+                  "govtrack_id": "300087",
+                  "icpsr_id": "14858",
+                  "lis_id": "S270",
+                  "opensecrets_id": "N00001093",
+                  "thomas_id": "01036",
+                  "votesmart_id": "26976",
+                  "washington_post_id": null,
+                  "wikipedia_id": "Chuck Schumer"
+                },
+                "seniority": "senior",
+                "social": {
+                  "facebook": "senschumer",
+                  "rss_url": null,
+                  "twitter": "SenSchumer",
+                  "youtube": "SenatorSchumer",
+                  "youtube_id": "UC-ABttxh8uQv_10qmwGaidw"
+                },
+                "source": "Legislator data collected by the @unitedstates project (https://github.com/unitedstates/)",
+                "type": "senator"
+              },
+              {
+                "bio": {
+                  "birthday": "1966-12-09",
+                  "first_name": "Kirsten",
+                  "gender": "F",
+                  "last_name": "Gillibrand",
+                  "party": "Democrat",
+                  "photo_attribution": "Courtesy U.S. Senate Historical Office (http://www.senate.gov/artandhistory/history/common/generic/Photo_Collection_of_the_Senate_Historical_Office.htm)",
+                  "photo_url": "https://www.congress.gov/img/member/g000555_200.jpg"
+                },
+                "contact": {
+                  "address": "478 Russell Senate Office Building Washington DC 20510",
+                  "contact_form": "https://www.gillibrand.senate.gov/contact/email-me",
+                  "phone": "202-224-4451",
+                  "url": "https://www.gillibrand.senate.gov"
+                },
+                "references": {
+                  "ballotpedia_id": "Kirsten Gillibrand",
+                  "bioguide_id": "G000555",
+                  "cspan_id": "1022862",
+                  "govtrack_id": "412223",
+                  "icpsr_id": "20735",
+                  "lis_id": "S331",
+                  "opensecrets_id": "N00027658",
+                  "thomas_id": "01866",
+                  "votesmart_id": "65147",
+                  "washington_post_id": null,
+                  "wikipedia_id": "Kirsten Gillibrand"
+                },
+                "seniority": "junior",
+                "social": {
+                  "facebook": "SenKirstenGillibrand",
+                  "rss_url": "http://www.gillibrand.senate.gov/rss/",
+                  "twitter": "GillibrandNY",
+                  "youtube": "KirstenEGillibrand",
+                  "youtube_id": "UCVEloQogVsmnkd5vxJInmYg"
+                },
+                "source": "Legislator data collected by the @unitedstates project (https://github.com/unitedstates/)",
+                "type": "senator"
+              }
+            ],
+            "district_number": 12,
+            "name": "Congressional District 12",
+            "ocd_id": "ocd-division/country:us/state:ny/cd:12",
+            "proportion": 1
+          }
+        ],
+        "timezone": {
+          "abbreviation": "EST",
+          "name": "America/New_York",
+          "observes_dst": true,
+          "source": "© OpenStreetMap contributors",
+          "utc_offset": -5
+        }
+      }
+    }
+  ]
+}

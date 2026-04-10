@@ -1,8 +1,10 @@
 package output
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"sort"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 )
@@ -14,6 +16,13 @@ type Agent struct {
 
 func NewAgent(w io.Writer, opts Options) *Agent {
 	return &Agent{w: w, opts: opts}
+}
+
+func (a *Agent) formatDistance(miles, km float64) string {
+	if a.opts.Units == "km" {
+		return fmt.Sprintf("%.1f km / %.1f mi", km, miles)
+	}
+	return fmt.Sprintf("%.1f mi / %.1f km", miles, km)
 }
 
 func (a *Agent) FormatGeocode(resp *api.GeocodeResponse) error {
@@ -49,6 +58,26 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 	if a.opts.ShowAddressKey && r.StableAddressKey != "" {
 		fmt.Fprintf(a.w, "| Address Key | %s |\n", r.StableAddressKey)
 	}
+	if r.Fields != nil && len(*r.Fields) > 0 {
+		fmt.Fprintln(a.w)
+		fmt.Fprintln(a.w, "**Fields:**")
+		fmt.Fprintln(a.w)
+		fieldNames := make([]string, 0, len(*r.Fields))
+		for name := range *r.Fields {
+			fieldNames = append(fieldNames, name)
+		}
+		sort.Strings(fieldNames)
+		for _, name := range fieldNames {
+			val := (*r.Fields)[name]
+			fmt.Fprintf(a.w, "**%s:**\n\n", name)
+			data, err := json.MarshalIndent(val, "", "  ")
+			if err != nil {
+				fmt.Fprintf(a.w, "%v\n\n", val)
+			} else {
+				fmt.Fprintf(a.w, "```json\n%s\n```\n\n", string(data))
+			}
+		}
+	}
 	if len(r.Destinations) > 0 {
 		fmt.Fprintln(a.w)
 		fmt.Fprintln(a.w, "**Distances:**")
@@ -65,8 +94,8 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 				mins := float64(*d.DurationSeconds) / 60
 				duration = fmt.Sprintf("%.0f min", mins)
 			}
-			fmt.Fprintf(a.w, "| %s | %.1f mi / %.1f km | %s |\n",
-				destStr, d.DistanceMiles, d.DistanceKm, duration)
+			fmt.Fprintf(a.w, "| %s | %s | %s |\n",
+				destStr, a.formatDistance(d.DistanceMiles, d.DistanceKm), duration)
 		}
 	}
 }
@@ -127,8 +156,8 @@ func (a *Agent) FormatDistance(resp *api.DistanceResponse) error {
 			mins := float64(*d.DurationSeconds) / 60
 			duration = fmt.Sprintf("%.0f min", mins)
 		}
-		fmt.Fprintf(a.w, "| %s | %s | %.1f mi / %.1f km | %s |\n",
-			originAddr, destAddr, d.DistanceMiles, d.DistanceKm, duration)
+		fmt.Fprintf(a.w, "| %s | %s | %s | %s |\n",
+			originAddr, destAddr, a.formatDistance(d.DistanceMiles, d.DistanceKm), duration)
 	}
 	return nil
 }
@@ -166,8 +195,8 @@ func (a *Agent) FormatDistanceMatrix(resp *api.DistanceMatrixResponse) error {
 				mins := float64(*d.DurationSeconds) / 60
 				duration = fmt.Sprintf("%.0f min", mins)
 			}
-			fmt.Fprintf(a.w, "| %s | %.1f mi / %.1f km | %s |\n",
-				destStr, d.DistanceMiles, d.DistanceKm, duration)
+			fmt.Fprintf(a.w, "| %s | %s | %s |\n",
+				destStr, a.formatDistance(d.DistanceMiles, d.DistanceKm), duration)
 		}
 
 		if i < len(resp.Results)-1 {

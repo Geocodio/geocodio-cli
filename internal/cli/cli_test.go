@@ -1,6 +1,10 @@
 package cli
 
 import (
+	"context"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
 	"testing"
@@ -223,6 +227,62 @@ func TestReadLines(t *testing.T) {
 			t.Error("readLines() expected error for non-existent file, got nil")
 		}
 	})
+}
+
+func TestGeocodeWithCommaDestination(t *testing.T) {
+	wantDestinations := []string{
+		"1600 Pennsylvania Ave NW, Washington DC",
+		"350 Fifth Ave, New York, NY",
+	}
+
+	var sawRequest bool
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sawRequest = true
+
+		if r.URL.Path != "/geocode" {
+			t.Errorf("path = %q, want %q", r.URL.Path, "/geocode")
+		}
+
+		destinations := r.URL.Query()["destinations[]"]
+		if len(destinations) != len(wantDestinations) {
+			t.Errorf("expected %d destinations, got %d: %v", len(wantDestinations), len(destinations), destinations)
+		}
+		for i, want := range wantDestinations {
+			if i < len(destinations) && destinations[i] != want {
+				t.Errorf("destination[%d] = %q, want %q", i, destinations[i], want)
+			}
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprint(w, `{
+			"results": [{
+				"formatted_address": "1 Main St, Washington, DC 20001",
+				"location": {"lat": 38.9000, "lng": -77.0000},
+				"accuracy": 1,
+				"accuracy_type": "rooftop",
+				"destinations": [{
+					"query": "1600 Pennsylvania Ave NW, Washington DC",
+					"distance_miles": 1.2
+				}]
+			}]
+		}`)
+	}))
+	defer server.Close()
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"geocode", "1 Main St",
+		"-d", wantDestinations[0],
+		"-d", wantDestinations[1],
+	})
+	if err != nil {
+		t.Fatalf("Run() error = %v", err)
+	}
+	if !sawRequest {
+		t.Fatal("expected geocode request")
+	}
 }
 
 func TestNewApp(t *testing.T) {

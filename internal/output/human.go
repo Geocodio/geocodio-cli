@@ -1,8 +1,10 @@
 package output
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"sort"
 	"strings"
 
 	"github.com/charmbracelet/lipgloss"
@@ -60,6 +62,25 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 	if h.opts.ShowAddressKey && r.StableAddressKey != "" {
 		h.printField("Address Key", r.StableAddressKey)
 	}
+	if r.Fields != nil && len(*r.Fields) > 0 {
+		fmt.Fprintln(h.w)
+		fmt.Fprintf(h.w, "  %s\n", h.style(HeaderStyle, "Fields:"))
+		fieldNames := make([]string, 0, len(*r.Fields))
+		for name := range *r.Fields {
+			fieldNames = append(fieldNames, name)
+		}
+		sort.Strings(fieldNames)
+		for _, name := range fieldNames {
+			val := (*r.Fields)[name]
+			label, summary := fieldSummary(name, val)
+			if summary != "" {
+				h.printField(label, summary)
+			} else {
+				h.printField(label, "")
+			}
+			h.printJSON(val, "      ")
+		}
+	}
 	if len(r.Destinations) > 0 {
 		fmt.Fprintln(h.w)
 		fmt.Fprintf(h.w, "  %s\n", h.style(HeaderStyle, "Distances:"))
@@ -69,7 +90,7 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 				destStr = d.Geocode.FormattedAddress
 			}
 			h.printField("To", destStr)
-			h.printField("Distance", fmt.Sprintf("%.1f miles (%.1f km)", d.DistanceMiles, d.DistanceKm))
+			h.printField("Distance", h.formatDistance(d.DistanceMiles, d.DistanceKm))
 			if d.DurationSeconds != nil {
 				mins := float64(*d.DurationSeconds) / 60
 				h.printField("Duration", fmt.Sprintf("%.0f minutes", mins))
@@ -86,6 +107,123 @@ func (h *Human) printField(label, value string) {
 	} else {
 		fmt.Fprintf(h.w, "  %-18s %s\n", label, value)
 	}
+}
+
+// formatDistance returns a distance string with the primary unit matching the user's preference.
+func (h *Human) formatDistance(miles, km float64) string {
+	if h.opts.Units == "km" {
+		return fmt.Sprintf("%.1f km (%.1f miles)", km, miles)
+	}
+	return fmt.Sprintf("%.1f miles (%.1f km)", miles, km)
+}
+
+// printJSON pretty-prints a value as indented JSON with the given prefix on each line.
+func (h *Human) printJSON(val interface{}, prefix string) {
+	data, err := json.MarshalIndent(val, "", "  ")
+	if err != nil {
+		fmt.Fprintf(h.w, "%s%v\n", prefix, val)
+		return
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		fmt.Fprintf(h.w, "%s%s\n", prefix, line)
+	}
+}
+
+// fieldSummary returns a human-friendly label and summary value for a known field.
+// For unknown fields, it returns the raw key name and an empty summary.
+func fieldSummary(key string, val interface{}) (label, summary string) {
+	switch key {
+	case "congressional_districts":
+		label = "Congressional District"
+		summary = extractFromArray(val, "name")
+	case "state_legislative_districts":
+		label = "State Legislature"
+		if m, ok := val.(map[string]interface{}); ok {
+			house := extractFromArray(m["house"], "name")
+			senate := extractFromArray(m["senate"], "name")
+			parts := []string{}
+			if house != "" {
+				parts = append(parts, house)
+			}
+			if senate != "" {
+				parts = append(parts, senate)
+			}
+			summary = strings.Join(parts, ", ")
+		}
+	case "school_districts":
+		label = "School District"
+		if m, ok := val.(map[string]interface{}); ok {
+			for _, sub := range []string{"unified", "elementary", "secondary"} {
+				if v, ok := m[sub]; ok {
+					if name := extractName(v); name != "" {
+						summary = name
+						break
+					}
+				}
+			}
+		}
+	case "census":
+		label = "Census"
+		if m, ok := val.(map[string]interface{}); ok {
+			parts := []string{}
+			if bc, ok := m["block_code"].(string); ok {
+				parts = append(parts, "Block: "+bc)
+			}
+			if fips, ok := m["full_fips"].(string); ok {
+				parts = append(parts, "FIPS: "+fips)
+			}
+			summary = strings.Join(parts, ", ")
+		}
+	case "timezone":
+		label = "Timezone"
+		summary = extractName(val)
+	case "zip4":
+		label = "USPS ZIP+4"
+		if arr, ok := val.([]interface{}); ok && len(arr) > 0 {
+			if m, ok := arr[0].(map[string]interface{}); ok {
+				if p4, ok := m["plus4"].([]interface{}); ok && len(p4) > 0 {
+					summary = fmt.Sprintf("%v", p4[0])
+				}
+			}
+		}
+	case "riding":
+		label = "Federal Riding"
+		summary = extractName(val)
+	case "provriding":
+		label = "Provincial Riding"
+		summary = extractName(val)
+	default:
+		label = key
+	}
+	return label, summary
+}
+
+// extractFromArray extracts a named string field from the first element of an array.
+func extractFromArray(val interface{}, key string) string {
+	arr, ok := val.([]interface{})
+	if !ok || len(arr) == 0 {
+		return ""
+	}
+	m, ok := arr[0].(map[string]interface{})
+	if !ok {
+		return ""
+	}
+	if s, ok := m[key].(string); ok {
+		return s
+	}
+	return ""
+}
+
+// extractName extracts the "name" field from a map.
+func extractName(val interface{}) string {
+	m, ok := val.(map[string]interface{})
+	if !ok {
+		return ""
+	}
+	if s, ok := m["name"].(string); ok {
+		return s
+	}
+	return ""
 }
 
 // FormatBatchGeocode formats a batch geocode response.
@@ -140,7 +278,7 @@ func (h *Human) FormatDistance(resp *api.DistanceResponse) error {
 			destAddr = d.Geocode.FormattedAddress
 		}
 		h.printField("To", destAddr)
-		h.printField("Distance", fmt.Sprintf("%.1f miles (%.1f km)", d.DistanceMiles, d.DistanceKm))
+		h.printField("Distance", h.formatDistance(d.DistanceMiles, d.DistanceKm))
 		if d.DurationSeconds != nil {
 			mins := float64(*d.DurationSeconds) / 60
 			h.printField("Duration", fmt.Sprintf("%.0f minutes", mins))
@@ -179,7 +317,7 @@ func (h *Human) FormatDistanceMatrix(resp *api.DistanceMatrixResponse) error {
 				destStr = fmt.Sprintf("%.6f, %.6f", d.Location[0], d.Location[1])
 			}
 			h.printField("To", destStr)
-			h.printField("Distance", fmt.Sprintf("%.1f miles (%.1f km)", d.DistanceMiles, d.DistanceKm))
+			h.printField("Distance", h.formatDistance(d.DistanceMiles, d.DistanceKm))
 			if d.DurationSeconds != nil {
 				mins := float64(*d.DurationSeconds) / 60
 				h.printField("Duration", fmt.Sprintf("%.0f minutes", mins))
