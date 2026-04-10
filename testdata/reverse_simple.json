@@ -1,0 +1,137 @@
+{
+  "input": null,
+  "results": [
+    {
+      "address_components": {
+        "number": "1600",
+        "street": "Pennsylvania",
+        "suffix": "Ave",
+        "postdirectional": "NW",
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20500",
+        "country": "US"
+      },
+      "formatted_address": "1600 Pennsylvania Ave NW, Washington, DC 20500",
+      "location": {
+        "lat": 38.897675,
+        "lng": -77.036547
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Statewide (City of Washington)",
+      "stable_address_key": "gcod_usnqu2qtyk7ac38dlpzanec598p2c"
+    },
+    {
+      "address_components": {
+        "number": "1500",
+        "street": "Pennsylvania",
+        "suffix": "Ave",
+        "postdirectional": "NW",
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20229",
+        "country": "US"
+      },
+      "formatted_address": "1500 Pennsylvania Ave NW, Washington, DC 20229",
+      "location": {
+        "lat": 38.89815,
+        "lng": -77.034336
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Statewide (City of Washington)",
+      "stable_address_key": "gcod_usncnq6krcdc49ue8rye8fb3be2d4"
+    },
+    {
+      "address_components": {
+        "number": "700",
+        "street": "Jackson",
+        "suffix": "Pl",
+        "postdirectional": "NW",
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20006",
+        "country": "US"
+      },
+      "formatted_address": "700 Jackson Pl NW, Washington, DC 20006",
+      "location": {
+        "lat": 38.898976,
+        "lng": -77.038219
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Statewide (City of Washington)",
+      "stable_address_key": "gcod_usnseh6yc5ufb6c5marenzsbe9rx9"
+    },
+    {
+      "address_components": {
+        "number": "704",
+        "street": "Jackson",
+        "suffix": "Pl",
+        "postdirectional": "NW",
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20006",
+        "country": "US"
+      },
+      "formatted_address": "704 Jackson Pl NW, Washington, DC 20006",
+      "location": {
+        "lat": 38.899055,
+        "lng": -77.038221
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Statewide (City of Washington)",
+      "stable_address_key": "gcod_usnseh6yc5ufb6c5vmz4rvnzlvnc9"
+    },
+    {
+      "address_components": {
+        "number": "708",
+        "street": "Jackson",
+        "suffix": "Pl",
+        "postdirectional": "NW",
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20006",
+        "country": "US"
+      },
+      "formatted_address": "708 Jackson Pl NW, Washington, DC 20006",
+      "location": {
+        "lat": 38.899132,
+        "lng": -77.038211
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Statewide (City of Washington)",
+      "stable_address_key": "gcod_usnseh6yc5ufb6c5waug5c7d3jdx2"
+    },
+    {
+      "address_components": {
+        "number": "712",
+        "street": "Jackson",
+        "suffix": "Pl",
+        "postdirectional": "NW",
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20006",
+        "country": "US"
+      },
+      "formatted_address": "712 Jackson Pl NW, Washington, DC 20006",
+      "location": {
+        "lat": 38.899207,
+        "lng": -77.038217
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Statewide (City of Washington)",
+      "stable_address_key": "gcod_usnseh6yc5ufb6c5vfzm46uzmuky7"
+    }
+  ]
+}

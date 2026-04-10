@@ -1,0 +1,55 @@
+{
+  "origin": {
+    "location": [
+      38.911936,
+      -77.016719
+    ],
+    "geocode": {
+      "address_components": {
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20001",
+        "country": "US"
+      },
+      "formatted_address": "Washington, DC 20001",
+      "location": {
+        "lat": 38.911936,
+        "lng": -77.016719
+      },
+      "accuracy": 1,
+      "accuracy_type": "place",
+      "source": "TIGER/Line® dataset from the US Census Bureau"
+    }
+  },
+  "mode": "driving",
+  "destinations": [
+    {
+      "query": "New York",
+      "location": [
+        40.750422,
+        -73.996328
+      ],
+      "distance_miles": 226.6,
+      "distance_km": 364.7,
+      "duration_seconds": 17061,
+      "geocode": {
+        "address_components": {
+          "city": "New York",
+          "county": "New York County",
+          "state": "NY",
+          "zip": "10001",
+          "country": "US"
+        },
+        "formatted_address": "New York, NY 10001",
+        "location": {
+          "lat": 40.750422,
+          "lng": -73.996328
+        },
+        "accuracy": 1,
+        "accuracy_type": "place",
+        "source": "TIGER/Line® dataset from the US Census Bureau"
+      }
+    }
+  ]
+}

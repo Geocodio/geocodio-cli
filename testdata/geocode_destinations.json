@@ -1,0 +1,92 @@
+{
+  "input": {
+    "address_components": {
+      "number": "1600",
+      "street": "Pennsylvania",
+      "suffix": "Ave",
+      "postdirectional": "NW",
+      "city": "Washington",
+      "state": "DC",
+      "country": "US"
+    },
+    "formatted_address": "1600 Pennsylvania Ave NW, Washington, DC"
+  },
+  "results": [
+    {
+      "address_components": {
+        "number": "1600",
+        "street": "Pennsylvania",
+        "suffix": "Ave",
+        "postdirectional": "NW",
+        "city": "Washington",
+        "county": "District of Columbia",
+        "state": "DC",
+        "zip": "20500",
+        "country": "US"
+      },
+      "formatted_address": "1600 Pennsylvania Ave NW, Washington, DC 20500",
+      "location": {
+        "lat": 38.897675,
+        "lng": -77.036547
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Statewide (City of Washington)",
+      "stable_address_key": "gcod_usnqu2qtyk7ac38dlpzanec598p2c",
+      "destinations": [
+        {
+          "query": "New York",
+          "location": [
+            40.750422,
+            -73.996328
+          ],
+          "distance_miles": 206.2,
+          "distance_km": 331.8,
+          "geocode": {
+            "address_components": {
+              "city": "New York",
+              "county": "New York County",
+              "state": "NY",
+              "zip": "10001",
+              "country": "US"
+            },
+            "formatted_address": "New York, NY 10001",
+            "location": {
+              "lat": 40.750422,
+              "lng": -73.996328
+            },
+            "accuracy": 1,
+            "accuracy_type": "place",
+            "source": "TIGER/Line® dataset from the US Census Bureau"
+          }
+        },
+        {
+          "query": "Boston",
+          "location": [
+            42.354318,
+            -71.073449
+          ],
+          "distance_miles": 393.7,
+          "distance_km": 633.7,
+          "geocode": {
+            "address_components": {
+              "city": "Boston",
+              "county": "Suffolk County",
+              "state": "MA",
+              "zip": "02106",
+              "country": "US"
+            },
+            "formatted_address": "Boston, MA 02106",
+            "location": {
+              "lat": 42.354318,
+              "lng": -71.073449
+            },
+            "accuracy": 1,
+            "accuracy_type": "place",
+            "source": "TIGER/Line® dataset from the US Census Bureau"
+          }
+        }
+      ]
+    }
+  ]
+}
