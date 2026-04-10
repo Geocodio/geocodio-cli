@@ -230,7 +230,10 @@ func TestReadLines(t *testing.T) {
 }
 
 func TestGeocodeWithCommaDestination(t *testing.T) {
-	const wantDestination = "1600 Pennsylvania Ave NW, Washington DC"
+	wantDestinations := []string{
+		"1600 Pennsylvania Ave NW, Washington DC",
+		"350 Fifth Ave, New York, NY",
+	}
 
 	var sawRequest bool
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -241,10 +244,13 @@ func TestGeocodeWithCommaDestination(t *testing.T) {
 		}
 
 		destinations := r.URL.Query()["destinations[]"]
-		if len(destinations) != 1 {
-			t.Errorf("expected 1 destination, got %d: %v", len(destinations), destinations)
-		} else if destinations[0] != wantDestination {
-			t.Errorf("destination = %q, want %q", destinations[0], wantDestination)
+		if len(destinations) != len(wantDestinations) {
+			t.Errorf("expected %d destinations, got %d: %v", len(wantDestinations), len(destinations), destinations)
+		}
+		for i, want := range wantDestinations {
+			if i < len(destinations) && destinations[i] != want {
+				t.Errorf("destination[%d] = %q, want %q", i, destinations[i], want)
+			}
 		}
 
 		w.Header().Set("Content-Type", "application/json")
@@ -268,7 +274,8 @@ func TestGeocodeWithCommaDestination(t *testing.T) {
 		"--api-key", "test-api-key",
 		"--base-url", server.URL,
 		"geocode", "1 Main St",
-		"--destinations", wantDestination,
+		"-d", wantDestinations[0],
+		"-d", wantDestinations[1],
 	})
 	if err != nil {
 		t.Fatalf("Run() error = %v", err)
