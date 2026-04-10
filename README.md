@@ -97,7 +97,7 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC"
 Geocodio can return additional data like timezone, congressional district, census data, and more. Specify fields with the `--fields` flag:
 
 ```bash
-geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --fields timezone,cd
+geocodio geocode "30 Rockefeller Plaza, New York NY" --fields timezone,cd
 ```
 
 > [!NOTE]
@@ -183,7 +183,7 @@ The coordinates file should have one `lat,lng` pair per line:
 Get only field appends (timezone, census data, etc.) for coordinates without reverse geocoding an address:
 
 ```bash
-geocodio reverse "38.8976,-77.0365" --skip-geocoding --fields timezone,cd
+geocodio reverse "40.7588,-73.9788" --skip-geocoding --fields timezone,cd
 ```
 
 **With inline distance calculations:**
