@@ -167,6 +167,56 @@ func TestAgent_FormatGeocodeStableAddressKey(t *testing.T) {
 	})
 }
 
+func TestAgent_FormatGeocodeWithFields(t *testing.T) {
+	resp := &api.GeocodeResponse{
+		Results: []api.GeocodeResult{
+			{
+				FormattedAddress: "1600 Pennsylvania Ave NW, Washington, DC 20500",
+				Location:         api.Location{Lat: 38.897675, Lng: -77.036547},
+				Accuracy:         1.0,
+				AccuracyType:     "rooftop",
+				Fields: &api.Fields{
+					"timezone": map[string]interface{}{
+						"name":         "America/New_York",
+						"utc_offset":   float64(-5),
+						"observes_dst": true,
+						"abbreviation": "EST",
+					},
+					"congressional_districts": []interface{}{
+						map[string]interface{}{
+							"name":            "Congressional District 8",
+							"district_number": float64(8),
+						},
+					},
+				},
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	a := NewAgent(&buf, Options{})
+
+	err := a.FormatGeocode(resp)
+	if err != nil {
+		t.Fatalf("FormatGeocode() error = %v", err)
+	}
+
+	output := buf.String()
+	wantContains := []string{
+		"**Fields:**",
+		"**timezone:**",
+		"America/New_York",
+		"**congressional_districts:**",
+		"Congressional District 8",
+		"```json",
+	}
+	for _, want := range wantContains {
+		if !strings.Contains(output, want) {
+			t.Errorf("output missing %q:\n%s", want, output)
+		}
+	}
+}
+
 func TestAgent_FormatBatchGeocode(t *testing.T) {
 	var buf bytes.Buffer
 	a := NewAgent(&buf, Options{})

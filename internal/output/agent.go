@@ -1,8 +1,10 @@
 package output
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
+	"sort"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 )
@@ -48,6 +50,26 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 	}
 	if a.opts.ShowAddressKey && r.StableAddressKey != "" {
 		fmt.Fprintf(a.w, "| Address Key | %s |\n", r.StableAddressKey)
+	}
+	if r.Fields != nil && len(*r.Fields) > 0 {
+		fmt.Fprintln(a.w)
+		fmt.Fprintln(a.w, "**Fields:**")
+		fmt.Fprintln(a.w)
+		fieldNames := make([]string, 0, len(*r.Fields))
+		for name := range *r.Fields {
+			fieldNames = append(fieldNames, name)
+		}
+		sort.Strings(fieldNames)
+		for _, name := range fieldNames {
+			val := (*r.Fields)[name]
+			fmt.Fprintf(a.w, "**%s:**\n\n", name)
+			data, err := json.MarshalIndent(val, "", "  ")
+			if err != nil {
+				fmt.Fprintf(a.w, "%v\n\n", val)
+			} else {
+				fmt.Fprintf(a.w, "```json\n%s\n```\n\n", string(data))
+			}
+		}
 	}
 	if len(r.Destinations) > 0 {
 		fmt.Fprintln(a.w)
