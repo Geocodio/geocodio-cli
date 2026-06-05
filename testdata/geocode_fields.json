@@ -1,15 +1,4 @@
 {
-  "input": {
-    "address_components": {
-      "number": "30",
-      "street": "Rockefeller",
-      "suffix": "Plz",
-      "city": "New York",
-      "state": "NY",
-      "country": "US"
-    },
-    "formatted_address": "30 Rockefeller Plz, New York, NY"
-  },
   "results": [
     {
       "address_components": {
@@ -18,8 +7,8 @@
         "suffix": "Plz",
         "city": "New York",
         "county": "New York County",
-        "state": "NY",
-        "zip": "10112",
+        "state_province": "NY",
+        "postal_code": "10112",
         "country": "US"
       },
       "formatted_address": "30 Rockefeller Plz, New York, NY 10112",
@@ -168,7 +157,7 @@
           "abbreviation": "EST",
           "name": "America/New_York",
           "observes_dst": true,
-          "source": "© OpenStreetMap contributors",
+          "source": "\u00a9 OpenStreetMap contributors",
           "utc_offset": -5
         }
       }
@@ -180,8 +169,8 @@
         "suffix": "Plz",
         "city": "New York",
         "county": "New York County",
-        "state": "NY",
-        "zip": "10112",
+        "state_province": "NY",
+        "postal_code": "10112",
         "country": "US"
       },
       "formatted_address": "30 Rockefeller Plz, New York, NY 10112",
@@ -191,7 +180,7 @@
       },
       "accuracy": 1,
       "accuracy_type": "range_interpolation",
-      "source": "TIGER/Line® from the US Census Bureau",
+      "source": "TIGER/Line\u00ae from the US Census Bureau",
       "stable_address_key": "gcod_usnrxk3h7zyvax22hr3383csnkh6c",
       "fields": {
         "congressional_districts": [
@@ -330,7 +319,7 @@
           "abbreviation": "EST",
           "name": "America/New_York",
           "observes_dst": true,
-          "source": "© OpenStreetMap contributors",
+          "source": "\u00a9 OpenStreetMap contributors",
           "utc_offset": -5
         }
       }

@@ -8,8 +8,8 @@
       "address_components": {
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20001",
+        "state_province": "DC",
+        "postal_code": "20001",
         "country": "US"
       },
       "formatted_address": "Washington, DC 20001",
@@ -19,7 +19,7 @@
       },
       "accuracy": 1,
       "accuracy_type": "place",
-      "source": "TIGER/Line® dataset from the US Census Bureau"
+      "source": "TIGER/Line\u00ae dataset from the US Census Bureau"
     }
   },
   "mode": "driving",
@@ -37,8 +37,8 @@
         "address_components": {
           "city": "Philadelphia",
           "county": "Philadelphia County",
-          "state": "PA",
-          "zip": "19101",
+          "state_province": "PA",
+          "postal_code": "19101",
           "country": "US"
         },
         "formatted_address": "Philadelphia, PA 19101",
@@ -48,7 +48,7 @@
         },
         "accuracy": 1,
         "accuracy_type": "place",
-        "source": "TIGER/Line® dataset from the US Census Bureau"
+        "source": "TIGER/Line\u00ae dataset from the US Census Bureau"
       }
     },
     {
@@ -64,8 +64,8 @@
         "address_components": {
           "city": "New York",
           "county": "New York County",
-          "state": "NY",
-          "zip": "10001",
+          "state_province": "NY",
+          "postal_code": "10001",
           "country": "US"
         },
         "formatted_address": "New York, NY 10001",
@@ -75,7 +75,7 @@
         },
         "accuracy": 1,
         "accuracy_type": "place",
-        "source": "TIGER/Line® dataset from the US Census Bureau"
+        "source": "TIGER/Line\u00ae dataset from the US Census Bureau"
       }
     },
     {
@@ -91,8 +91,8 @@
         "address_components": {
           "city": "Boston",
           "county": "Suffolk County",
-          "state": "MA",
-          "zip": "02106",
+          "state_province": "MA",
+          "postal_code": "02106",
           "country": "US"
         },
         "formatted_address": "Boston, MA 02106",
@@ -102,7 +102,7 @@
         },
         "accuracy": 1,
         "accuracy_type": "place",
-        "source": "TIGER/Line® dataset from the US Census Bureau"
+        "source": "TIGER/Line\u00ae dataset from the US Census Bureau"
       }
     }
   ]

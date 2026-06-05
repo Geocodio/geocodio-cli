@@ -1,16 +1,4 @@
 {
-  "input": {
-    "address_components": {
-      "number": "1600",
-      "street": "Pennsylvania",
-      "suffix": "Ave",
-      "postdirectional": "NW",
-      "city": "Washington",
-      "state": "DC",
-      "country": "US"
-    },
-    "formatted_address": "1600 Pennsylvania Ave NW, Washington, DC"
-  },
   "results": [
     {
       "address_components": {
@@ -20,8 +8,8 @@
         "postdirectional": "NW",
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20500",
+        "state_province": "DC",
+        "postal_code": "20500",
         "country": "US"
       },
       "formatted_address": "1600 Pennsylvania Ave NW, Washington, DC 20500",
@@ -47,8 +35,8 @@
             "address_components": {
               "city": "New York",
               "county": "New York County",
-              "state": "NY",
-              "zip": "10001",
+              "state_province": "NY",
+              "postal_code": "10001",
               "country": "US"
             },
             "formatted_address": "New York, NY 10001",
@@ -58,7 +46,7 @@
             },
             "accuracy": 1,
             "accuracy_type": "place",
-            "source": "TIGER/Line® dataset from the US Census Bureau"
+            "source": "TIGER/Line\u00ae dataset from the US Census Bureau"
           }
         }
       ]

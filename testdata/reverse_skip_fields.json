@@ -1,5 +1,4 @@
 {
-  "input": null,
   "results": [
     {
       "formatted_address": "",
@@ -146,7 +145,7 @@
           "abbreviation": "EST",
           "name": "America/New_York",
           "observes_dst": true,
-          "source": "© OpenStreetMap contributors",
+          "source": "\u00a9 OpenStreetMap contributors",
           "utc_offset": -5
         }
       }
