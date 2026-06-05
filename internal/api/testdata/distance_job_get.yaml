@@ -16,7 +16,7 @@ interactions:
                 - application/json
             User-Agent:
                 - geocodio-cli/dev
-        url: https://api.geocod.io/v1.9/distance-jobs?api_key=REDACTED
+        url: https://api.geocod.io/v2/distance-jobs?api_key=REDACTED
         method: POST
       response:
         proto: HTTP/2.0
@@ -74,7 +74,7 @@ interactions:
                 - application/json
             User-Agent:
                 - geocodio-cli/dev
-        url: https://api.geocod.io/v1.9/distance-jobs/427d511e5b5dca632ac0ac10dfc883a8b6c3bc2a?api_key=REDACTED
+        url: https://api.geocod.io/v2/distance-jobs/427d511e5b5dca632ac0ac10dfc883a8b6c3bc2a?api_key=REDACTED
         method: GET
       response:
         proto: HTTP/2.0

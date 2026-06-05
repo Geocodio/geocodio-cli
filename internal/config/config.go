@@ -8,7 +8,7 @@ const (
 	EnvAPIKey = "GEOCODIO_API_KEY"
 
 	// DefaultBaseURL is the default Geocodio API base URL.
-	DefaultBaseURL = "https://api.geocod.io/v1.9"
+	DefaultBaseURL = "https://api.geocod.io/v2"
 )
 
 // Config holds the CLI configuration.

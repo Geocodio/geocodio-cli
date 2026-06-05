@@ -18,7 +18,7 @@ interactions:
                 - application/json
             User-Agent:
                 - geocodio-cli/dev
-        url: https://api.geocod.io/v1.9/geocode?api_key=REDACTED&limit=1&q=1109+N+Highland+St%2C+Arlington+VA
+        url: https://api.geocod.io/v2/geocode?api_key=REDACTED&limit=1&q=1109+N+Highland+St%2C+Arlington+VA
         method: GET
       response:
         proto: HTTP/2.0
@@ -26,7 +26,7 @@ interactions:
         proto_minor: 0
         content_length: -1
         uncompressed: true
-        body: '{"input":{"address_components":{"number":"1109","predirectional":"N","street":"Highland","suffix":"St","formatted_street":"N Highland St","city":"Arlington","state":"VA","country":"US"},"formatted_address":"1109 N Highland St, Arlington, VA"},"results":[{"address_components":{"number":"1109","predirectional":"N","street":"Highland","suffix":"St","formatted_street":"N Highland St","city":"Arlington","county":"Arlington County","state":"VA","zip":"22201","country":"US"},"address_lines":["1109 N Highland St","","Arlington, VA 22201"],"formatted_address":"1109 N Highland St, Arlington, VA 22201","location":{"lat":38.886672,"lng":-77.094735},"accuracy":1,"accuracy_type":"rooftop","source":"Arlington"}]}'
+        body: '{"results":[{"address_components":{"number":"1109","predirectional":"N","street":"Highland","suffix":"St","formatted_street":"N Highland St","city":"Arlington","county":"Arlington County","state_province":"VA","postal_code":"22201","country":"US"},"address_lines":["1109 N Highland St","","Arlington, VA 22201"],"formatted_address":"1109 N Highland St, Arlington, VA 22201","location":{"lat":38.886672,"lng":-77.094735},"accuracy":1,"accuracy_type":"rooftop","source":"Arlington"}]}'
         headers:
             Access-Control-Allow-Headers:
                 - Content-Type, User-Agent

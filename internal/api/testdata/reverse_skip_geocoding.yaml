@@ -20,7 +20,7 @@ interactions:
                 - application/json
             User-Agent:
                 - geocodio-cli/dev
-        url: https://api.geocod.io/v1.9/reverse?api_key=REDACTED&fields=timezone&q=38.897676%2C-77.036530&skipGeocoding=true
+        url: https://api.geocod.io/v2/reverse?api_key=REDACTED&fields=timezone&q=38.897676%2C-77.036530&skipGeocoding=true
         method: GET
       response:
         proto: HTTP/2.0
@@ -28,7 +28,7 @@ interactions:
         proto_minor: 0
         content_length: -1
         uncompressed: true
-        body: '{"results":[{"location":{"lat":38.897676,"lng":-77.03653},"accuracy_type":"coordinate","fields":{"timezone":{"name":"America\/New_York","utc_offset":-5,"observes_dst":true,"abbreviation":"EST","source":"\u00a9 OpenStreetMap contributors"}}}],"_warnings":["There is a newer API version available, please consider upgrading to v1.11. See changelog here: https:\/\/www.geocod.io\/docs\/#changelog"]}'
+        body: '{"results":[{"location":{"lat":38.897676,"lng":-77.03653},"accuracy_type":"coordinate","fields":{"timezone":{"name":"America/New_York","utc_offset":-5,"observes_dst":true,"abbreviation":"EST","source":"© OpenStreetMap contributors"}}}],"_warnings":["There is a newer API version available, please consider upgrading to v1.11. See changelog here: https://www.geocod.io/docs/#changelog"]}'
         headers:
             Access-Control-Allow-Headers:
                 - Content-Type, User-Agent

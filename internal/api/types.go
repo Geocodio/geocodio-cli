@@ -25,15 +25,10 @@ type GeocodeRequest struct {
 }
 
 // GeocodeResponse represents a response from the geocode endpoint.
+// As of Geocodio API v2, the top-level "input" object has been removed;
+// the parsed address now lives in each result's AddressComponents.
 type GeocodeResponse struct {
-	Input   *GeocodeInput   `json:"input"`
 	Results []GeocodeResult `json:"results"`
-}
-
-// GeocodeInput represents the parsed input address.
-type GeocodeInput struct {
-	AddressComponents *AddressComponents `json:"address_components,omitempty"`
-	FormattedAddress  string             `json:"formatted_address,omitempty"`
 }
 
 // AddressComponents represents the components of a parsed address.
@@ -44,12 +39,12 @@ type AddressComponents struct {
 	Street          string `json:"street,omitempty"`
 	Suffix          string `json:"suffix,omitempty"`
 	Postdirectional string `json:"postdirectional,omitempty"`
-	SecondaryUnit   string `json:"secondaryunit,omitempty"`
-	SecondaryNumber string `json:"secondarynumber,omitempty"`
+	UnitType        string `json:"unit_type,omitempty"`
+	UnitNumber      string `json:"unit_number,omitempty"`
 	City            string `json:"city,omitempty"`
 	County          string `json:"county,omitempty"`
-	State           string `json:"state,omitempty"`
-	Zip             string `json:"zip,omitempty"`
+	StateProvince   string `json:"state_province,omitempty"`
+	PostalCode      string `json:"postal_code,omitempty"`
 	Country         string `json:"country,omitempty"`
 }
 

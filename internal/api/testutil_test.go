@@ -47,7 +47,7 @@ func newTestClient(t *testing.T, cassetteName string) *api.Client {
 	}
 
 	return api.NewClient(
-		"https://api.geocod.io/v1.9",
+		"https://api.geocod.io/v2",
 		apiKey,
 		api.WithHTTPClient(&http.Client{Transport: r}),
 	)
