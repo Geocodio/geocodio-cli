@@ -16,7 +16,7 @@ interactions:
                 - application/json
             User-Agent:
                 - geocodio-cli/dev
-        url: https://api.geocod.io/v1.9/distance-jobs?api_key=REDACTED
+        url: https://api.geocod.io/v2/distance-jobs?api_key=REDACTED
         method: POST
       response:
         proto: HTTP/2.0
@@ -74,7 +74,7 @@ interactions:
                 - application/json
             User-Agent:
                 - geocodio-cli/dev
-        url: https://api.geocod.io/v1.9/distance-jobs/9c1ec8a0e450d51416635030230d50b0da8a44c6?api_key=REDACTED
+        url: https://api.geocod.io/v2/distance-jobs/9c1ec8a0e450d51416635030230d50b0da8a44c6?api_key=REDACTED
         method: DELETE
       response:
         proto: HTTP/2.0
@@ -82,7 +82,7 @@ interactions:
         proto_minor: 0
         content_length: -1
         uncompressed: true
-        body: '{"message":"Resource not found. See our documentation at https:\/\/www.geocod.io\/docs\/"}'
+        body: '{"message":"Resource not found. See our documentation at https://www.geocod.io/docs/"}'
         headers:
             Access-Control-Allow-Headers:
                 - Content-Type, User-Agent

@@ -1,5 +1,4 @@
 {
-  "input": null,
   "results": [
     {
       "address_components": {
@@ -9,8 +8,8 @@
         "postdirectional": "NW",
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20500",
+        "state_province": "DC",
+        "postal_code": "20500",
         "country": "US"
       },
       "formatted_address": "1600 Pennsylvania Ave NW, Washington, DC 20500",
@@ -31,8 +30,8 @@
         "postdirectional": "NW",
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20229",
+        "state_province": "DC",
+        "postal_code": "20229",
         "country": "US"
       },
       "formatted_address": "1500 Pennsylvania Ave NW, Washington, DC 20229",
@@ -53,8 +52,8 @@
         "postdirectional": "NW",
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20006",
+        "state_province": "DC",
+        "postal_code": "20006",
         "country": "US"
       },
       "formatted_address": "700 Jackson Pl NW, Washington, DC 20006",
@@ -75,8 +74,8 @@
         "postdirectional": "NW",
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20006",
+        "state_province": "DC",
+        "postal_code": "20006",
         "country": "US"
       },
       "formatted_address": "704 Jackson Pl NW, Washington, DC 20006",
@@ -97,8 +96,8 @@
         "postdirectional": "NW",
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20006",
+        "state_province": "DC",
+        "postal_code": "20006",
         "country": "US"
       },
       "formatted_address": "708 Jackson Pl NW, Washington, DC 20006",
@@ -119,8 +118,8 @@
         "postdirectional": "NW",
         "city": "Washington",
         "county": "District of Columbia",
-        "state": "DC",
-        "zip": "20006",
+        "state_province": "DC",
+        "postal_code": "20006",
         "country": "US"
       },
       "formatted_address": "712 Jackson Pl NW, Washington, DC 20006",
