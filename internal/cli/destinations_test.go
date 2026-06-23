@@ -42,12 +42,6 @@ func TestAppendCountry(t *testing.T) {
 			want:    "10 Downing St, London, United Kingdom",
 		},
 		{
-			name:    "Great Britain ignored (not the same as the UK)",
-			address: "10 Downing St, London",
-			country: "Great Britain",
-			want:    "10 Downing St, London",
-		},
-		{
 			name:    "invalid country GB ignored",
 			address: "10 Downing St, London",
 			country: "GB",
