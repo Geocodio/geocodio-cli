@@ -34,7 +34,7 @@ func normalizeCountry(country string) string {
 		return "USA"
 	case "canada":
 		return "Canada"
-	case "united kingdom", "great britain":
+	case "united kingdom":
 		return "United Kingdom"
 	default:
 		return ""
