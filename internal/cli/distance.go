@@ -12,7 +12,7 @@ import (
 )
 
 // appendCountry appends the country to an address if it's not already present.
-// Only accepts "USA" or "Canada" (case-insensitive). Other values are ignored.
+// Only accepts "USA", "Canada", or "United Kingdom" (case-insensitive). Other values are ignored.
 func appendCountry(address, country string) string {
 	if country == "" {
 		return address
@@ -74,7 +74,7 @@ func distanceCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "country",
 				Aliases: []string{"c"},
-				Usage:   "Country to append to addresses (e.g. Canada)",
+				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom)",
 			},
 		},
 		Action: distanceAction,
@@ -139,7 +139,7 @@ func distanceMatrixCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "country",
 				Aliases: []string{"c"},
-				Usage:   "Country to append to addresses (e.g. Canada)",
+				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom)",
 			},
 		},
 		Action: distanceMatrixAction,
