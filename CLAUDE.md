@@ -72,7 +72,7 @@ The typical action flow: build an `*App` via `newApp(cmd, ...)` (resolves config
 ### Configuration (`internal/config`)
 
 - `GEOCODIO_API_KEY` env var or `--api-key` flag (flag wins). Missing key → `MissingAPIKeyError`.
-- Base URL defaults to `https://api.geocod.io/v1.9`; override with `--base-url` (e.g. Enterprise hosts).
+- Base URL defaults to `https://api.geocod.io/v2`; override with `--base-url` (e.g. Enterprise hosts).
 - `--debug` enables request/response logging to stderr.
 
 ### API client (`internal/api`)

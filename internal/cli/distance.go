@@ -34,6 +34,8 @@ func normalizeCountry(country string) string {
 		return "USA"
 	case "canada":
 		return "Canada"
+	case "united kingdom", "great britain":
+		return "United Kingdom"
 	default:
 		return ""
 	}
@@ -92,7 +94,7 @@ func distanceAction(ctx context.Context, cmd *cli.Command) error {
 	args := cmd.Args().Slice()
 	country := cmd.String("country")
 	if country != "" && normalizeCountry(country) == "" {
-		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA or Canada. Flag will be ignored.\n", country)
+		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, or United Kingdom. Flag will be ignored.\n", country)
 	}
 	origin := appendCountry(args[0], country)
 	destinations := appendCountryToAll(args[1:], country)
@@ -170,7 +172,7 @@ func distanceMatrixAction(ctx context.Context, cmd *cli.Command) error {
 
 	country := cmd.String("country")
 	if country != "" && normalizeCountry(country) == "" {
-		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA or Canada. Flag will be ignored.\n", country)
+		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, or United Kingdom. Flag will be ignored.\n", country)
 	}
 	origins = appendCountryToAll(origins, country)
 	destinations = appendCountryToAll(destinations, country)

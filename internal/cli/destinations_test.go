@@ -30,6 +30,30 @@ func TestAppendCountry(t *testing.T) {
 			want:    "Springfield IL, USA",
 		},
 		{
+			name:    "appends United Kingdom",
+			address: "10 Downing St, London",
+			country: "United Kingdom",
+			want:    "10 Downing St, London, United Kingdom",
+		},
+		{
+			name:    "appends United Kingdom case-insensitive",
+			address: "10 Downing St, London",
+			country: "united kingdom",
+			want:    "10 Downing St, London, United Kingdom",
+		},
+		{
+			name:    "appends Great Britain as United Kingdom",
+			address: "10 Downing St, London",
+			country: "Great Britain",
+			want:    "10 Downing St, London, United Kingdom",
+		},
+		{
+			name:    "invalid country GB ignored",
+			address: "10 Downing St, London",
+			country: "GB",
+			want:    "10 Downing St, London",
+		},
+		{
 			name:    "no country flag",
 			address: "Ottawa ON",
 			country: "",
