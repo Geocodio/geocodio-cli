@@ -32,7 +32,7 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --fields timezone,cd
 # Limit results
 geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --limit 1
 
-# Country hint (e.g. USA, Canada, United Kingdom)
+# Country hint (e.g. USA, Canada, Mexico, United Kingdom)
 geocodio geocode "Ottawa, Ontario" --country Canada
 
 # UK address with UK-specific data appends

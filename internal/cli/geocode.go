@@ -38,7 +38,7 @@ func geocodeCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "country",
 				Aliases: []string{"c"},
-				Usage:   "Country hint (e.g. USA, Canada, United Kingdom)",
+				Usage:   "Country hint (e.g. USA, Canada, Mexico, United Kingdom)",
 			},
 			&cli.BoolFlag{
 				Name:  "show-address-key",

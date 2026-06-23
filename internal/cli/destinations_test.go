@@ -30,6 +30,18 @@ func TestAppendCountry(t *testing.T) {
 			want:    "Springfield IL, USA",
 		},
 		{
+			name:    "appends Mexico",
+			address: "Avenida Juárez, Guadalajara",
+			country: "Mexico",
+			want:    "Avenida Juárez, Guadalajara, Mexico",
+		},
+		{
+			name:    "appends Mexico case-insensitive",
+			address: "Avenida Juárez, Guadalajara",
+			country: "mexico",
+			want:    "Avenida Juárez, Guadalajara, Mexico",
+		},
+		{
 			name:    "appends United Kingdom",
 			address: "10 Downing St, London",
 			country: "United Kingdom",

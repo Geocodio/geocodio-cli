@@ -12,7 +12,7 @@ import (
 )
 
 // appendCountry appends the country to an address if it's not already present.
-// Only accepts "USA", "Canada", or "United Kingdom" (case-insensitive). Other values are ignored.
+// Only accepts "USA", "Canada", "Mexico", or "United Kingdom" (case-insensitive). Other values are ignored.
 func appendCountry(address, country string) string {
 	if country == "" {
 		return address
@@ -34,6 +34,8 @@ func normalizeCountry(country string) string {
 		return "USA"
 	case "canada":
 		return "Canada"
+	case "mexico":
+		return "Mexico"
 	case "united kingdom":
 		return "United Kingdom"
 	default:
@@ -74,7 +76,7 @@ func distanceCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "country",
 				Aliases: []string{"c"},
-				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom)",
+				Usage:   "Country to append to addresses (e.g. USA, Canada, Mexico, United Kingdom)",
 			},
 		},
 		Action: distanceAction,
@@ -94,7 +96,7 @@ func distanceAction(ctx context.Context, cmd *cli.Command) error {
 	args := cmd.Args().Slice()
 	country := cmd.String("country")
 	if country != "" && normalizeCountry(country) == "" {
-		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, or United Kingdom. Flag will be ignored.\n", country)
+		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, Mexico, or United Kingdom. Flag will be ignored.\n", country)
 	}
 	origin := appendCountry(args[0], country)
 	destinations := appendCountryToAll(args[1:], country)
@@ -139,7 +141,7 @@ func distanceMatrixCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "country",
 				Aliases: []string{"c"},
-				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom)",
+				Usage:   "Country to append to addresses (e.g. USA, Canada, Mexico, United Kingdom)",
 			},
 		},
 		Action: distanceMatrixAction,
@@ -172,7 +174,7 @@ func distanceMatrixAction(ctx context.Context, cmd *cli.Command) error {
 
 	country := cmd.String("country")
 	if country != "" && normalizeCountry(country) == "" {
-		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, or United Kingdom. Flag will be ignored.\n", country)
+		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, Mexico, or United Kingdom. Flag will be ignored.\n", country)
 	}
 	origins = appendCountryToAll(origins, country)
 	destinations = appendCountryToAll(destinations, country)
