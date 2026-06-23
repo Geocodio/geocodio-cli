@@ -32,11 +32,11 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --fields timezone,cd
 # Limit results
 geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --limit 1
 
-# Country hint (e.g. US, CA, GB)
-geocodio geocode "Ottawa, Ontario" --country CA
+# Country hint (e.g. USA, Canada, United Kingdom)
+geocodio geocode "Ottawa, Ontario" --country Canada
 
 # UK address with UK-specific data appends
-geocodio geocode "10 Downing St, London" --country GB --fields uk-westminster,uk-local
+geocodio geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
 
 # Batch from file (one address per line, max 10,000)
 geocodio geocode --batch addresses.txt

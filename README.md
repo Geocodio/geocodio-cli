@@ -106,7 +106,7 @@ geocodio geocode "30 Rockefeller Plaza, New York NY" --fields timezone,cd
 United Kingdom data appends are available too — for example Westminster and devolved constituencies and local authority wards:
 
 ```bash
-geocodio geocode "10 Downing St, London" --country GB --fields uk-westminster,uk-local
+geocodio geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
 ```
 
 UK field appends: `uk-westminster`, `uk-westminster-next`, `uk-devolved`, `uk-devolved-next`, `uk-local`, `uk-local-next`. The `-next` variants return upcoming boundary changes.
@@ -156,7 +156,7 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--batch` | `-b` | File containing addresses (one per line) |
 | `--fields` | `-f` | Data append fields (comma-separated) |
 | `--limit` | `-l` | Maximum number of results per address |
-| `--country` | `-c` | Country hint (e.g. `US`, `CA`, `GB`) |
+| `--country` | `-c` | Country hint (e.g. `USA`, `Canada`, `United Kingdom`) |
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
 | `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
