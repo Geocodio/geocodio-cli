@@ -32,8 +32,11 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --fields timezone,cd
 # Limit results
 geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --limit 1
 
-# Country hint (US or CA)
-geocodio geocode "Ottawa, Ontario" --country CA
+# Country hint (e.g. USA, Canada, United Kingdom)
+geocodio geocode "Ottawa, Ontario" --country Canada
+
+# UK address with UK-specific data appends
+geocodio geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
 
 # Batch from file (one address per line, max 10,000)
 geocodio geocode --batch addresses.txt
@@ -44,6 +47,8 @@ geocodio geocode "Washington DC" -d "New York" -d "Boston" --distance-mode drivi
 # Show stable address key
 geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --show-address-key
 ```
+
+UK data append fields: `uk-westminster`, `uk-westminster-next`, `uk-devolved`, `uk-devolved-next`, `uk-local`, `uk-local-next` (the `-next` variants return upcoming boundary changes). Pass them via `--fields` like any other append.
 
 ### Reverse Geocode (coordinates to address)
 

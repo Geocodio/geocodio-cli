@@ -103,6 +103,14 @@ geocodio geocode "30 Rockefeller Plaza, New York NY" --fields timezone,cd
 > [!NOTE]
 > Data append fields may incur additional API costs. See [Geocodio's documentation](https://www.geocod.io/docs/#data-appends-fields) for available fields and pricing.
 
+United Kingdom data appends are available too — for example Westminster and devolved constituencies and local authority wards:
+
+```bash
+geocodio geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
+```
+
+UK field appends: `uk-westminster`, `uk-westminster-next`, `uk-devolved`, `uk-devolved-next`, `uk-local`, `uk-local-next`. The `-next` variants return upcoming boundary changes.
+
 **Batch geocoding from a file:**
 
 For processing many addresses at once, create a file with one address per line and use the `--batch` flag:
@@ -148,7 +156,7 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--batch` | `-b` | File containing addresses (one per line) |
 | `--fields` | `-f` | Data append fields (comma-separated) |
 | `--limit` | `-l` | Maximum number of results per address |
-| `--country` | `-c` | Country hint (`US` or `CA`) |
+| `--country` | `-c` | Country hint (e.g. `USA`, `Canada`, `United Kingdom`) |
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
 | `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
@@ -233,6 +241,7 @@ geocodio distance "Washington DC" "New York" --mode driving --units km
 |------|-------|---------|-------------|
 | `--mode` | `-m` | `driving` | Routing mode: `driving` or `straightline` |
 | `--units` | `-u` | `miles` | Distance units: `miles` or `km` |
+| `--country` | `-c` | | Country to append to addresses (e.g. `USA`, `Canada`, `United Kingdom`) |
 
 > [!TIP]
 > Use `straightline` mode for quick "as the crow flies" distances when you don't need actual driving routes.
