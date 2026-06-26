@@ -241,7 +241,7 @@ geocodio distance "Washington DC" "New York" --mode driving --units km
 |------|-------|---------|-------------|
 | `--mode` | `-m` | `driving` | Routing mode: `driving` or `straightline` |
 | `--units` | `-u` | `miles` | Distance units: `miles` or `km` |
-| `--country` | `-c` | | Country to append to addresses: `USA`, `Canada`, or `United Kingdom` |
+| `--country` | `-c` | | Country to append to addresses (e.g. `USA`, `Canada`, `United Kingdom`) |
 
 > [!TIP]
 > Use `straightline` mode for quick "as the crow flies" distances when you don't need actual driving routes.

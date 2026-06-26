@@ -18,10 +18,10 @@ func TestAppendCountry(t *testing.T) {
 			want:    "Ottawa ON, Canada",
 		},
 		{
-			name:    "appends Canada case-insensitive",
+			name:    "appends value as-is without normalization",
 			address: "Ottawa ON",
 			country: "canada",
-			want:    "Ottawa ON, Canada",
+			want:    "Ottawa ON, canada",
 		},
 		{
 			name:    "appends USA",
@@ -36,33 +36,21 @@ func TestAppendCountry(t *testing.T) {
 			want:    "10 Downing St, London, United Kingdom",
 		},
 		{
-			name:    "appends United Kingdom case-insensitive",
-			address: "10 Downing St, London",
-			country: "united kingdom",
-			want:    "10 Downing St, London, United Kingdom",
-		},
-		{
-			name:    "invalid country GB ignored",
+			name:    "appends arbitrary country code (no validation)",
 			address: "10 Downing St, London",
 			country: "GB",
-			want:    "10 Downing St, London",
+			want:    "10 Downing St, London, GB",
+		},
+		{
+			name:    "appends abbreviated country (no validation)",
+			address: "Berlin",
+			country: "DE",
+			want:    "Berlin, DE",
 		},
 		{
 			name:    "no country flag",
 			address: "Ottawa ON",
 			country: "",
-			want:    "Ottawa ON",
-		},
-		{
-			name:    "invalid country ignored",
-			address: "Ottawa ON",
-			country: "CA",
-			want:    "Ottawa ON",
-		},
-		{
-			name:    "invalid country US ignored",
-			address: "Ottawa ON",
-			country: "US",
 			want:    "Ottawa ON",
 		},
 		{

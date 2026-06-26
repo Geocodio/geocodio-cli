@@ -12,33 +12,16 @@ import (
 )
 
 // appendCountry appends the country to an address if it's not already present.
-// Only accepts "USA", "Canada", or "United Kingdom" (case-insensitive). Other values are ignored.
+// The value is passed through as-is; the Geocodio API accepts a wide range of
+// country names and formats, so no client-side validation or normalization is done.
 func appendCountry(address, country string) string {
 	if country == "" {
 		return address
 	}
-	normalized := normalizeCountry(country)
-	if normalized == "" {
+	if strings.Contains(strings.ToLower(address), strings.ToLower(country)) {
 		return address
 	}
-	if strings.Contains(strings.ToLower(address), strings.ToLower(normalized)) {
-		return address
-	}
-	return address + ", " + normalized
-}
-
-// normalizeCountry returns the accepted country string or empty if invalid.
-func normalizeCountry(country string) string {
-	switch strings.ToLower(country) {
-	case "usa":
-		return "USA"
-	case "canada":
-		return "Canada"
-	case "united kingdom":
-		return "United Kingdom"
-	default:
-		return ""
-	}
+	return address + ", " + country
 }
 
 // appendCountryToAll appends the country to each address in the slice.
@@ -93,9 +76,6 @@ func distanceAction(ctx context.Context, cmd *cli.Command) error {
 
 	args := cmd.Args().Slice()
 	country := cmd.String("country")
-	if country != "" && normalizeCountry(country) == "" {
-		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, or United Kingdom. Flag will be ignored.\n", country)
-	}
 	origin := appendCountry(args[0], country)
 	destinations := appendCountryToAll(args[1:], country)
 
@@ -171,9 +151,6 @@ func distanceMatrixAction(ctx context.Context, cmd *cli.Command) error {
 	}
 
 	country := cmd.String("country")
-	if country != "" && normalizeCountry(country) == "" {
-		fmt.Fprintf(app.stderr, "Warning: %q is not a valid country. Accepted values are USA, Canada, or United Kingdom. Flag will be ignored.\n", country)
-	}
 	origins = appendCountryToAll(origins, country)
 	destinations = appendCountryToAll(destinations, country)
 	mode := cmd.String("mode")
