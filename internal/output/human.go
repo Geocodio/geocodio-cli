@@ -56,6 +56,9 @@ func (h *Human) formatResult(r *api.GeocodeResult, num, total int) {
 	h.printField("Coordinates", fmt.Sprintf("%.7f, %.7f", r.Location.Lat, r.Location.Lng))
 	h.printField("Accuracy", fmt.Sprintf("%s (%.2f)", r.AccuracyType, r.Accuracy))
 
+	if r.MatchType != "" {
+		h.printField("Match Type", r.MatchType)
+	}
 	if r.Source != "" {
 		h.printField("Source", r.Source)
 	}

@@ -1,0 +1,280 @@
+{
+    "results": [
+        {
+            "stable_address_key": "gcod_usn222gxcazcmuj4eeyt5stezyq7b-kywxxr77v9db3",
+            "address_components": {
+                "number": "996C",
+                "street": "East",
+                "suffix": "St",
+                "unit_type": "Apt",
+                "unit_number": "10",
+                "formatted_street": "East St",
+                "city": "Walpole",
+                "county": "Norfolk County",
+                "state_province": "MA",
+                "postal_code": "02081",
+                "country": "US"
+            },
+            "address_lines": [
+                "996C East St",
+                "Apt 10",
+                "Walpole, MA 02081"
+            ],
+            "formatted_address": "996C East St, Apt 10, Walpole, MA 02081",
+            "location": {
+                "lat": 42.146821,
+                "lng": -71.254055
+            },
+            "accuracy": 1,
+            "accuracy_type": "rooftop",
+            "match_type": "unit",
+            "source": "Office of Geographic Information (MassGIS), Commonwealth of Massachusetts, MassIT",
+            "fields": {
+                "census": {
+                    "2025": {
+                        "census_year": 2025,
+                        "state_fips": "25",
+                        "county_fips": "25021",
+                        "tract_code": "411302",
+                        "block_code": "2002",
+                        "block_group": "2",
+                        "full_fips": "250214113022002",
+                        "place": {
+                            "name": "Walpole",
+                            "fips": "2572460"
+                        },
+                        "metro_micro_statistical_area": {
+                            "name": "Boston-Cambridge-Newton, MA-NH",
+                            "area_code": "14460",
+                            "type": "metropolitan"
+                        },
+                        "combined_statistical_area": {
+                            "name": "Boston-Worcester-Providence, MA-RI-NH",
+                            "area_code": "148"
+                        },
+                        "metropolitan_division": {
+                            "name": "Boston, MA",
+                            "area_code": "14454"
+                        },
+                        "county_subdivision": {
+                            "name": "Walpole",
+                            "fips": "72495",
+                            "fips_class": {
+                                "class_code": "T1",
+                                "description": "An active county subdivision that is not coextensive with an incorporated place"
+                            }
+                        },
+                        "source": "US Census Bureau"
+                    }
+                }
+            }
+        },
+        {
+            "stable_address_key": "gcod_usn222gxcazcmuj4eeyt5stezyq7b",
+            "address_components": {
+                "number": "996C",
+                "street": "East",
+                "suffix": "St",
+                "unit_type": "Apt",
+                "unit_number": "10",
+                "formatted_street": "East St",
+                "city": "Walpole",
+                "county": "Norfolk County",
+                "state_province": "MA",
+                "postal_code": "02081",
+                "country": "US"
+            },
+            "address_lines": [
+                "996C East St",
+                "Apt 10",
+                "Walpole, MA 02081"
+            ],
+            "formatted_address": "996C East St, Apt 10, Walpole, MA 02081",
+            "location": {
+                "lat": 42.146821,
+                "lng": -71.254055
+            },
+            "accuracy": 1,
+            "accuracy_type": "rooftop",
+            "match_type": "building_centroid",
+            "source": "Office of Geographic Information (MassGIS), Commonwealth of Massachusetts, MassIT",
+            "fields": {
+                "census": {
+                    "2025": {
+                        "census_year": 2025,
+                        "state_fips": "25",
+                        "county_fips": "25021",
+                        "tract_code": "411302",
+                        "block_code": "2002",
+                        "block_group": "2",
+                        "full_fips": "250214113022002",
+                        "place": {
+                            "name": "Walpole",
+                            "fips": "2572460"
+                        },
+                        "metro_micro_statistical_area": {
+                            "name": "Boston-Cambridge-Newton, MA-NH",
+                            "area_code": "14460",
+                            "type": "metropolitan"
+                        },
+                        "combined_statistical_area": {
+                            "name": "Boston-Worcester-Providence, MA-RI-NH",
+                            "area_code": "148"
+                        },
+                        "metropolitan_division": {
+                            "name": "Boston, MA",
+                            "area_code": "14454"
+                        },
+                        "county_subdivision": {
+                            "name": "Walpole",
+                            "fips": "72495",
+                            "fips_class": {
+                                "class_code": "T1",
+                                "description": "An active county subdivision that is not coextensive with an incorporated place"
+                            }
+                        },
+                        "source": "US Census Bureau"
+                    }
+                }
+            }
+        },
+        {
+            "stable_address_key": "gcod_usn222gxcazcmuj48b8kekvjucpyc-6tvssndu3n287",
+            "address_components": {
+                "number": "996",
+                "street": "East",
+                "suffix": "St",
+                "unit_type": "Apt",
+                "unit_number": "10",
+                "formatted_street": "East St",
+                "city": "Walpole",
+                "county": "Norfolk County",
+                "state_province": "MA",
+                "postal_code": "02081",
+                "country": "US"
+            },
+            "address_lines": [
+                "996 East St",
+                "Apt 10",
+                "Walpole, MA 02081"
+            ],
+            "formatted_address": "996 East St, Apt 10, Walpole, MA 02081",
+            "location": {
+                "lat": 42.146821,
+                "lng": -71.254055
+            },
+            "accuracy": 1,
+            "accuracy_type": "rooftop",
+            "match_type": "unit",
+            "source": "Office of Geographic Information (MassGIS), Commonwealth of Massachusetts, MassIT",
+            "fields": {
+                "census": {
+                    "2025": {
+                        "census_year": 2025,
+                        "state_fips": "25",
+                        "county_fips": "25021",
+                        "tract_code": "411302",
+                        "block_code": "2002",
+                        "block_group": "2",
+                        "full_fips": "250214113022002",
+                        "place": {
+                            "name": "Walpole",
+                            "fips": "2572460"
+                        },
+                        "metro_micro_statistical_area": {
+                            "name": "Boston-Cambridge-Newton, MA-NH",
+                            "area_code": "14460",
+                            "type": "metropolitan"
+                        },
+                        "combined_statistical_area": {
+                            "name": "Boston-Worcester-Providence, MA-RI-NH",
+                            "area_code": "148"
+                        },
+                        "metropolitan_division": {
+                            "name": "Boston, MA",
+                            "area_code": "14454"
+                        },
+                        "county_subdivision": {
+                            "name": "Walpole",
+                            "fips": "72495",
+                            "fips_class": {
+                                "class_code": "T1",
+                                "description": "An active county subdivision that is not coextensive with an incorporated place"
+                            }
+                        },
+                        "source": "US Census Bureau"
+                    }
+                }
+            }
+        },
+        {
+            "stable_address_key": "gcod_usn222gxcazcmuj48b8kekvjucpyc",
+            "address_components": {
+                "number": "996",
+                "street": "East",
+                "suffix": "St",
+                "unit_type": "Apt",
+                "unit_number": "10",
+                "formatted_street": "East St",
+                "city": "Walpole",
+                "county": "Norfolk County",
+                "state_province": "MA",
+                "postal_code": "02081",
+                "country": "US"
+            },
+            "address_lines": [
+                "996 East St",
+                "Apt 10",
+                "Walpole, MA 02081"
+            ],
+            "formatted_address": "996 East St, Apt 10, Walpole, MA 02081",
+            "location": {
+                "lat": 42.146821,
+                "lng": -71.254055
+            },
+            "accuracy": 1,
+            "accuracy_type": "rooftop",
+            "match_type": "building_centroid",
+            "source": "Office of Geographic Information (MassGIS), Commonwealth of Massachusetts, MassIT",
+            "fields": {
+                "census": {
+                    "2025": {
+                        "census_year": 2025,
+                        "state_fips": "25",
+                        "county_fips": "25021",
+                        "tract_code": "411302",
+                        "block_code": "2002",
+                        "block_group": "2",
+                        "full_fips": "250214113022002",
+                        "place": {
+                            "name": "Walpole",
+                            "fips": "2572460"
+                        },
+                        "metro_micro_statistical_area": {
+                            "name": "Boston-Cambridge-Newton, MA-NH",
+                            "area_code": "14460",
+                            "type": "metropolitan"
+                        },
+                        "combined_statistical_area": {
+                            "name": "Boston-Worcester-Providence, MA-RI-NH",
+                            "area_code": "148"
+                        },
+                        "metropolitan_division": {
+                            "name": "Boston, MA",
+                            "area_code": "14454"
+                        },
+                        "county_subdivision": {
+                            "name": "Walpole",
+                            "fips": "72495",
+                            "fips_class": {
+                                "class_code": "T1",
+                                "description": "An active county subdivision that is not coextensive with an incorporated place"
+                            }
+                        },
+                        "source": "US Census Bureau"
+                    }
+                }
+            }
+        }
+    ]
+}

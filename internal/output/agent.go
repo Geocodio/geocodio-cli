@@ -52,6 +52,9 @@ func (a *Agent) writeResultTable(r *api.GeocodeResult) {
 	fmt.Fprintf(a.w, "| Matched Address | %s |\n", r.FormattedAddress)
 	fmt.Fprintf(a.w, "| Coordinates | %.7f, %.7f |\n", r.Location.Lat, r.Location.Lng)
 	fmt.Fprintf(a.w, "| Accuracy | %s (%.2f) |\n", r.AccuracyType, r.Accuracy)
+	if r.MatchType != "" {
+		fmt.Fprintf(a.w, "| Match Type | %s |\n", r.MatchType)
+	}
 	if r.Source != "" {
 		fmt.Fprintf(a.w, "| Source | %s |\n", r.Source)
 	}
