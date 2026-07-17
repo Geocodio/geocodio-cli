@@ -41,6 +41,7 @@ type AddressComponents struct {
 	Postdirectional string `json:"postdirectional,omitempty"`
 	UnitType        string `json:"unit_type,omitempty"`
 	UnitNumber      string `json:"unit_number,omitempty"`
+	FormattedStreet string `json:"formatted_street,omitempty"`
 	City            string `json:"city,omitempty"`
 	County          string `json:"county,omitempty"`
 	StateProvince   string `json:"state_province,omitempty"`
@@ -51,10 +52,12 @@ type AddressComponents struct {
 // GeocodeResult represents a single geocoding result.
 type GeocodeResult struct {
 	AddressComponents *AddressComponents    `json:"address_components,omitempty"`
+	AddressLines      []string              `json:"address_lines,omitempty"`
 	FormattedAddress  string                `json:"formatted_address"`
 	Location          Location              `json:"location"`
 	Accuracy          float64               `json:"accuracy"`
 	AccuracyType      string                `json:"accuracy_type"`
+	MatchType         string                `json:"match_type,omitempty"`
 	Source            string                `json:"source,omitempty"`
 	StableAddressKey  string                `json:"stable_address_key,omitempty"`
 	Fields            *Fields               `json:"fields,omitempty"`

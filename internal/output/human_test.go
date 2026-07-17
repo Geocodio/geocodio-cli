@@ -30,6 +30,21 @@ func TestHuman_FormatGeocode(t *testing.T) {
 			wantContains: []string{"1600 Pennsylvania Ave NW", "38.8977", "rooftop"},
 		},
 		{
+			name: "unit match type shown",
+			resp: &api.GeocodeResponse{
+				Results: []api.GeocodeResult{
+					{
+						FormattedAddress: "996C East St, Apt 10, Walpole, MA 02081",
+						Location:         api.Location{Lat: 42.146821, Lng: -71.254055},
+						Accuracy:         1.0,
+						AccuracyType:     "rooftop",
+						MatchType:        "unit",
+					},
+				},
+			},
+			wantContains: []string{"Match Type", "unit"},
+		},
+		{
 			name: "multiple results",
 			resp: &api.GeocodeResponse{
 				Results: []api.GeocodeResult{

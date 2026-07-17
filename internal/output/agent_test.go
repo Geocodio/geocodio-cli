@@ -36,6 +36,23 @@ func TestAgent_FormatGeocode(t *testing.T) {
 			},
 		},
 		{
+			name: "unit match type shown",
+			resp: &api.GeocodeResponse{
+				Results: []api.GeocodeResult{
+					{
+						FormattedAddress: "996C East St, Apt 10, Walpole, MA 02081",
+						Location:         api.Location{Lat: 42.146821, Lng: -71.254055},
+						Accuracy:         1.0,
+						AccuracyType:     "rooftop",
+						MatchType:        "unit",
+					},
+				},
+			},
+			wantContains: []string{
+				"| Match Type | unit |",
+			},
+		},
+		{
 			name: "multiple results",
 			resp: &api.GeocodeResponse{
 				Results: []api.GeocodeResult{
