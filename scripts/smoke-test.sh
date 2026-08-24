@@ -100,6 +100,12 @@ address,city,state
 350 Fifth Avenue,New York,NY
 EOF
 
+cat > "$TMPDIR/uk_addresses.txt" <<EOF
+10 Downing St, London, United Kingdom
+221B Baker St, London, United Kingdom
+The Shard, London, United Kingdom
+EOF
+
 # ─── Geocode ───────────────────────────────────────────────
 bold "Geocode"
 run_test "Single address"                    "$CLI" geocode "1600 Pennsylvania Ave NW, Washington DC"
@@ -115,6 +121,9 @@ run_test "With destinations (straightline)"  "$CLI" geocode "1600 Pennsylvania A
 run_test "With destinations (km)"            "$CLI" geocode "1600 Pennsylvania Ave NW, Washington DC" -d "New York" --distance-units km
 run_test "Batch geocode"                     "$CLI" geocode --batch "$TMPDIR/addresses.txt"
 run_test "Batch geocode (JSON)"              "$CLI" geocode --batch "$TMPDIR/addresses.txt" --json
+run_test "UK address (country hint)"         "$CLI" geocode "10 Downing St, London" --country "United Kingdom"
+run_test "UK data appends"                   "$CLI" geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
+run_test "UK batch geocode"                  "$CLI" geocode --batch "$TMPDIR/uk_addresses.txt"
 echo
 
 # ─── Reverse Geocode ──────────────────────────────────────

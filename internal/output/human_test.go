@@ -255,6 +255,57 @@ func TestHuman_FormatGeocodeWithFields(t *testing.T) {
 	}
 }
 
+func TestHuman_FormatGeocodeWithUKFields(t *testing.T) {
+	resp := &api.GeocodeResponse{
+		Results: []api.GeocodeResult{
+			{
+				FormattedAddress: "10 Downing St, London SW1A 2AA",
+				Location:         api.Location{Lat: 51.503541, Lng: -0.12767},
+				Accuracy:         1.0,
+				AccuracyType:     "rooftop",
+				Fields: &api.Fields{
+					"uk_westminster": []interface{}{
+						map[string]interface{}{
+							"district_type": "westminster_constituency",
+							"name":          "Cities of London and Westminster",
+						},
+					},
+					"uk_local": []interface{}{
+						map[string]interface{}{
+							"district_type": "ward",
+							"name":          "St James's",
+						},
+					},
+				},
+			},
+		},
+	}
+
+	var buf bytes.Buffer
+	h := NewHuman(&buf, false, Options{})
+
+	err := h.FormatGeocode(resp)
+	if err != nil {
+		t.Fatalf("FormatGeocode() error = %v", err)
+	}
+
+	output := buf.String()
+	// UK appends should render with friendly labels and their district names,
+	// not the raw field keys.
+	wantContains := []string{
+		"Fields:",
+		"Westminster Constituency",
+		"Cities of London and Westminster",
+		"Local Authority",
+		"St James's",
+	}
+	for _, want := range wantContains {
+		if !strings.Contains(output, want) {
+			t.Errorf("output missing %q:\n%s", want, output)
+		}
+	}
+}
+
 func TestHuman_FormatGeocodeWithFields_NoFields(t *testing.T) {
 	resp := &api.GeocodeResponse{
 		Results: []api.GeocodeResult{

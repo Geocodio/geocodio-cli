@@ -2,6 +2,23 @@
 
 All notable changes to the Geocodio CLI are documented in this file.
 
+## v3.2.0 - 26-08-25
+
+### Added
+
+- Friendly labels for UK data appends in the default (human) output. `uk-westminster`, `uk-devolved`, and `uk-local` now render as "Westminster Constituency", "Devolved Legislature", and "Local Authority" with the district name, instead of the raw field key.
+
+## v3.1.0 - 2026-07-17
+
+### Added
+
+- **United Kingdom support.** Pass `--country "United Kingdom"` as a country hint, and request UK data appends via `--fields`: `uk-westminster`, `uk-westminster-next`, `uk-devolved`, `uk-devolved-next`, `uk-local`, `uk-local-next` (the `-next` variants return upcoming boundary changes).
+- `match_type`, `address_lines`, and `formatted_street` are now surfaced in geocode results.
+
+### Changed
+
+- Removed client-side country validation — country hints are passed through to the API as-is.
+
 ## v3.0.0 - 2026-06-05
 
 ### Breaking changes
