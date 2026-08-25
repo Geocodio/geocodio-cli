@@ -1,0 +1,46 @@
+{
+  "results": [
+    {
+      "address_components": {
+        "number": "10",
+        "street": "Downing",
+        "suffix": "St",
+        "formatted_street": "Downing St",
+        "city": "London",
+        "nation": "England",
+        "postal_code": "SW1A 2AA",
+        "country": "GB"
+      },
+      "formatted_address": "10 Downing St, London SW1A 2AA",
+      "location": {
+        "lat": 51.503541,
+        "lng": -0.12767
+      },
+      "accuracy": 1,
+      "accuracy_type": "rooftop",
+      "source": "Contains OS data © Crown copyright. Contains PAF® data © Royal Mail Group Ltd.",
+      "fields": {
+        "uk_westminster": [
+          {
+            "district_type": "westminster_constituency",
+            "gss_code": "E14001172",
+            "ocd_id": "ocd-division/country:gb/part:eng/region:uki/ed:cities_of_london_and_westminster",
+            "name": "Cities of London and Westminster",
+            "is_upcoming_district": false,
+            "source": "Office for National Statistics"
+          }
+        ],
+        "uk_local": [
+          {
+            "district_type": "ward",
+            "gss_code": "E05014959",
+            "ocd_id": "ocd-division/country:gb/part:eng/ward:e05014959",
+            "name": "St James's",
+            "is_upcoming_district": false,
+            "source": "Office for National Statistics"
+          }
+        ]
+      }
+    }
+  ]
+}

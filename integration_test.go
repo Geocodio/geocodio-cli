@@ -101,6 +101,25 @@ func TestIntegration_GeocodeWithFields(t *testing.T) {
 	assertContains(t, output, "Congressional District 12")
 }
 
+// README Example: geocodio geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
+func TestIntegration_GeocodeUKFields(t *testing.T) {
+	server := newFixtureServer(t, map[string]string{
+		"/geocode": loadFixture(t, "geocode_uk.json"),
+	})
+	defer server.Close()
+
+	output, err := runCLI(t, server, "geocode", "10 Downing St, London", "--country", "United Kingdom", "--fields", "uk-westminster,uk-local")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	assertContains(t, output, "10 Downing St, London SW1A 2AA")
+	assertContains(t, output, "Westminster Constituency")
+	assertContains(t, output, "Cities of London and Westminster")
+	assertContains(t, output, "Local Authority")
+	assertContains(t, output, "St James's")
+}
+
 // README Example: geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --destinations "New York" --destinations "Boston"
 func TestIntegration_GeocodeWithDestinations(t *testing.T) {
 	server := newFixtureServer(t, map[string]string{

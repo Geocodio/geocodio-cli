@@ -195,6 +195,15 @@ func fieldSummary(key string, val interface{}) (label, summary string) {
 	case "provriding":
 		label = "Provincial Riding"
 		summary = extractName(val)
+	case "uk_westminster":
+		label = "Westminster Constituency"
+		summary = extractFromArray(val, "name")
+	case "uk_devolved":
+		label = "Devolved Legislature"
+		summary = extractFromArray(val, "name")
+	case "uk_local":
+		label = "Local Authority"
+		summary = extractFromArray(val, "name")
 	default:
 		label = key
 	}
