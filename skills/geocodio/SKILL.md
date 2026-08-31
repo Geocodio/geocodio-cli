@@ -44,6 +44,9 @@ geocodio geocode --batch addresses.txt
 # With inline distance to destinations
 geocodio geocode "Washington DC" -d "New York" -d "Boston" --distance-mode driving
 
+# Inline distance with a radius limit (note the distance- prefix on these commands)
+geocodio geocode "Washington DC" -d "New York" -d "Boston" --distance-radius 150
+
 # Show stable address key
 geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --show-address-key
 ```
@@ -79,11 +82,45 @@ geocodio distance "Washington DC" "New York" "Boston" "Philadelphia"
 geocodio distance "Washington DC" "New York" --mode driving --units km
 ```
 
+**Radius limiting and filtering.** Use these to answer "which of these are within X of the origin?" rather than filtering the full result set yourself:
+
+```bash
+# Only destinations within 150 miles (--radius is an alias for --max-distance)
+geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" --radius 150
+
+# A ring: between 50 and 150 miles out
+geocodio distance "Washington DC" "New York" "Boston" --min-distance 50 --max-distance 150
+
+# Within a 2-hour drive (duration filters need --mode driving)
+geocodio distance "Washington DC" "New York" "Boston" --mode driving --max-duration 7200
+
+# The 3 nearest, sorted by driving time
+geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" \
+  --mode driving --max-results 3 --order-by duration --sort-order asc
+```
+
+| Flag | Description |
+|------|-------------|
+| `--max-distance` / `--radius` | Radius limit: only keep destinations within this distance (in `--units`) |
+| `--min-distance` | Only keep destinations at least this far away (in `--units`) |
+| `--max-duration` | Only keep destinations within this travel time in seconds (driving mode only) |
+| `--min-duration` | Only keep destinations at least this many seconds away (driving mode only) |
+| `--max-results` | Only keep the N nearest destinations per origin |
+| `--order-by` | Sort destinations by `distance` (default) or `duration` |
+| `--sort-order` | `asc` (default) or `desc` |
+
 ### Distance Matrix (many-to-many)
 
 ```bash
 # Requires files for origins and destinations (one location per line)
 geocodio distance-matrix --origins origins.txt --destinations destinations.txt --mode driving --units miles
+
+# The same radius/duration/sorting flags apply, per origin
+geocodio distance-matrix --origins customers.txt --destinations stores.txt --radius 10
+
+# Nearest store to each customer by driving time
+geocodio distance-matrix --origins customers.txt --destinations stores.txt \
+  --mode driving --max-results 1 --order-by duration
 ```
 
 ### Async Distance Jobs (large calculations)
@@ -137,6 +174,11 @@ geocodio geocode --batch addresses.txt --json
 **Find distances from one address to several others:**
 ```bash
 geocodio geocode "123 Main St, Springfield IL" -d "Chicago IL" -d "St Louis MO" --distance-mode driving --agent
+```
+
+**Find which locations are within a radius:**
+```bash
+geocodio distance "123 Main St, Springfield IL" "Chicago IL" "St Louis MO" "Indianapolis IN" --radius 100 --agent
 ```
 
 **Process a CSV with address columns:**

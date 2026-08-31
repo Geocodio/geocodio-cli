@@ -123,12 +123,39 @@ type BatchReverseGeocodeResult struct {
 	Response GeocodeResponse `json:"response"`
 }
 
-// DistanceRequest represents a distance calculation request.
+// DistanceFilters holds the optional filtering and sorting parameters accepted by
+// the /distance and /distance-matrix endpoints. Zero values are omitted from the
+// request so the API applies its own defaults.
+//
+// Note that these endpoints take the parameters unprefixed (max_distance), while
+// the geocode and reverse endpoints take the distance_-prefixed spelling — see
+// DestinationParams.
+type DistanceFilters struct {
+	MaxResults  int     // keep only the N nearest destinations per origin
+	MaxDistance float64 // radius limit: drop destinations farther away than this, in Units
+	MinDistance float64 // drop destinations closer than this, in Units
+	MaxDuration int     // drop destinations farther away than this many seconds (driving mode only)
+	MinDuration int     // drop destinations closer than this many seconds (driving mode only)
+	OrderBy     string  // "distance" or "duration"
+	SortOrder   string  // "asc" or "desc"
+}
+
+// DistanceRequest represents a distance calculation request from a single origin.
 type DistanceRequest struct {
+	Origin       string
+	Destinations []string
+	Mode         string // "driving" or "straightline"
+	Units        string // "miles" or "km"
+	DistanceFilters
+}
+
+// DistanceMatrixRequest represents an N×M distance matrix request.
+type DistanceMatrixRequest struct {
 	Origins      []string
 	Destinations []string
 	Mode         string // "driving" or "straightline"
 	Units        string // "miles" or "km"
+	DistanceFilters
 }
 
 // DistanceResponse represents a distance calculation response.

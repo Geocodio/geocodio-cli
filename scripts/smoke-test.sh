@@ -17,8 +17,9 @@
 # What it tests:
 #   - geocode:          single, batch, all flags (fields, limit, country, destinations, output formats)
 #   - reverse:          single, batch, all flags (fields, skip-geocoding, destinations, output formats)
-#   - distance:         single/multi destination, driving/straightline, miles/km, output formats
-#   - distance-matrix:  file-based origins/destinations, all mode/unit combos
+#   - distance:         single/multi destination, driving/straightline, miles/km,
+#                       radius/duration/result filters, output formats
+#   - distance-matrix:  file-based origins/destinations, all mode/unit combos, filters
 #   - distance-jobs:    list, create → status → delete lifecycle
 #   - lists:            list, upload → status → download → delete lifecycle
 #   - global flags:     --version, --help, --no-color
@@ -147,6 +148,10 @@ run_test "Multiple destinations"             "$CLI" distance "Washington DC" "Ne
 run_test "Driving mode"                      "$CLI" distance "Washington DC" "New York" --mode driving
 run_test "Straightline mode"                 "$CLI" distance "Washington DC" "New York" --mode straightline
 run_test "Kilometers"                        "$CLI" distance "Washington DC" "New York" --units km
+run_test "Radius limit"                      "$CLI" distance "Washington DC" "New York" "Boston" "Philadelphia" --radius 150
+run_test "Distance range"                    "$CLI" distance "Washington DC" "New York" "Boston" --min-distance 50 --max-distance 300
+run_test "Duration limit"                    "$CLI" distance "Washington DC" "New York" "Boston" --mode driving --max-duration 21600
+run_test "Nearest N, sorted"                 "$CLI" distance "Washington DC" "New York" "Boston" "Philadelphia" --max-results 2 --order-by distance --sort-order asc
 run_test "JSON output"                       "$CLI" distance "Washington DC" "New York" --json
 run_test "Agent output"                      "$CLI" distance "Washington DC" "New York" --agent
 echo
@@ -156,6 +161,8 @@ bold "Distance Matrix"
 run_test "Basic matrix"                      "$CLI" distance-matrix --origins "$TMPDIR/origins.txt" --destinations "$TMPDIR/destinations.txt"
 run_test "Matrix (straightline)"             "$CLI" distance-matrix --origins "$TMPDIR/origins.txt" --destinations "$TMPDIR/destinations.txt" --mode straightline
 run_test "Matrix (km)"                       "$CLI" distance-matrix --origins "$TMPDIR/origins.txt" --destinations "$TMPDIR/destinations.txt" --units km
+run_test "Matrix (radius)"                   "$CLI" distance-matrix --origins "$TMPDIR/origins.txt" --destinations "$TMPDIR/destinations.txt" --radius 300
+run_test "Matrix (nearest 1)"                "$CLI" distance-matrix --origins "$TMPDIR/origins.txt" --destinations "$TMPDIR/destinations.txt" --max-results 1
 run_test "Matrix (JSON)"                     "$CLI" distance-matrix --origins "$TMPDIR/origins.txt" --destinations "$TMPDIR/destinations.txt" --json
 echo
 

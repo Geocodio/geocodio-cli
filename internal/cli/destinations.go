@@ -31,8 +31,9 @@ func destinationFlags() []cli.Flag {
 			Usage: "Maximum number of destinations to return per result",
 		},
 		&cli.FloatFlag{
-			Name:  "distance-max-distance",
-			Usage: "Maximum distance filter (in specified units)",
+			Name:    "distance-max-distance",
+			Aliases: []string{"distance-radius"},
+			Usage:   "Radius limit: only keep destinations within this distance (in --distance-units)",
 		},
 		&cli.IntFlag{
 			Name:  "distance-max-duration",

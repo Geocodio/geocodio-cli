@@ -2,9 +2,12 @@ package cli
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
 	"testing"
@@ -340,4 +343,111 @@ func findSubstring(s, substr string) bool {
 		}
 	}
 	return false
+}
+
+func TestDistanceRadiusFlags(t *testing.T) {
+	var gotQuery url.Values
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotQuery = r.URL.Query()
+
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"origin": {"query": "Washington DC"}, "destinations": []}`)
+	}))
+	defer server.Close()
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"distance", "Washington DC", "New York", "Boston",
+		"--radius", "150.5",
+		"--min-distance", "10",
+		"--max-duration", "7200",
+		"--min-duration", "60",
+		"--max-results", "3",
+		"--order-by", "duration",
+		"--sort-order", "desc",
+	})
+	if err != nil {
+		t.Fatalf("Run() error = %v", err)
+	}
+
+	want := map[string]string{
+		"max_distance": "150.5",
+		"min_distance": "10",
+		"max_duration": "7200",
+		"min_duration": "60",
+		"max_results":  "3",
+		"order_by":     "duration",
+		"sort_order":   "desc",
+	}
+	for key, wantValue := range want {
+		if got := gotQuery.Get(key); got != wantValue {
+			t.Errorf("query[%q] = %q, want %q", key, got, wantValue)
+		}
+	}
+}
+
+func TestDistanceRejectsInvalidRadiusRange(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Error("expected no request to be made")
+	}))
+	defer server.Close()
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"distance", "Washington DC", "New York",
+		"--radius", "10",
+		"--min-distance", "50",
+	})
+	if err == nil {
+		t.Fatal("expected an error for min-distance greater than max-distance")
+	}
+}
+
+func TestDistanceMatrixRadiusFlags(t *testing.T) {
+	dir := t.TempDir()
+	originsFile := filepath.Join(dir, "origins.txt")
+	destinationsFile := filepath.Join(dir, "destinations.txt")
+	if err := os.WriteFile(originsFile, []byte("Washington DC\n"), 0o600); err != nil {
+		t.Fatalf("writing origins: %v", err)
+	}
+	if err := os.WriteFile(destinationsFile, []byte("New York\nBoston\n"), 0o600); err != nil {
+		t.Fatalf("writing destinations: %v", err)
+	}
+
+	var gotBody map[string]interface{}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		body, _ := io.ReadAll(r.Body)
+		_ = json.Unmarshal(body, &gotBody)
+
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"results": []}`)
+	}))
+	defer server.Close()
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"distance-matrix",
+		"--origins", originsFile,
+		"--destinations", destinationsFile,
+		"--radius", "25",
+		"--max-results", "1",
+	})
+	if err != nil {
+		t.Fatalf("Run() error = %v", err)
+	}
+
+	if got := gotBody["max_distance"]; got != 25.0 {
+		t.Errorf("body[\"max_distance\"] = %v, want 25", got)
+	}
+	if got := gotBody["max_results"]; got != 1.0 {
+		t.Errorf("body[\"max_results\"] = %v, want 1", got)
+	}
 }
