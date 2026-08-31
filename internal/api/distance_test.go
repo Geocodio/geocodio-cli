@@ -16,12 +16,12 @@ import (
 func TestDistance(t *testing.T) {
 	client := newTestClient(t, "distance_single")
 
-	resp, err := client.Distance(context.Background(),
-		"Washington DC",
-		[]string{"New York"},
-		"driving",
-		"miles",
-	)
+	resp, err := client.Distance(context.Background(), &api.DistanceRequest{
+		Origin:       "Washington DC",
+		Destinations: []string{"New York"},
+		Mode:         "driving",
+		Units:        "miles",
+	})
 
 	require.NoError(t, err)
 	require.NotNil(t, resp)
@@ -36,12 +36,12 @@ func TestDistance(t *testing.T) {
 func TestDistanceMultipleDestinations(t *testing.T) {
 	client := newTestClient(t, "distance_multiple")
 
-	resp, err := client.Distance(context.Background(),
-		"Washington DC",
-		[]string{"New York", "Boston"},
-		"driving",
-		"miles",
-	)
+	resp, err := client.Distance(context.Background(), &api.DistanceRequest{
+		Origin:       "Washington DC",
+		Destinations: []string{"New York", "Boston"},
+		Mode:         "driving",
+		Units:        "miles",
+	})
 
 	require.NoError(t, err)
 	require.NotNil(t, resp)
@@ -51,12 +51,12 @@ func TestDistanceMultipleDestinations(t *testing.T) {
 func TestDistanceStraightline(t *testing.T) {
 	client := newTestClient(t, "distance_straightline")
 
-	resp, err := client.Distance(context.Background(),
-		"Washington DC",
-		[]string{"New York"},
-		"straightline",
-		"miles",
-	)
+	resp, err := client.Distance(context.Background(), &api.DistanceRequest{
+		Origin:       "Washington DC",
+		Destinations: []string{"New York"},
+		Mode:         "straightline",
+		Units:        "miles",
+	})
 
 	require.NoError(t, err)
 	require.NotNil(t, resp)
@@ -85,12 +85,12 @@ func TestDistanceMatrix_ModeAndUnitsInBody(t *testing.T) {
 	defer server.Close()
 
 	client := api.NewClient(server.URL, "test-key")
-	_, _ = client.DistanceMatrix(context.Background(),
-		[]string{"Washington DC"},
-		[]string{"New York"},
-		"straightline",
-		"km",
-	)
+	_, _ = client.DistanceMatrix(context.Background(), &api.DistanceMatrixRequest{
+		Origins:      []string{"Washington DC"},
+		Destinations: []string{"New York"},
+		Mode:         "straightline",
+		Units:        "km",
+	})
 
 	assert.Equal(t, "straightline", capturedBody["mode"], "mode should be in request body")
 	assert.Equal(t, "km", capturedBody["units"], "units should be in request body")
@@ -99,12 +99,12 @@ func TestDistanceMatrix_ModeAndUnitsInBody(t *testing.T) {
 func TestDistanceMatrix(t *testing.T) {
 	client := newTestClient(t, "distance_matrix")
 
-	resp, err := client.DistanceMatrix(context.Background(),
-		[]string{"Washington DC", "New York"},
-		[]string{"Boston", "Philadelphia"},
-		"driving",
-		"miles",
-	)
+	resp, err := client.DistanceMatrix(context.Background(), &api.DistanceMatrixRequest{
+		Origins:      []string{"Washington DC", "New York"},
+		Destinations: []string{"Boston", "Philadelphia"},
+		Mode:         "driving",
+		Units:        "miles",
+	})
 
 	require.NoError(t, err)
 	require.NotNil(t, resp)

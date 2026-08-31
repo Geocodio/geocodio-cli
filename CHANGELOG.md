@@ -2,6 +2,17 @@
 
 All notable changes to the Geocodio CLI are documented in this file.
 
+## Unreleased
+
+### Added
+
+- **Radius limiting for distance calculations.** `distance` and `distance-matrix` now accept `--max-distance` (aliased `--radius`), `--min-distance`, `--max-duration`, `--min-duration`, `--max-results`, `--order-by`, and `--sort-order`, mapping to the corresponding parameters on the `/distance` and `/distance-matrix` endpoints. Duration filters apply in `driving` mode only.
+- `--distance-radius` as a friendlier alias for `geocode`/`reverse`'s existing `--distance-max-distance`.
+
+### Fixed
+
+- Documented the inline distance filters on `geocode` and `reverse` (`--distance-max-distance`, `--distance-min-distance`, `--distance-max-duration`, `--distance-min-duration`, `--distance-max-results`, `--distance-order-by`, `--distance-sort-order`). They were already implemented but missing from the README and the agent skill.
+
 ## v3.2.0 - 26-08-25
 
 ### Added

@@ -160,6 +160,13 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
 | `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
+| `--distance-max-distance` | `--distance-radius` | Radius limit: only keep destinations within this distance |
+| `--distance-min-distance` | | Only keep destinations at least this far away |
+| `--distance-max-duration` | | Only keep destinations within this travel time in seconds (driving only) |
+| `--distance-min-duration` | | Only keep destinations at least this many seconds away (driving only) |
+| `--distance-max-results` | | Only keep the N nearest destinations per result |
+| `--distance-order-by` | | Sort destinations by: `distance` or `duration` |
+| `--distance-sort-order` | | Sort direction: `asc` or `desc` |
 | `--show-address-key` | | Show stable address key in output |
 
 ### Reverse Geocoding
@@ -211,6 +218,13 @@ geocodio reverse "38.8976,-77.0365" --destinations "New York" --distance-mode dr
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
 | `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
+| `--distance-max-distance` | `--distance-radius` | Radius limit: only keep destinations within this distance |
+| `--distance-min-distance` | | Only keep destinations at least this far away |
+| `--distance-max-duration` | | Only keep destinations within this travel time in seconds (driving only) |
+| `--distance-min-duration` | | Only keep destinations at least this many seconds away (driving only) |
+| `--distance-max-results` | | Only keep the N nearest destinations per result |
+| `--distance-order-by` | | Sort destinations by: `distance` or `duration` |
+| `--distance-sort-order` | | Sort direction: `asc` or `desc` |
 | `--show-address-key` | | Show stable address key in output |
 
 ### Distance Calculation
@@ -235,6 +249,32 @@ geocodio distance "Washington DC" "New York" "Boston" "Philadelphia"
 geocodio distance "Washington DC" "New York" --mode driving --units km
 ```
 
+**Radius limiting:**
+
+Use `--radius` (an alias for `--max-distance`) to drop destinations that fall outside a radius around the origin. The value is interpreted in whatever `--units` is set to.
+
+```bash
+# Only the destinations within 150 miles of Washington DC
+geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" --radius 150
+
+# Same, in kilometers
+geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" --radius 250 --units km
+
+# A ring: at least 50 miles out, at most 150
+geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" --min-distance 50 --max-distance 150
+```
+
+You can also limit by travel time instead of distance, and keep only the nearest few:
+
+```bash
+# Within a two-hour drive
+geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" --mode driving --max-duration 7200
+
+# The three closest destinations, longest drive first
+geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" \
+  --max-results 3 --order-by duration --sort-order desc
+```
+
 **Distance flags:**
 
 | Flag | Alias | Default | Description |
@@ -242,9 +282,19 @@ geocodio distance "Washington DC" "New York" --mode driving --units km
 | `--mode` | `-m` | `driving` | Routing mode: `driving` or `straightline` |
 | `--units` | `-u` | `miles` | Distance units: `miles` or `km` |
 | `--country` | `-c` | | Country to append to addresses (e.g. `USA`, `Canada`, `United Kingdom`) |
+| `--max-distance` | `--radius` | | Radius limit: only keep destinations within this distance (in `--units`) |
+| `--min-distance` | | | Only keep destinations at least this far away (in `--units`) |
+| `--max-duration` | | | Only keep destinations within this travel time in seconds (driving mode only) |
+| `--min-duration` | | | Only keep destinations at least this many seconds away (driving mode only) |
+| `--max-results` | | | Only keep the N nearest destinations |
+| `--order-by` | | `distance` | Sort destinations by: `distance` or `duration` |
+| `--sort-order` | | `asc` | Sort direction: `asc` or `desc` |
 
 > [!TIP]
 > Use `straightline` mode for quick "as the crow flies" distances when you don't need actual driving routes.
+
+> [!NOTE]
+> `--max-duration` and `--min-duration` only apply in `driving` mode, since `straightline` results have no travel time.
 
 ### Distance Matrix
 
@@ -256,6 +306,16 @@ geocodio distance-matrix --origins origins.txt --destinations destinations.txt
 
 Both files should contain one location per line (addresses or coordinates).
 
+The same radius and travel-time limits available on `distance` apply here, per origin. This is how you answer "which of my stores is within 10 miles of each customer?" without post-processing the full matrix:
+
+```bash
+geocodio distance-matrix --origins customers.txt --destinations stores.txt --radius 10
+
+# Nearest store to each customer, by driving time
+geocodio distance-matrix --origins customers.txt --destinations stores.txt \
+  --mode driving --max-results 1 --order-by duration
+```
+
 **Distance matrix flags:**
 
 | Flag | Alias | Required | Default | Description |
@@ -264,6 +324,14 @@ Both files should contain one location per line (addresses or coordinates).
 | `--destinations` | `-d` | Yes | — | File containing destination locations |
 | `--mode` | `-m` | No | `driving` | Routing mode: `driving` or `straightline` |
 | `--units` | `-u` | No | `miles` | Distance units: `miles` or `km` |
+| `--country` | `-c` | No | | Country to append to addresses |
+| `--max-distance` | `--radius` | No | | Radius limit: only keep destinations within this distance (in `--units`) |
+| `--min-distance` | | No | | Only keep destinations at least this far away (in `--units`) |
+| `--max-duration` | | No | | Only keep destinations within this travel time in seconds (driving mode only) |
+| `--min-duration` | | No | | Only keep destinations at least this many seconds away (driving mode only) |
+| `--max-results` | | No | | Only keep the N nearest destinations per origin |
+| `--order-by` | | No | `distance` | Sort destinations by: `distance` or `duration` |
+| `--sort-order` | | No | `asc` | Sort direction: `asc` or `desc` |
 
 ### Async Distance Jobs
 
