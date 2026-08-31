@@ -351,3 +351,34 @@ func TestJSON_FormatMessage(t *testing.T) {
 		t.Errorf("decoded message = %q, want %q", decoded["message"], "test message")
 	}
 }
+
+func TestJSON_FormatDistanceIncludesBilling(t *testing.T) {
+	lookups, calculations := 2, 8
+
+	var buf bytes.Buffer
+	j := NewJSON(&buf)
+
+	err := j.FormatDistance(&api.DistanceResponse{
+		Destinations: []api.DistanceDestination{{Query: "New York"}},
+		Billing:      &api.Billing{Lookups: &lookups, DistanceCalculations: &calculations},
+	})
+	if err != nil {
+		t.Fatalf("FormatDistance() error = %v", err)
+	}
+
+	var decoded map[string]interface{}
+	if err := json.Unmarshal(buf.Bytes(), &decoded); err != nil {
+		t.Fatalf("output is not valid JSON: %v", err)
+	}
+
+	billing, ok := decoded["billing"].(map[string]interface{})
+	if !ok {
+		t.Fatalf("expected a billing object, got: %s", buf.String())
+	}
+	if billing["lookups"] != float64(2) {
+		t.Errorf("billing.lookups = %v, want 2", billing["lookups"])
+	}
+	if billing["distance_calculations"] != float64(8) {
+		t.Errorf("billing.distance_calculations = %v, want 8", billing["distance_calculations"])
+	}
+}

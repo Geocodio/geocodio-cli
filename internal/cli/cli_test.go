@@ -10,6 +10,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -449,5 +450,136 @@ func TestDistanceMatrixRadiusFlags(t *testing.T) {
 	}
 	if got := gotBody["max_results"]; got != 1.0 {
 		t.Errorf("body[\"max_results\"] = %v, want 1", got)
+	}
+}
+
+func TestDistanceDefaultsToStraightlineMode(t *testing.T) {
+	var gotQuery url.Values
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		gotQuery = r.URL.Query()
+
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"origin": {"query": "Washington DC"}, "destinations": []}`)
+	}))
+	defer server.Close()
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"distance", "Washington DC", "New York",
+	})
+	if err != nil {
+		t.Fatalf("Run() error = %v", err)
+	}
+
+	if got := gotQuery.Get("mode"); got != "straightline" {
+		t.Errorf("mode = %q, want %q (straightline is the API default and costs half as much)", got, "straightline")
+	}
+}
+
+func TestDistanceMatrixDefaultsToStraightlineMode(t *testing.T) {
+	var gotBody map[string]interface{}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewDecoder(r.Body).Decode(&gotBody)
+
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"results": []}`)
+	}))
+	defer server.Close()
+
+	dir := t.TempDir()
+	originsFile := filepath.Join(dir, "origins.txt")
+	destsFile := filepath.Join(dir, "destinations.txt")
+	if err := os.WriteFile(originsFile, []byte("Washington DC\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(destsFile, []byte("New York\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"distance-matrix", "--origins", originsFile, "--destinations", destsFile,
+	})
+	if err != nil {
+		t.Fatalf("Run() error = %v", err)
+	}
+
+	if got := gotBody["mode"]; got != "straightline" {
+		t.Errorf("body mode = %v, want %q", got, "straightline")
+	}
+}
+
+func TestDistanceJobsCreateDefaultsToStraightlineMode(t *testing.T) {
+	var gotBody map[string]interface{}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		_ = json.NewDecoder(r.Body).Decode(&gotBody)
+
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"identifier": "abc123", "status": "PROCESSING"}`)
+	}))
+	defer server.Close()
+
+	dir := t.TempDir()
+	originsFile := filepath.Join(dir, "origins.txt")
+	destsFile := filepath.Join(dir, "destinations.txt")
+	if err := os.WriteFile(originsFile, []byte("Washington DC\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(destsFile, []byte("New York\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"--json",
+		"distance-jobs", "create", "--name", "test", "--origins", originsFile, "--destinations", destsFile,
+	})
+	if err != nil {
+		t.Fatalf("Run() error = %v", err)
+	}
+
+	if got := gotBody["distance_mode"]; got != "straightline" {
+		t.Errorf("body distance_mode = %v, want %q", got, "straightline")
+	}
+}
+
+func TestBatchGeocodeOverLimitPointsAtLists(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Error("expected no request to be made")
+	}))
+	defer server.Close()
+
+	batchFile := filepath.Join(t.TempDir(), "addresses.txt")
+	var sb strings.Builder
+	for i := 0; i < 10001; i++ {
+		sb.WriteString("Washington DC\n")
+	}
+	if err := os.WriteFile(batchFile, []byte(sb.String()), 0600); err != nil {
+		t.Fatal(err)
+	}
+
+	err := Run(context.Background(), []string{
+		"geocodio",
+		"--api-key", "test-api-key",
+		"--base-url", server.URL,
+		"geocode", "--batch", batchFile,
+	})
+	if err == nil {
+		t.Fatal("expected an error for an oversized batch file")
+	}
+
+	for _, want := range []string{"10,000", "10001", "appends", "lists upload"} {
+		if !strings.Contains(err.Error(), want) {
+			t.Errorf("error message missing %q; got: %v", want, err)
+		}
 	}
 }

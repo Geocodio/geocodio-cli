@@ -158,7 +158,7 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--limit` | `-l` | Maximum number of results per address |
 | `--country` | `-c` | Country hint (e.g. `USA`, `Canada`, `United Kingdom`) |
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
-| `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
+| `--distance-mode` | `-m` | Distance mode: `straightline` (default, 1 credit per calculation) or `driving` (2 credits per calculation) |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
 | `--distance-max-distance` | `--distance-radius` | Radius limit: only keep destinations within this distance |
 | `--distance-min-distance` | | Only keep destinations at least this far away |
@@ -216,7 +216,7 @@ geocodio reverse "38.8976,-77.0365" --destinations "New York" --distance-mode dr
 | `--limit` | `-l` | Maximum number of results per coordinate |
 | `--skip-geocoding` | | Skip reverse geocoding, only return field appends |
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
-| `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
+| `--distance-mode` | `-m` | Distance mode: `straightline` (default, 1 credit per calculation) or `driving` (2 credits per calculation) |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
 | `--distance-max-distance` | `--distance-radius` | Radius limit: only keep destinations within this distance |
 | `--distance-min-distance` | | Only keep destinations at least this far away |
@@ -279,7 +279,7 @@ geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" \
 
 | Flag | Alias | Default | Description |
 |------|-------|---------|-------------|
-| `--mode` | `-m` | `driving` | Routing mode: `driving` or `straightline` |
+| `--mode` | `-m` | `straightline` | Routing mode: `straightline` (1 credit per calculation) or `driving` (2 credits per calculation) |
 | `--units` | `-u` | `miles` | Distance units: `miles` or `km` |
 | `--country` | `-c` | | Country to append to addresses (e.g. `USA`, `Canada`, `United Kingdom`) |
 | `--max-distance` | `--radius` | | Radius limit: only keep destinations within this distance (in `--units`) |
@@ -291,10 +291,13 @@ geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" \
 | `--sort-order` | | `asc` | Sort direction: `asc` or `desc` |
 
 > [!TIP]
-> Use `straightline` mode for quick "as the crow flies" distances when you don't need actual driving routes.
+> `straightline` is the default: it gives "as the crow flies" distances and costs 1 credit per calculation. Pass `--mode driving` only when you need actual road distance or travel time — it costs 2 credits per calculation.
 
 > [!NOTE]
-> `--max-duration` and `--min-duration` only apply in `driving` mode, since `straightline` results have no travel time.
+> `--max-duration` and `--min-duration` only apply in `driving` mode, since `straightline` results have no travel time. Pass `--mode driving` alongside them.
+
+> [!NOTE]
+> `distance-matrix` and `distance-jobs create` print the calculation count, the mode, and an estimated credit cost to stderr before submitting anything larger than 10,000 calculations. You can cap spend on the account with a [usage limit](https://www.geocod.io/guides/set-a-usage-limit).
 
 ### Distance Matrix
 
@@ -322,7 +325,7 @@ geocodio distance-matrix --origins customers.txt --destinations stores.txt \
 |------|-------|----------|---------|-------------|
 | `--origins` | `-o` | Yes | — | File containing origin locations |
 | `--destinations` | `-d` | Yes | — | File containing destination locations |
-| `--mode` | `-m` | No | `driving` | Routing mode: `driving` or `straightline` |
+| `--mode` | `-m` | No | `straightline` | Routing mode: `straightline` (1 credit per calculation) or `driving` (2 credits per calculation) |
 | `--units` | `-u` | No | `miles` | Distance units: `miles` or `km` |
 | `--country` | `-c` | No | | Country to append to addresses |
 | `--max-distance` | `--radius` | No | | Radius limit: only keep destinations within this distance (in `--units`) |
@@ -389,7 +392,7 @@ geocodio distance-jobs delete 12345
 | `--name` | `-n` | Yes | — | Job name for identification |
 | `--origins` | `-o` | Yes | — | File containing origin locations |
 | `--destinations` | `-d` | Yes | — | File containing destination locations |
-| `--mode` | `-m` | No | `driving` | Routing mode: `driving` or `straightline` |
+| `--mode` | `-m` | No | `straightline` | Routing mode: `straightline` (1 credit per calculation) or `driving` (2 credits per calculation) |
 | `--units` | `-u` | No | `miles` | Distance units: `miles` or `km` |
 | `--watch` | `-w` | No | `false` | Watch progress until completion |
 
@@ -733,6 +736,14 @@ If you're not seeing colored output:
 1. Make sure you're running in a terminal (not piping output)
 2. Check that `NO_COLOR` isn't set in your environment
 3. Try using `FORCE_COLOR=1` to force color output
+
+## Upgrading
+
+Behavior changes that affect existing scripts:
+
+| Change | Before | After | What to do |
+|--------|--------|-------|------------|
+| `--mode` default on `distance`, `distance-matrix`, and `distance-jobs create` | `driving` — 2 credits per calculation | `straightline` — 1 credit per calculation, matching the HTTP API's own default | Pass `--mode driving` explicitly wherever you rely on road distance or travel time. `--max-duration` and `--min-duration` need `--mode driving` alongside them. |
 
 ## Migrating from v1.x
 

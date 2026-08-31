@@ -29,6 +29,9 @@ type GeocodeRequest struct {
 // the parsed address now lives in each result's AddressComponents.
 type GeocodeResponse struct {
 	Results []GeocodeResult `json:"results"`
+	// Billing is populated from the response headers on top-level responses;
+	// it stays nil on the nested responses inside a batch result.
+	Billing *Billing `json:"billing,omitempty"`
 }
 
 // AddressComponents represents the components of a parsed address.
@@ -86,6 +89,7 @@ type BatchGeocodeRequest struct {
 // BatchGeocodeResponse represents a batch geocoding response.
 type BatchGeocodeResponse struct {
 	Results []BatchGeocodeResult `json:"results"`
+	Billing *Billing             `json:"billing,omitempty"`
 }
 
 // BatchGeocodeResult represents a single result in a batch response.
@@ -115,6 +119,7 @@ type BatchReverseGeocodeRequest struct {
 // BatchReverseGeocodeResponse represents a batch reverse geocode response.
 type BatchReverseGeocodeResponse struct {
 	Results []BatchReverseGeocodeResult `json:"results"`
+	Billing *Billing                    `json:"billing,omitempty"`
 }
 
 // BatchReverseGeocodeResult represents a single result in a batch reverse response.
@@ -163,6 +168,7 @@ type DistanceResponse struct {
 	Origin       *DistanceLocation     `json:"origin,omitempty"`
 	Mode         string                `json:"mode,omitempty"`
 	Destinations []DistanceDestination `json:"destinations,omitempty"`
+	Billing      *Billing              `json:"billing,omitempty"`
 }
 
 type DistanceLocation struct {
@@ -185,6 +191,7 @@ type DistanceDestination struct {
 type DistanceMatrixResponse struct {
 	Mode    string                 `json:"mode,omitempty"`
 	Results []DistanceMatrixResult `json:"results,omitempty"`
+	Billing *Billing               `json:"billing,omitempty"`
 }
 
 // DistanceMatrixResult represents a single origin's distances to all destinations.

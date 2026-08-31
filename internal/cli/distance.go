@@ -96,8 +96,8 @@ func distanceCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "mode",
 				Aliases: []string{"m"},
-				Usage:   "Routing mode: driving or straightline",
-				Value:   "driving",
+				Usage:   "Routing mode: straightline (1 credit per calculation) or driving (2 credits per calculation)",
+				Value:   defaultDistanceMode,
 			},
 			&cli.StringFlag{
 				Name:    "units",
@@ -164,8 +164,8 @@ func distanceMatrixCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "mode",
 				Aliases: []string{"m"},
-				Usage:   "Routing mode: driving or straightline",
-				Value:   "driving",
+				Usage:   "Routing mode: straightline (1 credit per calculation) or driving (2 credits per calculation)",
+				Value:   defaultDistanceMode,
 			},
 			&cli.StringFlag{
 				Name:    "units",
@@ -210,6 +210,9 @@ func distanceMatrixAction(ctx context.Context, cmd *cli.Command) error {
 	country := cmd.String("country")
 	origins = appendCountryToAll(origins, country)
 	destinations = appendCountryToAll(destinations, country)
+
+	printCostNotice(app.stderr, len(origins), len(destinations), cmd.String("mode"))
+
 	req := &api.DistanceMatrixRequest{
 		Origins:         origins,
 		Destinations:    destinations,
