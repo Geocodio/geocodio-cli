@@ -8,6 +8,7 @@ Whether you're geocoding a single address or processing thousands in batch, this
 
 - [Getting Started](#getting-started)
 - [Configuration](#configuration)
+- [Cost and Billing](#cost-and-billing)
 - [Commands](#commands)
   - [Geocoding](#geocoding)
   - [Reverse Geocoding](#reverse-geocoding)
@@ -80,6 +81,39 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --api-key your-api-ke
 > [!TIP]
 > Add the export command to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.) so you don't have to set it every session.
 
+### API Key Permissions
+
+Geocodio API keys carry per-feature permissions. The `lists` and `distance` commands (`distance`, `distance-matrix`, and `distance-jobs`) only work when spreadsheet and distance access are enabled for the key you are using. You can turn them on at [dash.geocod.io/apikey](https://dash.geocod.io/apikey).
+
+If those commands return a `403` while `geocode` works fine, the key is valid and the permission is missing.
+
+## Cost and Billing
+
+Every command here spends lookups on your Geocodio account. One lookup is one credit, and a run costs:
+
+```
+records × (1 + number of append categories)
+```
+
+- **Appends are not free.** Each category in `--fields` is a full extra lookup per record. `--fields timezone,cd` on 1,000 addresses costs 3,000 lookups, not 1,000.
+- **Distance commands** cost geocoding for any input given as an address, plus `origins × destinations × mode multiplier`, plus any appends. Straightline counts 1× per pair, driving counts 2×.
+- **Free tier:** the first 2,500 lookups each day are free on pay-as-you-go and Flex plans. The allowance resets daily and does not roll over.
+- **Zero-result lookups are not billed.** An address that returns no match costs nothing.
+
+### Ways to Spend Less
+
+- Pass `--skip-geocoding` when you already have coordinates and only need field appends.
+- Store the `stable_address_key` returned by `--show-address-key`, then skip records you have geocoded before.
+- Pass coordinates instead of addresses to `distance`, `distance-matrix`, and `distance-jobs`, so there is nothing left to geocode.
+- Use `--mode straightline` unless you need real driving routes. Driving costs twice as much per pair.
+- Request only the append fields you use. Every extra category multiplies the whole run.
+
+### Set a Limit Before a Large Run
+
+A usage limit on your account caps what a run can spend, which is worth setting before the first big file: [Set a usage limit](https://www.geocod.io/guides/set-a-usage-limit).
+
+For plan and per-lookup rates, see [Geocodio pricing](https://www.geocod.io/pricing). To size a plan against your own volume, use the [plan calculator](https://www.geocod.io/find-my-plan).
+
 ## Commands
 
 ### Geocoding
@@ -100,8 +134,8 @@ Geocodio can return additional data like timezone, congressional district, censu
 geocodio geocode "30 Rockefeller Plaza, New York NY" --fields timezone,cd
 ```
 
-> [!NOTE]
-> Data append fields may incur additional API costs. See [Geocodio's documentation](https://www.geocod.io/docs/#data-appends-fields) for available fields and pricing.
+> [!IMPORTANT]
+> Appends are not free. Each `--fields` category is a full extra lookup per record, so `--fields timezone,cd` on 1,000 addresses costs 3,000 lookups instead of 1,000. See [Cost and Billing](#cost-and-billing) and [Geocodio's field documentation](https://www.geocod.io/docs/#data-appends-fields).
 
 United Kingdom data appends are available too — for example Westminster and devolved constituencies and local authority wards:
 
@@ -110,6 +144,9 @@ geocodio geocode "10 Downing St, London" --country "United Kingdom" --fields uk-
 ```
 
 UK field appends: `uk-westminster`, `uk-westminster-next`, `uk-devolved`, `uk-devolved-next`, `uk-local`, `uk-local-next`. The `-next` variants return upcoming boundary changes.
+
+> [!NOTE]
+> United Kingdom addresses need a Flex or Unlimited+UK plan. UK geocoding is not available on pay-as-you-go. See [Geocodio pricing](https://www.geocod.io/pricing).
 
 **Batch geocoding from a file:**
 
@@ -120,6 +157,11 @@ geocodio geocode --batch addresses.txt
 ```
 
 When running in a terminal, you'll see a spinner while the batch processes.
+
+> [!IMPORTANT]
+> `--batch` caps at **10,000 lookups per request**, and appends count toward that cap: 5,000 addresses with one `--fields` category already reaches the limit. A full 10,000-lookup batch can take around 600 seconds, so set script and client timeouts accordingly.
+>
+> For anything larger, and for any spreadsheet, prefer [`lists upload`](#spreadsheet-processing). It runs asynchronously, handles up to 10 million lookups, needs no file splitting, and reports progress with `--watch`.
 
 **With inline distance calculations:**
 
@@ -156,7 +198,7 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--batch` | `-b` | File containing addresses (one per line) |
 | `--fields` | `-f` | Data append fields (comma-separated) |
 | `--limit` | `-l` | Maximum number of results per address |
-| `--country` | `-c` | Country hint (e.g. `USA`, `Canada`, `United Kingdom`) |
+| `--country` | `-c` | Country hint, recommended for non-US data (e.g. `USA`, `Canada`, `United Kingdom`) |
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
 | `--distance-mode` | `-m` | Distance mode: `driving` or `straightline` |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
@@ -168,6 +210,9 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--distance-order-by` | | Sort destinations by: `distance` or `duration` |
 | `--distance-sort-order` | | Sort direction: `asc` or `desc` |
 | `--show-address-key` | | Show stable address key in output |
+
+> [!TIP]
+> Pass `--country` whenever your data is not from the United States. Without it the API falls back to the US, which returns confident but wrong matches for addresses elsewhere.
 
 ### Reverse Geocoding
 
@@ -281,7 +326,7 @@ geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" \
 |------|-------|---------|-------------|
 | `--mode` | `-m` | `driving` | Routing mode: `driving` or `straightline` |
 | `--units` | `-u` | `miles` | Distance units: `miles` or `km` |
-| `--country` | `-c` | | Country to append to addresses (e.g. `USA`, `Canada`, `United Kingdom`) |
+| `--country` | `-c` | | Country to append to addresses, recommended for non-US data (e.g. `USA`, `Canada`, `United Kingdom`) |
 | `--max-distance` | `--radius` | | Radius limit: only keep destinations within this distance (in `--units`) |
 | `--min-distance` | | | Only keep destinations at least this far away (in `--units`) |
 | `--max-duration` | | | Only keep destinations within this travel time in seconds (driving mode only) |
@@ -295,6 +340,9 @@ geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" \
 
 > [!NOTE]
 > `--max-duration` and `--min-duration` only apply in `driving` mode, since `straightline` results have no travel time.
+
+> [!IMPORTANT]
+> A distance run costs geocoding for every input given as an address, plus one lookup per origin/destination pair in `straightline` mode or two per pair in `driving` mode, plus any appends. Passing coordinates instead of addresses removes the geocoding cost. See [Cost and Billing](#cost-and-billing).
 
 ### Distance Matrix
 
@@ -324,7 +372,7 @@ geocodio distance-matrix --origins customers.txt --destinations stores.txt \
 | `--destinations` | `-d` | Yes | — | File containing destination locations |
 | `--mode` | `-m` | No | `driving` | Routing mode: `driving` or `straightline` |
 | `--units` | `-u` | No | `miles` | Distance units: `miles` or `km` |
-| `--country` | `-c` | No | | Country to append to addresses |
+| `--country` | `-c` | No | | Country to append to addresses, recommended for non-US data |
 | `--max-distance` | `--radius` | No | | Radius limit: only keep destinations within this distance (in `--units`) |
 | `--min-distance` | | No | | Only keep destinations at least this far away (in `--units`) |
 | `--max-duration` | | No | | Only keep destinations within this travel time in seconds (driving mode only) |
@@ -332,6 +380,9 @@ geocodio distance-matrix --origins customers.txt --destinations stores.txt \
 | `--max-results` | | No | | Only keep the N nearest destinations per origin |
 | `--order-by` | | No | `distance` | Sort destinations by: `distance` or `duration` |
 | `--sort-order` | | No | `asc` | Sort direction: `asc` or `desc` |
+
+> [!IMPORTANT]
+> A matrix costs `origins × destinations` pairs, doubled in `driving` mode, plus geocoding for any inputs given as addresses. A 500 × 500 matrix is 250,000 pairs, so check the numbers (and your [usage limit](https://www.geocod.io/guides/set-a-usage-limit)) before a large run. See [Cost and Billing](#cost-and-billing).
 
 ### Async Distance Jobs
 
@@ -393,9 +444,12 @@ geocodio distance-jobs delete 12345
 | `--units` | `-u` | No | `miles` | Distance units: `miles` or `km` |
 | `--watch` | `-w` | No | `false` | Watch progress until completion |
 
+> [!IMPORTANT]
+> Async jobs are priced the same way as `distance-matrix`: `origins × destinations` pairs, doubled in `driving` mode, plus geocoding for address inputs. The job size is the whole matrix, so a job created by mistake can spend a lot of lookups. See [Cost and Billing](#cost-and-billing).
+
 ### Spreadsheet Processing
 
-Upload CSV or Excel files for batch geocoding. Geocodio processes the file asynchronously and returns results with coordinates appended to your data.
+Geocode CSV or Excel files without splitting them. Geocodio processes the file asynchronously and returns results with coordinates appended to your data. This is the recommended path for spreadsheets and for anything above the 10,000-lookup `--batch` cap: a list handles up to 10 million lookups.
 
 **Upload a file:**
 
@@ -464,6 +518,9 @@ geocodio lists delete 12345
 
 > [!WARNING]
 > Large spreadsheets can take time to process. Use the `--watch` flag or check status periodically rather than waiting for immediate results.
+
+> [!IMPORTANT]
+> A list costs `records × (1 + number of append categories)` lookups, the same as batch geocoding. `--fields cd,timezone` on a 100,000-row spreadsheet is 300,000 lookups. Spreadsheet access also has to be enabled on your API key. See [Cost and Billing](#cost-and-billing).
 
 ## Output Formats
 
@@ -571,6 +628,10 @@ Once installed, the skill activates automatically when you ask your assistant to
 - "What congressional district is 1600 Pennsylvania Ave in?"
 - "Calculate driving distances from our warehouse to these 50 customers"
 - "Upload this CSV and geocode the addresses in columns B and C"
+
+### Cost Guidance for Agents
+
+Before you let an assistant run large jobs on your account, point it at [Cost and Billing](#cost-and-billing). It covers how lookups are counted, why appends multiply a run, and when `lists upload` beats `--batch`, which is the context an agent needs to avoid an expensive surprise.
 
 ### Skill Source
 
@@ -698,12 +759,25 @@ geocodio geocode "address" --api-key your-api-key
 
 ### "batch size exceeds maximum of 10,000"
 
-Geocodio's batch endpoints accept a maximum of 10,000 items per request. Split your file into smaller chunks:
+Geocodio's batch endpoints accept a maximum of 10,000 lookups per request, and appends count toward that cap: 5,000 addresses with one `--fields` category reaches it.
+
+Above that limit, upload the file as a list instead of splitting it. A list runs asynchronously, takes up to 10 million lookups, and reports progress:
+
+```bash
+geocodio lists upload large_file.csv --direction forward --format "{{A}}" --watch
+geocodio lists download 12345 --output geocoded.csv
+```
+
+Splitting the file still works if you need results in a single stream, but it costs the same lookups and takes longer end to end:
 
 ```bash
 split -l 10000 large_file.txt chunk_
 for f in chunk_*; do geocodio geocode --batch "$f"; done
 ```
+
+### "geocodio API error (403)" from `lists` or `distance` commands
+
+A `403` from these commands usually means the API key is fine but the permission is not enabled. Spreadsheet and distance access are per-key settings at [dash.geocod.io/apikey](https://dash.geocod.io/apikey). If `geocodio geocode "1600 Pennsylvania Ave NW, Washington DC"` succeeds with the same key, the key itself is valid.
 
 ### "invalid coordinate format"
 
