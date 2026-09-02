@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"sort"
+	"strings"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 )
@@ -25,6 +26,26 @@ func (a *Agent) formatDistance(miles, km float64) string {
 	return fmt.Sprintf("%.1f mi / %.1f km", miles, km)
 }
 
+// writeBilling renders the per-request billing counters returned by the API, so
+// the caller can reconcile what was actually billed against their estimate.
+func (a *Agent) writeBilling(b *api.Billing) {
+	if b == nil {
+		return
+	}
+	var parts []string
+	if b.Lookups != nil {
+		parts = append(parts, fmt.Sprintf("%d lookup(s)", *b.Lookups))
+	}
+	if b.DistanceCalculations != nil {
+		parts = append(parts, fmt.Sprintf("%d distance calculation(s)", *b.DistanceCalculations))
+	}
+	if len(parts) == 0 {
+		return
+	}
+	fmt.Fprintln(a.w)
+	fmt.Fprintf(a.w, "_Billed: %s._\n", strings.Join(parts, ", "))
+}
+
 func (a *Agent) FormatGeocode(resp *api.GeocodeResponse) error {
 	if len(resp.Results) == 0 {
 		fmt.Fprintln(a.w, "No results found.")
@@ -43,6 +64,7 @@ func (a *Agent) FormatGeocode(resp *api.GeocodeResponse) error {
 			fmt.Fprintln(a.w)
 		}
 	}
+	a.writeBilling(resp.Billing)
 	return nil
 }
 
@@ -127,6 +149,7 @@ func (a *Agent) FormatBatchGeocode(resp *api.BatchGeocodeResponse) error {
 			fmt.Fprintln(a.w)
 		}
 	}
+	a.writeBilling(resp.Billing)
 	return nil
 }
 
@@ -162,6 +185,7 @@ func (a *Agent) FormatDistance(resp *api.DistanceResponse) error {
 		fmt.Fprintf(a.w, "| %s | %s | %s | %s |\n",
 			originAddr, destAddr, a.formatDistance(d.DistanceMiles, d.DistanceKm), duration)
 	}
+	a.writeBilling(resp.Billing)
 	return nil
 }
 
@@ -206,6 +230,7 @@ func (a *Agent) FormatDistanceMatrix(resp *api.DistanceMatrixResponse) error {
 			fmt.Fprintln(a.w)
 		}
 	}
+	a.writeBilling(resp.Billing)
 	return nil
 }
 

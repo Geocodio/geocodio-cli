@@ -127,8 +127,9 @@ func addDistanceFiltersToBody(body map[string]interface{}, f *DistanceFilters) {
 	}
 }
 
-// Distance calculates driving distance and duration from a single origin to one or more destinations.
-// Req.Mode can be "driving" (default) or "straightline"; Req.Units can be "miles" (default) or "km".
+// Distance calculates distance and duration from a single origin to one or more destinations.
+// Req.Mode can be "straightline" (the API default, 1 credit per calculation) or
+// "driving" (2 credits per calculation); Req.Units can be "miles" (default) or "km".
 // The embedded DistanceFilters optionally limit the destinations to a radius, a
 // travel time, or the N nearest.
 func (c *Client) Distance(ctx context.Context, req *DistanceRequest) (*DistanceResponse, error) {
@@ -163,7 +164,8 @@ func (c *Client) Distance(ctx context.Context, req *DistanceRequest) (*DistanceR
 
 // DistanceMatrix calculates distances between multiple origins and destinations.
 // Returns a matrix of distance/duration results for all origin-destination pairs.
-// Req.Mode can be "driving" (default) or "straightline"; Req.Units can be "miles" (default) or "km".
+// Req.Mode can be "straightline" (the API default, 1 credit per calculation) or
+// "driving" (2 credits per calculation); Req.Units can be "miles" (default) or "km".
 // The embedded DistanceFilters optionally limit each origin's destinations to a
 // radius, a travel time, or the N nearest.
 func (c *Client) DistanceMatrix(ctx context.Context, req *DistanceMatrixRequest) (*DistanceMatrixResponse, error) {

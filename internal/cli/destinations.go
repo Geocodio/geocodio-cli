@@ -19,7 +19,7 @@ func destinationFlags() []cli.Flag {
 		&cli.StringFlag{
 			Name:    "distance-mode",
 			Aliases: []string{"m"},
-			Usage:   "Distance mode: driving or straightline",
+			Usage:   "Distance mode: straightline (default, 1 credit per calculation) or driving (2 credits per calculation)",
 		},
 		&cli.StringFlag{
 			Name:    "distance-units",

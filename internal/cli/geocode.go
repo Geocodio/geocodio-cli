@@ -99,7 +99,10 @@ func geocodeBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 	}
 
 	if len(addresses) > 10000 {
-		return fmt.Errorf("batch size exceeds maximum of 10,000 addresses")
+		return fmt.Errorf("batch size exceeds maximum of 10,000 addresses (file has %d). "+
+			"Data appends count toward this limit too: each --fields category is an extra lookup per address, "+
+			"so the cap is records x (1 + number of appends). "+
+			"Use `geocodio lists upload` instead — it runs asynchronously and handles far larger files without splitting", len(addresses))
 	}
 
 	req := &api.BatchGeocodeRequest{

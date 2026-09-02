@@ -102,7 +102,10 @@ func reverseBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 	}
 
 	if len(lines) > 10000 {
-		return fmt.Errorf("batch size exceeds maximum of 10,000 coordinates")
+		return fmt.Errorf("batch size exceeds maximum of 10,000 coordinates (file has %d). "+
+			"Data appends count toward this limit too: each --fields category is an extra lookup per coordinate, "+
+			"so the cap is records x (1 + number of appends). "+
+			"Use `geocodio lists upload --direction reverse` instead — it runs asynchronously and handles far larger files without splitting", len(lines))
 	}
 
 	coords := make([]api.Location, 0, len(lines))
@@ -133,6 +136,7 @@ func reverseBatch(ctx context.Context, cmd *cli.Command, app *App, filename stri
 
 	batchResp := &api.BatchGeocodeResponse{
 		Results: make([]api.BatchGeocodeResult, len(resp.Results)),
+		Billing: resp.Billing,
 	}
 	for i, r := range resp.Results {
 		batchResp.Results[i] = api.BatchGeocodeResult(r)

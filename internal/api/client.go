@@ -129,6 +129,9 @@ func (c *Client) do(ctx context.Context, method, path string, query url.Values, 
 		if err := json.NewDecoder(resp.Body).Decode(result); err != nil {
 			return fmt.Errorf("decoding response: %w", err)
 		}
+		if b, ok := result.(billingSetter); ok {
+			b.setBilling(parseBilling(resp.Header))
+		}
 	}
 
 	return nil

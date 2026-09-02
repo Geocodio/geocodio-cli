@@ -50,8 +50,8 @@ func distanceJobsCreateCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "mode",
 				Aliases: []string{"m"},
-				Usage:   "Routing mode: driving or straightline",
-				Value:   "driving",
+				Usage:   "Routing mode: straightline (1 credit per calculation) or driving (2 credits per calculation)",
+				Value:   defaultDistanceMode,
 			},
 			&cli.StringFlag{
 				Name:    "units",
@@ -84,6 +84,8 @@ func distanceJobsCreateAction(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return fmt.Errorf("reading destinations file: %w", err)
 	}
+
+	printCostNotice(app.stderr, len(origins), len(destinations), cmd.String("mode"))
 
 	req := &api.DistanceJobCreateRequest{
 		Name:         cmd.String("name"),

@@ -18,6 +18,36 @@ If either is missing, tell the user what they need before proceeding.
 
 Always use `--json` when you need to parse or process results programmatically. Use `--agent` when presenting results directly to the user in conversation (produces clean markdown tables). Omit both for default human-readable terminal output.
 
+Both modes report what the request was actually billed — a `billing` object in `--json` (`lookups`, `distance_calculations`) and a `_Billed: ..._` line in `--agent`. Use it to reconcile actual spend against your estimate.
+
+## Cost and Credits
+
+Every Geocodio request costs credits. Read this before running anything large — the user pays for it.
+
+**Lookups.** 1 lookup = 1 credit. A request costs `records x (1 + number of appends)` lookups: each `--fields` category is a full extra lookup per record, so 1,000 addresses with `--fields timezone,cd` is 3,000 lookups, not 1,000. Zero-result lookups are not billed. On pay-as-you-go and Flex plans the first 2,500 lookups per day are free.
+
+**Distance calculations.** A distance request costs geocoding lookups for any inputs given as addresses (coordinates cost nothing to geocode), plus `origins x destinations x mode multiplier` distance calculations, plus any appends:
+
+| Mode | Cost per calculation |
+|------|----------------------|
+| `straightline` (default) | 1 credit |
+| `driving` | 2 credits |
+
+The CLI defaults to `straightline`, matching the API. Only pass `--mode driving` when the user actually needs road distance or travel time — it doubles the bill. A 500x500 matrix is 250,000 credits straightline and 500,000 driving.
+
+**Before a large run:** estimate the lookups, tell the user what it will cost, and get confirmation. Point them at the usage limit setting so a mistake can't run away: https://www.geocod.io/guides/set-a-usage-limit
+
+**Cheaper paths:**
+
+- `--skip-geocoding` on `reverse` when you already have coordinates and only need appends.
+- `--show-address-key` returns a `stable_address_key`; store it so the same address is never geocoded twice.
+- Drop `--fields` categories the user didn't ask for. Each one is a full extra lookup per record.
+- Prefer `lists upload` over `--batch` for anything large (see below).
+
+**Country.** Always pass `--country` explicitly. When it's omitted the API falls back to the US, which silently produces wrong (and billed) results for non-US addresses. UK geocoding requires a Flex or Unlimited+UK plan.
+
+Full agent-facing cost guidance: https://www.geocod.io/docs/for-agents.md
+
 ## Commands
 
 ### Geocode (address to coordinates)
@@ -78,7 +108,8 @@ geocodio distance "Washington DC" "New York"
 # Multiple destinations
 geocodio distance "Washington DC" "New York" "Boston" "Philadelphia"
 
-# Options: --mode (driving|straightline), --units (miles|km)
+# Options: --mode (straightline|driving), --units (miles|km)
+# straightline is the default and costs 1 credit per calculation; driving costs 2
 geocodio distance "Washington DC" "New York" --mode driving --units km
 ```
 
@@ -123,6 +154,8 @@ geocodio distance-matrix --origins customers.txt --destinations stores.txt \
   --mode driving --max-results 1 --order-by duration
 ```
 
+A matrix costs `origins x destinations` calculations. Above 10,000 calculations the CLI prints the count, the mode, and the estimated credits to stderr before submitting — read it back to the user rather than swallowing it.
+
 ### Async Distance Jobs (large calculations)
 
 ```bash
@@ -132,6 +165,8 @@ geocodio distance-jobs status JOB_ID --watch
 geocodio distance-jobs download JOB_ID --output results.csv
 geocodio distance-jobs delete JOB_ID
 ```
+
+Distance jobs are billed the same way as `distance-matrix`, and print the same cost notice above 10,000 calculations. `--mode` defaults to `straightline` here too.
 
 ### Spreadsheet Processing (async batch geocoding)
 
@@ -191,7 +226,8 @@ geocodio lists upload customers.csv --direction forward --format "{{B}}, {{C}}, 
 geocodio reverse "38.8976,-77.0365" --fields timezone,cd --agent
 ```
 
-## Batch File Limits
+## Batch vs Lists
 
-- Batch geocode/reverse: max 10,000 items per request
-- For larger files, use `lists upload` which handles up to 10,000,000+ rows asynchronously
+- `--batch` caps at **10,000 lookups** per request, and appends count toward that cap: 10,000 addresses with one `--fields` category is 20,000 lookups, which is over the cap.
+- **Prefer `lists upload` for anything larger, and for any spreadsheet.** It is asynchronous, handles up to 10M lookups, and needs no splitting into chunks.
+- Don't hand-split a large file into 10,000-line batches when `lists upload` would do it in one call.

@@ -473,3 +473,44 @@ func TestAgent_FormatMessage(t *testing.T) {
 		t.Errorf("output missing message:\n%s", output)
 	}
 }
+
+func TestAgent_FormatDistanceIncludesBilling(t *testing.T) {
+	lookups, calculations := 2, 8
+
+	var buf bytes.Buffer
+	a := NewAgent(&buf, Options{})
+
+	err := a.FormatDistance(&api.DistanceResponse{
+		Origin: &api.DistanceLocation{Query: "Washington DC"},
+		Destinations: []api.DistanceDestination{
+			{Query: "New York", DistanceMiles: 204.3, DistanceKm: 328.8},
+		},
+		Billing: &api.Billing{Lookups: &lookups, DistanceCalculations: &calculations},
+	})
+	if err != nil {
+		t.Fatalf("FormatDistance() error = %v", err)
+	}
+
+	out := buf.String()
+	for _, want := range []string{"_Billed: 2 lookup(s), 8 distance calculation(s)._"} {
+		if !strings.Contains(out, want) {
+			t.Errorf("output missing %q; got:\n%s", want, out)
+		}
+	}
+}
+
+func TestAgent_FormatGeocodeOmitsBillingWhenAbsent(t *testing.T) {
+	var buf bytes.Buffer
+	a := NewAgent(&buf, Options{})
+
+	err := a.FormatGeocode(&api.GeocodeResponse{
+		Results: []api.GeocodeResult{{FormattedAddress: "Washington, DC"}},
+	})
+	if err != nil {
+		t.Fatalf("FormatGeocode() error = %v", err)
+	}
+
+	if strings.Contains(buf.String(), "Billed") {
+		t.Errorf("expected no billing line without headers; got:\n%s", buf.String())
+	}
+}
