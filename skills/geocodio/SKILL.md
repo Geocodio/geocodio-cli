@@ -46,7 +46,7 @@ The CLI defaults to `straightline`, matching the API. Only pass `--mode driving`
 
 **Country.** Always pass `--country` explicitly. When it's omitted the API falls back to the US, which silently produces wrong (and billed) results for non-US addresses. UK geocoding requires a Flex or Unlimited+UK plan.
 
-Full agent-facing cost guidance: https://www.geocod.io/docs/for-agents.md
+Full agent-facing cost guidance: https://www.geocod.io/AGENTS.md
 
 ## Commands
 
