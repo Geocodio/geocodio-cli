@@ -22,7 +22,7 @@ var enqueuedHintDelay = 30 * time.Second
 // concurrency limits per plan. Keep the numbers out of the CLI and this doc
 // link current -- they live in one place instead of drifting across the
 // CLI, website, agent guide, and API docs.
-const concurrencyGuideURL = "https://www.geocod.io/guides/spreadsheet-concurrency"
+const concurrencyGuideURL = "https://www.geocod.io/guides/why-spreadsheet-uploads-get-queued"
 
 // concurrencyExplanation describes why a list stays ENQUEUED: Geocodio caps
 // how many spreadsheet jobs one billing owner can process at the same time.

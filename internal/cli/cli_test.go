@@ -637,13 +637,13 @@ func TestListsStatusEnqueuedShowsConcurrencyHint(t *testing.T) {
 		t.Fatalf("Run() error = %v", runErr)
 	}
 
-	for _, want := range []string{"queued", "depends on your plan", "spreadsheet-concurrency"} {
+	for _, want := range []string{"queued", "depends on your plan", "why-spreadsheet-uploads-get-queued"} {
 		if !strings.Contains(stderr, want) {
 			t.Errorf("stderr missing %q; got: %s", want, stderr)
 		}
 	}
 
-	if strings.Contains(stdout, "queued") || strings.Contains(stdout, "spreadsheet-concurrency") {
+	if strings.Contains(stdout, "queued") || strings.Contains(stdout, "why-spreadsheet-uploads-get-queued") {
 		t.Errorf("concurrency hint leaked into stdout: %s", stdout)
 	}
 }
