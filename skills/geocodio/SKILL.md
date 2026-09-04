@@ -187,6 +187,8 @@ geocodio lists download LIST_ID --output geocoded.csv
 geocodio lists delete LIST_ID
 ```
 
+**Concurrency.** Geocodio processes a limited number of spreadsheet jobs per account at the same time -- 1 at a time on pay-as-you-go and Flex, 3 per dedicated instance on Unlimited. Uploads started from the dashboard count toward the same limit as CLI/API uploads. There is no error or rejection for this: a list over the limit just stays in `ENQUEUED` longer and starts automatically once a slot frees up. If a list sits in `ENQUEUED` for a while, that's expected -- don't retry the upload or treat it as a failure.
+
 ## Global Flags
 
 These work with all commands:
