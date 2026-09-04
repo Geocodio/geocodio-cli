@@ -18,23 +18,29 @@ import (
 // explains why. It's a var (not const) so tests can shorten it.
 var enqueuedHintDelay = 30 * time.Second
 
+// concurrencyGuideURL is the canonical source of truth for the actual
+// concurrency limits per plan. Keep the numbers out of the CLI and this doc
+// link current -- they live in one place instead of drifting across the
+// CLI, website, agent guide, and API docs.
+const concurrencyGuideURL = "https://www.geocod.io/guides/spreadsheet-concurrency"
+
 // concurrencyExplanation describes why a list stays ENQUEUED: Geocodio caps
 // how many spreadsheet jobs one billing owner can process at the same time.
 // The API never rejects an upload over this limit -- it just delays it, so
 // this is purely explanatory, not an error.
 func concurrencyExplanation() string {
-	return "Geocodio limits how many spreadsheet jobs one account processes at once: " +
-		"1 at a time on pay-as-you-go and Flex plans, 3 per dedicated instance on Unlimited. " +
-		"Uploads started from the dashboard count toward the same limit. " +
-		"It will start automatically once a slot frees up -- no action needed."
+	return "Geocodio limits how many spreadsheet jobs one account can process at once. " +
+		"The limit depends on your plan, and uploads started from the dashboard count toward it too. " +
+		"No action needed -- it will start automatically once a slot frees up. " +
+		"See " + concurrencyGuideURL + " for your plan's limit before running multiple lists."
 }
 
 // concurrencyExplanationBrief is a shorter version of concurrencyExplanation
 // for a single (non-watching) status check.
 func concurrencyExplanationBrief() string {
-	return "Geocodio processes a limited number of spreadsheet jobs per account at once " +
-		"(1 on pay-as-you-go/Flex, 3 per dedicated instance on Unlimited; dashboard uploads count too). " +
-		"It will start automatically."
+	return "Geocodio limits how many spreadsheet jobs one account can process at once. " +
+		"The limit depends on your plan, and dashboard uploads count toward it too. " +
+		"It will start automatically -- see " + concurrencyGuideURL + " before running multiple lists."
 }
 
 // shouldShowEnqueuedHint reports whether watchList should print the
@@ -62,8 +68,8 @@ func listsUploadCmd() *cli.Command {
 		Name:  "upload",
 		Usage: "Upload a spreadsheet for geocoding",
 		Description: "Uploads are queued and processed asynchronously. How many run at once for your " +
-			"account is plan-dependent (1 on pay-as-you-go/Flex, 3 per dedicated instance on Unlimited), " +
-			"and dashboard uploads share the same limit.",
+			"account is plan-dependent, and dashboard uploads share the same limit -- see " +
+			concurrencyGuideURL + " before running multiple lists.",
 		ArgsUsage: "<file>",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -170,7 +176,8 @@ func listsStatusCmd() *cli.Command {
 		Name:  "status",
 		Usage: "Get status of a spreadsheet job",
 		Description: "A list can sit in ENQUEUED longer than expected while it waits for a free " +
-			"processing slot -- how many run concurrently is plan-dependent.",
+			"processing slot -- how many run concurrently is plan-dependent. See " +
+			concurrencyGuideURL + " before running multiple lists.",
 		ArgsUsage: "<list-id>",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
