@@ -7,11 +7,47 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 	"github.com/geocodio/geocodio-cli/internal/ui"
 	"github.com/urfave/cli/v3"
 )
+
+// enqueuedHintDelay is how long a list must sit in ENQUEUED before watchList
+// explains why. It's a var (not const) so tests can shorten it.
+var enqueuedHintDelay = 30 * time.Second
+
+// concurrencyGuideURL is the canonical source of truth for the actual
+// concurrency limits per plan. Keep the numbers out of the CLI and this doc
+// link current -- they live in one place instead of drifting across the
+// CLI, website, agent guide, and API docs.
+const concurrencyGuideURL = "https://www.geocod.io/guides/why-spreadsheet-uploads-get-queued"
+
+// concurrencyExplanation describes why a list stays ENQUEUED: Geocodio caps
+// how many spreadsheet jobs one billing owner can process at the same time.
+// The API never rejects an upload over this limit -- it just delays it, so
+// this is purely explanatory, not an error.
+func concurrencyExplanation() string {
+	return "Geocodio limits how many spreadsheet jobs one account can process at once. " +
+		"The limit depends on your plan, and uploads started from the dashboard count toward it too. " +
+		"No action needed -- it will start automatically once a slot frees up. " +
+		"See " + concurrencyGuideURL + " for your plan's limit before running multiple lists."
+}
+
+// concurrencyExplanationBrief is a shorter version of concurrencyExplanation
+// for a single (non-watching) status check.
+func concurrencyExplanationBrief() string {
+	return "Geocodio limits how many spreadsheet jobs one account can process at once. " +
+		"The limit depends on your plan, and dashboard uploads count toward it too. " +
+		"It will start automatically -- see " + concurrencyGuideURL + " before running multiple lists."
+}
+
+// shouldShowEnqueuedHint reports whether watchList should print the
+// concurrency explanation for a list that has been ENQUEUED for elapsed.
+func shouldShowEnqueuedHint(state string, elapsed time.Duration) bool {
+	return state == "ENQUEUED" && elapsed >= enqueuedHintDelay
+}
 
 func listsCmd() *cli.Command {
 	return &cli.Command{
@@ -29,8 +65,11 @@ func listsCmd() *cli.Command {
 
 func listsUploadCmd() *cli.Command {
 	return &cli.Command{
-		Name:      "upload",
-		Usage:     "Upload a spreadsheet for geocoding",
+		Name:  "upload",
+		Usage: "Upload a spreadsheet for geocoding",
+		Description: "Uploads are queued and processed asynchronously. How many run at once for your " +
+			"account is plan-dependent, and dashboard uploads share the same limit -- see " +
+			concurrencyGuideURL + " before running multiple lists.",
 		ArgsUsage: "<file>",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
@@ -134,8 +173,11 @@ func listsListAction(ctx context.Context, cmd *cli.Command) error {
 
 func listsStatusCmd() *cli.Command {
 	return &cli.Command{
-		Name:      "status",
-		Usage:     "Get status of a spreadsheet job",
+		Name:  "status",
+		Usage: "Get status of a spreadsheet job",
+		Description: "A list can sit in ENQUEUED longer than expected while it waits for a free " +
+			"processing slot -- how many run concurrently is plan-dependent. See " +
+			concurrencyGuideURL + " before running multiple lists.",
 		ArgsUsage: "<list-id>",
 		Flags: []cli.Flag{
 			&cli.BoolFlag{
@@ -170,6 +212,10 @@ func listsStatusAction(ctx context.Context, cmd *cli.Command) error {
 
 	if err := app.formatter.FormatList(resp); err != nil {
 		return err
+	}
+
+	if resp.Status != nil && resp.Status.State == "ENQUEUED" {
+		fmt.Fprintf(app.stderr, "List %d is queued. %s\n", id, concurrencyExplanationBrief())
 	}
 
 	if cmd.Bool("watch") {
@@ -265,10 +311,19 @@ func listsDeleteAction(ctx context.Context, cmd *cli.Command) error {
 func watchList(ctx context.Context, app *App, id int) error {
 	display := ui.NewWatchDisplay(app.stderr)
 
+	start := time.Now()
+	hintShown := false
+
 	resp, err := app.client.PollList(ctx, id, func(list *api.ListResponse) {
 		if list.Status == nil {
 			return
 		}
+
+		if !hintShown && shouldShowEnqueuedHint(list.Status.State, time.Since(start)) {
+			fmt.Fprintf(app.stderr, "\nList %d is still queued. %s\n", id, concurrencyExplanation())
+			hintShown = true
+		}
+
 		display.Update(ui.WatchUpdate{
 			Progress: list.Status.Progress,
 			Status:   list.Status.State,

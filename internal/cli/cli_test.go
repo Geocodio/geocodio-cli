@@ -12,7 +12,40 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
+
+// captureOutput temporarily redirects os.Stdout and os.Stderr while fn runs,
+// so callers can assert on what a Run() invocation actually printed to each
+// stream (newApp reads os.Stdout/os.Stderr at call time).
+func captureOutput(t *testing.T, fn func()) (stdout, stderr string) {
+	t.Helper()
+
+	origOut, origErr := os.Stdout, os.Stderr
+	outR, outW, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("os.Pipe: %v", err)
+	}
+	errR, errW, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("os.Pipe: %v", err)
+	}
+	os.Stdout = outW
+	os.Stderr = errW
+	defer func() {
+		os.Stdout = origOut
+		os.Stderr = origErr
+	}()
+
+	fn()
+
+	_ = outW.Close()
+	_ = errW.Close()
+
+	outData, _ := io.ReadAll(outR)
+	errData, _ := io.ReadAll(errR)
+	return string(outData), string(errData)
+}
 
 func TestParseCoordinates(t *testing.T) {
 	tests := []struct {
@@ -581,5 +614,144 @@ func TestBatchGeocodeOverLimitPointsAtLists(t *testing.T) {
 		if !strings.Contains(err.Error(), want) {
 			t.Errorf("error message missing %q; got: %v", want, err)
 		}
+	}
+}
+
+func TestListsStatusEnqueuedShowsConcurrencyHint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"id": 42, "status": {"state": "ENQUEUED", "progress": 0}}`)
+	}))
+	defer server.Close()
+
+	var runErr error
+	stdout, stderr := captureOutput(t, func() {
+		runErr = Run(context.Background(), []string{
+			"geocodio",
+			"--api-key", "test-api-key",
+			"--base-url", server.URL,
+			"lists", "status", "42",
+		})
+	})
+	if runErr != nil {
+		t.Fatalf("Run() error = %v", runErr)
+	}
+
+	for _, want := range []string{"queued", "depends on your plan", "why-spreadsheet-uploads-get-queued"} {
+		if !strings.Contains(stderr, want) {
+			t.Errorf("stderr missing %q; got: %s", want, stderr)
+		}
+	}
+
+	if strings.Contains(stdout, "queued") || strings.Contains(stdout, "why-spreadsheet-uploads-get-queued") {
+		t.Errorf("concurrency hint leaked into stdout: %s", stdout)
+	}
+}
+
+func TestListsStatusProcessingOmitsConcurrencyHint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"id": 42, "status": {"state": "PROCESSING", "progress": 40}}`)
+	}))
+	defer server.Close()
+
+	var runErr error
+	_, stderr := captureOutput(t, func() {
+		runErr = Run(context.Background(), []string{
+			"geocodio",
+			"--api-key", "test-api-key",
+			"--base-url", server.URL,
+			"lists", "status", "42",
+		})
+	})
+	if runErr != nil {
+		t.Fatalf("Run() error = %v", runErr)
+	}
+
+	if strings.Contains(stderr, "queued") || strings.Contains(stderr, "Geocodio limits") {
+		t.Errorf("expected no concurrency hint for PROCESSING status; got: %s", stderr)
+	}
+}
+
+func TestListsStatusCompletedOmitsConcurrencyHint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"id": 42, "status": {"state": "COMPLETED", "progress": 100}}`)
+	}))
+	defer server.Close()
+
+	var runErr error
+	_, stderr := captureOutput(t, func() {
+		runErr = Run(context.Background(), []string{
+			"geocodio",
+			"--api-key", "test-api-key",
+			"--base-url", server.URL,
+			"lists", "status", "42",
+		})
+	})
+	if runErr != nil {
+		t.Fatalf("Run() error = %v", runErr)
+	}
+
+	if strings.Contains(stderr, "queued") || strings.Contains(stderr, "Geocodio limits") {
+		t.Errorf("expected no concurrency hint for COMPLETED status; got: %s", stderr)
+	}
+}
+
+func TestListsStatusJSONNotCorruptedByConcurrencyHint(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = fmt.Fprint(w, `{"id": 42, "status": {"state": "ENQUEUED", "progress": 0}}`)
+	}))
+	defer server.Close()
+
+	var runErr error
+	stdout, stderr := captureOutput(t, func() {
+		runErr = Run(context.Background(), []string{
+			"geocodio",
+			"--api-key", "test-api-key",
+			"--base-url", server.URL,
+			"--json",
+			"lists", "status", "42",
+		})
+	})
+	if runErr != nil {
+		t.Fatalf("Run() error = %v", runErr)
+	}
+
+	var parsed map[string]any
+	if err := json.Unmarshal([]byte(stdout), &parsed); err != nil {
+		t.Fatalf("stdout is not valid JSON: %v; got: %s", err, stdout)
+	}
+
+	// The hint is informational and belongs on stderr only, so it must not
+	// appear in the machine-readable stdout payload.
+	if strings.Contains(stdout, "Geocodio limits") {
+		t.Errorf("concurrency hint leaked into JSON stdout: %s", stdout)
+	}
+	if !strings.Contains(stderr, "queued") {
+		t.Errorf("expected concurrency hint on stderr; got: %s", stderr)
+	}
+}
+
+func TestShouldShowEnqueuedHint(t *testing.T) {
+	tests := []struct {
+		name    string
+		state   string
+		elapsed time.Duration
+		want    bool
+	}{
+		{"enqueued at threshold", "ENQUEUED", enqueuedHintDelay, true},
+		{"enqueued past threshold", "ENQUEUED", enqueuedHintDelay + time.Second, true},
+		{"enqueued before threshold", "ENQUEUED", enqueuedHintDelay - time.Second, false},
+		{"processing past threshold", "PROCESSING", enqueuedHintDelay + time.Second, false},
+		{"completed past threshold", "COMPLETED", enqueuedHintDelay + time.Second, false},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := shouldShowEnqueuedHint(tt.state, tt.elapsed); got != tt.want {
+				t.Errorf("shouldShowEnqueuedHint(%q, %v) = %v, want %v", tt.state, tt.elapsed, got, tt.want)
+			}
+		})
 	}
 }
