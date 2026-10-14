@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Geocodio/yak/main/schemas/config.schema.json
+version: 1
+ci: github_actions
+review:
+  enabled: false
+  approval:
+    mode: 'off'
+    allowed_paths: []
+    blocked_paths: []
+    max_files: 5
+    max_lines: 150
+    max_risk_score: 30
+    min_confidence: 80
+    required_checks: []
