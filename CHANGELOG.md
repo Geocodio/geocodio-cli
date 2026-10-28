@@ -17,9 +17,10 @@ All notable changes to the Geocodio CLI are documented in this file.
 
 - **Radius limiting for distance calculations.** `distance` and `distance-matrix` now accept `--max-distance` (aliased `--radius`), `--min-distance`, `--max-duration`, `--min-duration`, `--max-results`, `--order-by`, and `--sort-order`, mapping to the corresponding parameters on the `/distance` and `/distance-matrix` endpoints. Duration filters apply in `driving` mode only.
 - `--distance-radius` as a friendlier alias for `geocode`/`reverse`'s existing `--distance-max-distance`.
-
+- **Australia and New Zealand in the docs and help text.** The README, the `--country` help text, and the bundled agent skill now include Australia and New Zealand examples, and list the Australian data appends (`au-census`, `au-demographics`, `au-housing`, `au-income`, `au-federal-electorate`, `au-state-electorate`).
 ### Fixed
 
+- `--country` on `distance` and `distance-matrix` was skipped whenever the country text appeared anywhere in an address, so `--country AU` did nothing for "1 Beaumont St, Hamilton NSW" and the API fell back to the US. The country is now only skipped when the address already ends with it as a whole word, which is where the API reads it from.
 - The `--batch` size error now reports how many records the file has, explains that data appends count toward the 10,000-lookup cap, and points at `lists upload` for larger files.
 - Documented the inline distance filters on `geocode` and `reverse` (`--distance-max-distance`, `--distance-min-distance`, `--distance-max-duration`, `--distance-min-duration`, `--distance-max-results`, `--distance-order-by`, `--distance-sort-order`). They were already implemented but missing from the README and the agent skill.
 

@@ -125,6 +125,9 @@ run_test "Batch geocode (JSON)"              "$CLI" geocode --batch "$TMPDIR/add
 run_test "UK address (country hint)"         "$CLI" geocode "10 Downing St, London" --country "United Kingdom"
 run_test "UK data appends"                   "$CLI" geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
 run_test "UK batch geocode"                  "$CLI" geocode --batch "$TMPDIR/uk_addresses.txt"
+run_test "AU address (country hint)"         "$CLI" geocode "30 Pitt St, Sydney NSW 2000" --country "Australia"
+run_test "AU data appends"                   "$CLI" geocode "30 Pitt St, Sydney NSW 2000" --country "Australia" --fields au-federal-electorate,au-state-electorate
+run_test "NZ address (country hint)"         "$CLI" geocode "55 Cable St, Wellington 6011" --country "New Zealand"
 echo
 
 # ─── Reverse Geocode ──────────────────────────────────────
@@ -154,6 +157,7 @@ run_test "Duration limit"                    "$CLI" distance "Washington DC" "Ne
 run_test "Nearest N, sorted"                 "$CLI" distance "Washington DC" "New York" "Boston" "Philadelphia" --max-results 2 --order-by distance --sort-order asc
 run_test "JSON output"                       "$CLI" distance "Washington DC" "New York" --json
 run_test "Agent output"                      "$CLI" distance "Washington DC" "New York" --agent
+run_test "AU country code"                   "$CLI" distance "1 Beaumont St, Hamilton NSW 2303" "30 Pitt St, Sydney NSW 2000" --country AU
 echo
 
 # ─── Distance Matrix ──────────────────────────────────────

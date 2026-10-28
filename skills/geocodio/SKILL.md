@@ -62,11 +62,17 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --fields timezone,cd
 # Limit results
 geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --limit 1
 
-# Country hint (e.g. USA, Canada, United Kingdom)
+# Country hint (e.g. USA, Canada, United Kingdom, Australia, New Zealand)
 geocodio geocode "Ottawa, Ontario" --country Canada
 
 # UK address with UK-specific data appends
 geocodio geocode "10 Downing St, London" --country "United Kingdom" --fields uk-westminster,uk-local
+
+# Australian address with Australia-specific data appends
+geocodio geocode "30 Pitt St, Sydney NSW 2000" --country "Australia" --fields au-federal-electorate,au-state-electorate
+
+# New Zealand address (no NZ-specific appends yet)
+geocodio geocode "55 Cable St, Wellington 6011" --country "New Zealand"
 
 # Batch from file (one address per line, max 10,000)
 geocodio geocode --batch addresses.txt
@@ -82,6 +88,8 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --show-address-key
 ```
 
 UK data append fields: `uk-westminster`, `uk-westminster-next`, `uk-devolved`, `uk-devolved-next`, `uk-local`, `uk-local-next` (the `-next` variants return upcoming boundary changes). Pass them via `--fields` like any other append.
+
+Australian data append fields: `au-census`, `au-census2021`, `au-demographics`, `au-housing`, `au-income`, `au-federal-electorate`, `au-federal-electorate-next`, `au-state-electorate`. They work with `geocode`, `reverse`, and `lists upload`, like any other append. New Zealand has no country-specific appends yet.
 
 ### Reverse Geocode (coordinates to address)
 

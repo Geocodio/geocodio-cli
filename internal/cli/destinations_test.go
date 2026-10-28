@@ -54,10 +54,34 @@ func TestAppendCountry(t *testing.T) {
 			want:    "Ottawa ON",
 		},
 		{
-			name:    "address already contains country",
+			name:    "address already ends with country",
 			address: "Ottawa Ontario Canada",
 			country: "Canada",
 			want:    "Ottawa Ontario Canada",
+		},
+		{
+			name:    "address already ends with country code and trailing punctuation",
+			address: "30 Pitt St, Sydney NSW 2000, AU.",
+			country: "AU",
+			want:    "30 Pitt St, Sydney NSW 2000, AU.",
+		},
+		{
+			name:    "appends AU when the code appears inside a word",
+			address: "1 Beaumont St, Hamilton NSW 2303",
+			country: "AU",
+			want:    "1 Beaumont St, Hamilton NSW 2303, AU",
+		},
+		{
+			name:    "appends NZ when the code appears inside a word",
+			address: "Cron St, Franz Josef 7886",
+			country: "NZ",
+			want:    "Cron St, Franz Josef 7886, NZ",
+		},
+		{
+			name:    "appends country named earlier in the address",
+			address: "4250 Canada Way, Burnaby BC",
+			country: "Canada",
+			want:    "4250 Canada Way, Burnaby BC, Canada",
 		},
 	}
 
