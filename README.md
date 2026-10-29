@@ -148,6 +148,20 @@ UK field appends: `uk-westminster`, `uk-westminster-next`, `uk-devolved`, `uk-de
 > [!NOTE]
 > United Kingdom addresses need a Flex or Unlimited+UK plan. UK geocoding is not available on pay-as-you-go. See [Geocodio pricing](https://www.geocod.io/pricing).
 
+Australian addresses have their own data appends too, for example federal and state electorates:
+
+```bash
+geocodio geocode "30 Pitt St, Sydney NSW 2000" --country "Australia" --fields au-federal-electorate,au-state-electorate
+```
+
+Australian field appends: `au-census`, `au-census2021`, `au-demographics`, `au-housing`, `au-income`, `au-federal-electorate`, `au-federal-electorate-next`, `au-state-electorate`. They work with `geocode`, `reverse`, and `lists upload`, like any other append.
+
+New Zealand addresses geocode the same way. There are no New Zealand-specific appends yet, but appends that work in any country, like `timezone`, do:
+
+```bash
+geocodio geocode "55 Cable St, Wellington 6011" --country "New Zealand" --fields timezone
+```
+
 **Batch geocoding from a file:**
 
 For processing many addresses at once, create a file with one address per line and use the `--batch` flag:
@@ -198,7 +212,7 @@ geocodio geocode "1600 Pennsylvania Ave NW, Washington DC" --json
 | `--batch` | `-b` | File containing addresses (one per line) |
 | `--fields` | `-f` | Data append fields (comma-separated) |
 | `--limit` | `-l` | Maximum number of results per address |
-| `--country` | `-c` | Country hint, recommended for non-US data (e.g. `USA`, `Canada`, `United Kingdom`) |
+| `--country` | `-c` | Country hint, recommended for non-US data (e.g. `USA`, `Canada`, `United Kingdom`, `Australia`, `New Zealand`) |
 | `--destinations` | `-d` | Destination addresses or coordinates for distance calculation (repeatable) |
 | `--distance-mode` | `-m` | Distance mode: `straightline` (default, 1 credit per calculation) or `driving` (2 credits per calculation) |
 | `--distance-units` | `-u` | Distance units: `miles` or `km` |
@@ -326,7 +340,7 @@ geocodio distance "Washington DC" "New York" "Boston" "Philadelphia" \
 |------|-------|---------|-------------|
 | `--mode` | `-m` | `straightline` | Routing mode: `straightline` (1 credit per calculation) or `driving` (2 credits per calculation) |
 | `--units` | `-u` | `miles` | Distance units: `miles` or `km` |
-| `--country` | `-c` | | Country to append to addresses, recommended for non-US data (e.g. `USA`, `Canada`, `United Kingdom`) |
+| `--country` | `-c` | | Country to append to addresses, recommended for non-US data (e.g. `USA`, `Canada`, `United Kingdom`, `Australia`, `New Zealand`) |
 | `--max-distance` | `--radius` | | Radius limit: only keep destinations within this distance (in `--units`) |
 | `--min-distance` | | | Only keep destinations at least this far away (in `--units`) |
 | `--max-duration` | | | Only keep destinations within this travel time in seconds (driving mode only) |

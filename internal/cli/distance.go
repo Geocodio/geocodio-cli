@@ -3,7 +3,7 @@ package cli
 import (
 	"context"
 	"fmt"
-	"strings"
+	"regexp"
 
 	"github.com/geocodio/geocodio-cli/internal/api"
 	"github.com/geocodio/geocodio-cli/internal/output"
@@ -11,14 +11,18 @@ import (
 	"github.com/urfave/cli/v3"
 )
 
-// appendCountry appends the country to an address if it's not already present.
+// appendCountry appends the country to an address unless the address already ends with it.
+// The API only reads the country from the end of the address, so a country named earlier
+// ("Canada Way") doesn't count, and a short code has to match as a whole word: "AU" inside
+// "Beaumont" would otherwise skip the append and send an Australian address to the US default.
 // The value is passed through as-is; the Geocodio API accepts a wide range of
 // country names and formats, so no client-side validation or normalization is done.
 func appendCountry(address, country string) string {
 	if country == "" {
 		return address
 	}
-	if strings.Contains(strings.ToLower(address), strings.ToLower(country)) {
+	endsWithCountry := regexp.MustCompile(`(?i)\b` + regexp.QuoteMeta(country) + `\W*$`)
+	if endsWithCountry.MatchString(address) {
 		return address
 	}
 	return address + ", " + country
@@ -108,7 +112,7 @@ func distanceCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "country",
 				Aliases: []string{"c"},
-				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom)",
+				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom, Australia, New Zealand)",
 			},
 		}, distanceFilterFlags()...),
 		Action: distanceAction,
@@ -176,7 +180,7 @@ func distanceMatrixCmd() *cli.Command {
 			&cli.StringFlag{
 				Name:    "country",
 				Aliases: []string{"c"},
-				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom)",
+				Usage:   "Country to append to addresses (e.g. USA, Canada, United Kingdom, Australia, New Zealand)",
 			},
 		}, distanceFilterFlags()...),
 		Action: distanceMatrixAction,
